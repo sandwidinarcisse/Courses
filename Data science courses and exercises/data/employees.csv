@@ -1,0 +1,16 @@
+id,name,department,salary,age,hire_date,email
+1,Alice Johnson,Engineering,85000,32,2019-03-15,alice.j@company.com
+2,Bob Smith,Marketing,62000,28,2021-06-01,bob.s@company.com
+3,Carlos Rivera,Engineering,91000,35,2017-11-20,carlos.r@company.com
+4,Diana Chen,HR,58000,,2022-01-10,diana.c@company.com
+5,Eve Martinez,Engineering,78000,29,2020-08-05,eve.m@company.com
+6,Frank Lee,Marketing,,41,2018-04-22,frank.l@company.com
+7,Grace Kim,HR,55000,26,2023-02-14,grace.k@company.com
+8,Hank Brown,Engineering,95000,38,2015-07-30,hank.b@company.com
+9,Iris Davis,Marketing,67000,31,2020-12-01,iris.d@company.com
+10,Jack Wilson,Engineering,,34,2019-09-18,jack.w@company.com
+11,Karen Moore,HR,53000,27,2022-11-05,karen.m@company.com
+12,Leo Turner,Engineering,88000,36,2016-05-12,leo.t@company.com
+13,Mia Scott,Marketing,71000,33,2018-08-25,mia.s@company.com
+14,Noah White,HR,,29,2021-03-08,noah.w@company.com
+15,Olivia Hall,Engineering,93000,37,2016-01-20,olivia.h@company.com
