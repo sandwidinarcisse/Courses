@@ -1,0 +1,3394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSGE Models: An Interactive Graduate Course</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sidebar-bg: #0f172a;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #1d4ed8;
+  --sidebar-text: #94a3b8;
+  --sidebar-active-text: #ffffff;
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --body-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --sidebar-width: 280px;
+  --topbar-height: 60px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--body-bg);
+  color: var(--text-primary);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+  transition: transform .3s ease;
+}
+#sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid #1e293b;
+}
+#sidebar-header h1 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+#sidebar-header p {
+  font-size: 11px;
+  color: var(--sidebar-text);
+  margin-top: 4px;
+}
+#progress-bar-wrap {
+  padding: 12px 20px;
+  border-bottom: 1px solid #1e293b;
+}
+#progress-bar-wrap label {
+  font-size: 10px;
+  color: var(--sidebar-text);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  display: flex;
+  justify-content: space-between;
+}
+#progress-track {
+  margin-top: 6px;
+  height: 4px;
+  background: #1e293b;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  border-radius: 9999px;
+  transition: width .4s ease;
+  width: 0%;
+}
+#nav-list {
+  list-style: none;
+  padding: 8px 0;
+  flex: 1;
+}
+#nav-list li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+#nav-list li a:hover { background: var(--sidebar-hover); color: #e2e8f0; }
+#nav-list li a.active {
+  background: #1e3a5f;
+  color: var(--sidebar-active-text);
+  border-left-color: var(--accent-blue);
+}
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #334155;
+  flex-shrink: 0;
+  transition: background .3s;
+}
+.nav-dot.visited { background: var(--accent-green); }
+.nav-dot.active { background: var(--accent-blue); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+#glossary-btn-sidebar {
+  margin: 8px 12px 16px;
+  padding: 9px 16px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: var(--sidebar-text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .15s;
+}
+#glossary-btn-sidebar:hover { background: #334155; color: #e2e8f0; }
+
+/* ── MAIN ── */
+#main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  height: var(--topbar-height);
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+#topbar-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+#topbar-actions { display: flex; gap: 10px; align-items: center; }
+.btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.btn-ghost:hover { background: var(--body-bg); }
+.btn-primary {
+  background: var(--accent-blue);
+  color: white;
+}
+.btn-primary:hover { background: #2563eb; }
+
+/* ── CONTENT ── */
+#content { padding: 0 32px 80px; max-width: 940px; margin: 0 auto; }
+
+/* Sections */
+.section {
+  padding-top: 56px;
+}
+.section-header {
+  margin-bottom: 32px;
+}
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: var(--accent-blue);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 680px;
+}
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card p, .card li {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.card ul { padding-left: 20px; margin-top: 8px; }
+.card ul li { margin-bottom: 4px; }
+.card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 14px 0 6px; }
+
+/* Info boxes */
+.info-box {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex;
+  gap: 12px;
+}
+.info-box .ib-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.info-box .ib-content { flex: 1; }
+.info-box .ib-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.info-box .ib-body { font-size: 13.5px; line-height: 1.65; }
+.ib-blue { background: #eff6ff; border: 1px solid #bfdbfe; }
+.ib-blue .ib-title { color: #1d4ed8; }
+.ib-blue .ib-body { color: #1e40af; }
+.ib-green { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.ib-green .ib-title { color: #166534; }
+.ib-green .ib-body { color: #15803d; }
+.ib-amber { background: #fffbeb; border: 1px solid #fde68a; }
+.ib-amber .ib-title { color: #92400e; }
+.ib-amber .ib-body { color: #b45309; }
+.ib-purple { background: #faf5ff; border: 1px solid #ddd6fe; }
+.ib-purple .ib-title { color: #5b21b6; }
+.ib-purple .ib-body { color: #6d28d9; }
+
+/* Math display */
+.math-box {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.math-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+}
+
+/* Code blocks */
+.code-block-wrap {
+  position: relative;
+  margin: 16px 0;
+}
+.code-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0;
+}
+.code-tab {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #374151;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  background: #1f2937;
+  color: #9ca3af;
+  transition: all .15s;
+}
+.code-tab.active {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+.code-panel { display: none; }
+.code-panel.active { display: block; }
+pre[class*="language-"] {
+  margin: 0 !important;
+  border-radius: 0 8px 8px 8px !important;
+  font-size: 13px !important;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.copy-btn {
+  position: absolute;
+  top: 34px;
+  right: 10px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #374151;
+  color: #d1d5db;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all .15s;
+  z-index: 10;
+}
+.copy-btn:hover { background: #4b5563; }
+.copy-btn.copied { background: var(--accent-green); color: white; }
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.run-btn:hover { background: #2563eb; }
+.run-btn:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+.pyodide-output {
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: #0f172a;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: #86efac;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+.pyodide-output.visible { display: block; }
+
+/* Simulation panel */
+.sim-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+.sim-header {
+  background: #0f172a;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sim-header h3 { font-size: 15px; font-weight: 600; }
+.sim-header p { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+.sim-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 440px;
+}
+.sim-controls {
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+}
+.sim-controls h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.shock-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+.shock-tab {
+  flex: 1;
+  padding: 7px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--body-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+}
+.shock-tab.active {
+  background: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+}
+.param-group { margin-bottom: 18px; }
+.param-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.param-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.param-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 42px;
+  text-align: right;
+}
+input[type="range"] {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform .1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.param-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.sim-chart-area { padding: 16px; display: flex; flex-direction: column; }
+.irf-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.irf-tab {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--body-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all .15s;
+}
+.irf-tab.active {
+  background: var(--text-primary);
+  color: white;
+  border-color: var(--text-primary);
+}
+#irf-plot { flex: 1; min-height: 360px; }
+
+/* Timeline / history */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-dot {
+  position: absolute;
+  left: -24px; top: 4px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px var(--accent-blue);
+}
+.timeline-year {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 2px;
+}
+.timeline-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.timeline-body { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Quiz */
+.quiz-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 32px;
+}
+.quiz-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quiz-q {
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.quiz-q:last-of-type { border-bottom: none; }
+.quiz-q-text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+.quiz-option:hover { border-color: var(--accent-blue); color: var(--text-primary); background: #eff6ff; }
+.quiz-option.correct { border-color: var(--accent-green); background: #f0fdf4; color: #166534; }
+.quiz-option.wrong { border-color: var(--accent-red); background: #fef2f2; color: #991b1b; }
+.quiz-option input { accent-color: var(--accent-blue); margin-top: 2px; }
+.quiz-feedback {
+  font-size: 13px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: #f0fdf4; color: #166534; }
+.quiz-feedback.wrong { background: #fef2f2; color: #991b1b; }
+.quiz-submit {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.quiz-submit:hover { background: #2563eb; }
+.quiz-result {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: none;
+}
+.quiz-result.show { display: block; }
+
+/* Grid layouts */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+.stat-card .stat-icon { font-size: 24px; margin-bottom: 8px; }
+
+/* Glossary modal */
+#glossary-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0;
+}
+#glossary-modal.open { display: flex; }
+#glossary-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(2px);
+}
+#glossary-panel {
+  position: relative;
+  width: 460px;
+  height: 100vh;
+  background: var(--card-bg);
+  overflow-y: auto;
+  box-shadow: -8px 0 32px rgba(0,0,0,.15);
+  z-index: 1;
+  padding: 28px 28px 48px;
+}
+#glossary-panel h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+#glossary-panel p { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+#glossary-search {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  outline: none;
+}
+#glossary-search:focus { border-color: var(--accent-blue); }
+.glossary-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: none; border: none;
+}
+.glossary-item {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.glossary-term {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.glossary-term .g-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-weight: 600;
+  background: #eff6ff;
+  color: var(--accent-blue);
+}
+.glossary-def { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  .sim-body { grid-template-columns: 1fr; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+}
+
+/* Utilities */
+.text-mono { font-family: 'JetBrains Mono', monospace; }
+.mt-4 { margin-top: 16px; }
+.mt-6 { margin-top: 24px; }
+.mb-4 { margin-bottom: 16px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--text-muted); }
+p { font-size: 14.5px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 12px; }
+h3 { font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 28px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 20px 0 8px; }
+strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <h1>DSGE Course</h1>
+    <p>Graduate Macroeconomics</p>
+  </div>
+  <div id="progress-bar-wrap">
+    <label><span>Progress</span><span id="progress-pct">0%</span></label>
+    <div id="progress-track"><div id="progress-fill"></div></div>
+  </div>
+  <ul id="nav-list">
+    <li><a href="#s-intro" class="nav-link"><span class="nav-icon">🎯</span><span class="nav-label">Introduction</span><span class="nav-dot" data-section="s-intro"></span></a></li>
+    <li><a href="#s-households" class="nav-link"><span class="nav-icon">👥</span><span class="nav-label">Households</span><span class="nav-dot" data-section="s-households"></span></a></li>
+    <li><a href="#s-firms" class="nav-link"><span class="nav-icon">🏭</span><span class="nav-label">Firms &amp; Pricing</span><span class="nav-dot" data-section="s-firms"></span></a></li>
+    <li><a href="#s-policy" class="nav-link"><span class="nav-icon">🏦</span><span class="nav-label">Monetary &amp; Fiscal Policy</span><span class="nav-dot" data-section="s-policy"></span></a></li>
+    <li><a href="#s-equations" class="nav-link"><span class="nav-icon">📐</span><span class="nav-label">Key Equations</span><span class="nav-dot" data-section="s-equations"></span></a></li>
+    <li><a href="#s-simulation" class="nav-link"><span class="nav-icon">⚡</span><span class="nav-label">Interactive Simulation</span><span class="nav-dot" data-section="s-simulation"></span></a></li>
+    <li><a href="#s-solution" class="nav-link"><span class="nav-icon">🔧</span><span class="nav-label">Solution Methods</span><span class="nav-dot" data-section="s-solution"></span></a></li>
+    <li><a href="#s-estimation" class="nav-link"><span class="nav-icon">📊</span><span class="nav-label">Bayesian Estimation</span><span class="nav-dot" data-section="s-estimation"></span></a></li>
+    <li><a href="#s-advanced" class="nav-link"><span class="nav-icon">🌐</span><span class="nav-label">Advanced Topics</span><span class="nav-dot" data-section="s-advanced"></span></a></li>
+    <li><a href="#s-quiz" class="nav-link"><span class="nav-icon">🎓</span><span class="nav-label">Final Assessment</span><span class="nav-dot" data-section="s-quiz"></span></a></li>
+  </ul>
+  <button id="glossary-btn-sidebar" onclick="openGlossary()">📚 Open Glossary</button>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div id="topbar-title">DSGE Models: An Interactive Graduate Course</div>
+    <div id="topbar-actions">
+      <button class="btn btn-ghost" onclick="openGlossary()">📚 Glossary</button>
+      <button class="btn btn-ghost" id="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none">☰ Menu</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 1: INTRODUCTION
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-intro">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 1</div>
+        <h1 class="section-title">Introduction to DSGE Models</h1>
+        <p class="section-subtitle">Understand what Dynamic Stochastic General Equilibrium models are, how they evolved, and why they remain the dominant framework in modern macroeconomics.</p>
+      </div>
+
+      <div class="three-col">
+        <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">Dynamic</div><div class="stat-label">Intertemporal optimization over time</div></div>
+        <div class="stat-card"><div class="stat-icon">🎲</div><div class="stat-value">Stochastic</div><div class="stat-label">Random shocks drive fluctuations</div></div>
+        <div class="stat-card"><div class="stat-icon">⚖️</div><div class="stat-value">General Equil.</div><div class="stat-label">All markets clear simultaneously</div></div>
+      </div>
+
+      <h3>What is a DSGE Model?</h3>
+      <p>A DSGE model is a macroeconomic model that describes the entire economy as a system of optimizing agents — households, firms, and policymakers — whose decisions interact through markets that always clear. The <strong>Dynamic</strong> dimension means agents optimize over an infinite horizon, trading off present against future. The <strong>Stochastic</strong> dimension means random shocks — technology surprises, monetary policy errors, preference shifts — drive business cycle fluctuations. <strong>General Equilibrium</strong> means we track every market simultaneously rather than studying one sector in isolation.</p>
+
+      <p>At their core, DSGE models are microfounded: every behavioral equation is derived explicitly from an optimization problem with well-defined preferences and constraints. This stands in sharp contrast to the ad hoc structural models (like large-scale macroeconometric models) that dominated before the 1980s, whose parameters were vulnerable to the Lucas Critique.</p>
+
+      <div class="info-box ib-blue">
+        <div class="ib-icon">💡</div>
+        <div class="ib-content">
+          <div class="ib-title">The Lucas Critique (1976)</div>
+          <div class="ib-body">Robert Lucas showed that the parameters of reduced-form econometric models are not structural — they shift whenever policy changes, because agents' optimal decisions depend on the policy regime. DSGE models sidestep this by grounding behavior in deep, invariant parameters (preferences, technology) that do not change with policy.</div>
+        </div>
+      </div>
+
+      <h3>A Brief History</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1954–1972</div>
+          <div class="timeline-title">Arrow-Debreu General Equilibrium</div>
+          <div class="timeline-body">Walrasian foundations established: competitive equilibria exist and are Pareto optimal. Provides the micro underpinnings for later macroeconomic models.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1976</div>
+          <div class="timeline-title">Lucas Critique</div>
+          <div class="timeline-body">Robert Lucas argues policy analysis using structural macroeconometric models is flawed. Paves the way for microfounded models with rational expectations.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1982</div>
+          <div class="timeline-title">Kydland &amp; Prescott — Real Business Cycle</div>
+          <div class="timeline-body">The founding paper of modern DSGE. Shows that technology shocks alone, propagated through a neoclassical growth model with optimizing agents, can explain a significant fraction of business cycle variance. Nobel Prize 2004.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1983 / 1993</div>
+          <div class="timeline-title">Calvo Pricing &amp; Taylor Rule</div>
+          <div class="timeline-body">Guillermo Calvo introduces staggered price-setting (a random fraction of firms cannot adjust each period). John Taylor proposes a simple interest-rate rule linking the policy rate to inflation and output — the building blocks of the New Keynesian model.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">1999</div>
+          <div class="timeline-title">New Keynesian Synthesis</div>
+          <div class="timeline-body">Woodford, Clarida-Galí-Gertler, and Galí-Monacelli formalize the three-equation New Keynesian (NK) model: IS curve, Phillips curve, Taylor rule. This becomes the standard workhorse for monetary policy analysis.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2003–2007</div>
+          <div class="timeline-title">Smets &amp; Wouters — Medium-Scale DSGE</div>
+          <div class="timeline-body">Smets and Wouters estimate a large-scale NK DSGE model on Euro Area and US data using Bayesian methods. The model matches the data comparably to a Bayesian VAR — cementing DSGE as a tool for empirical central banking.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2010–present</div>
+          <div class="timeline-title">HANK, Financial Frictions, Open Economy</div>
+          <div class="timeline-body">Post-GFC research incorporates financial intermediation (BGG accelerator, Gertler-Kiyotaki), heterogeneous agents (HANK by Kaplan-Moll-Violante), and open-economy dynamics. The frontier now lives at the intersection of DSGE and structural heterogeneous-agent models.</div>
+        </div>
+      </div>
+
+      <h3>Why DSGE Models Matter</h3>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🏛️ Policy Analysis</div>
+          <p>Central banks worldwide — the Fed, ECB, Bank of England — use DSGE models to analyze the effects of interest rate changes, forward guidance, and unconventional monetary policy. The models provide counterfactual experiments that real-world data cannot.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🔬 Structural Identification</div>
+          <p>By imposing theory-derived restrictions, DSGE models achieve structural identification — we can separate demand shocks from supply shocks, monetary from fiscal impulses — something reduced-form VARs struggle with.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 Forecasting</div>
+          <p>Bayesian DSGE models estimated on historical data produce competitive short-run forecasts and — crucially — conditional forecasts under different policy scenarios that purely statistical models cannot provide.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🎓 Theoretical Coherence</div>
+          <p>Every equation is derived from a first-order condition. There are no free parameters added for fit — each coefficient has a precise economic interpretation. This discipline keeps models interpretable and falsifiable.</p>
+        </div>
+      </div>
+
+      <div class="info-box ib-amber">
+        <div class="ib-icon">⚠️</div>
+        <div class="ib-content">
+          <div class="ib-title">Criticisms &amp; Limitations</div>
+          <div class="ib-body">DSGE models have faced criticism: they assumed away financial frictions before the 2008 crisis (Stiglitz, Romer), rely on the representative-agent assumption that misses distributional effects, and require strong parametric assumptions on preferences and technology. Modern DSGE research actively addresses these limitations through HANK models and financial-friction extensions.</div>
+        </div>
+      </div>
+
+      <!-- QUIZ 1 -->
+      <div class="quiz-card" id="quiz-intro">
+        <div class="quiz-title">🎯 Module 1 Self-Check</div>
+        <div class="quiz-q" data-qid="q1-1">
+          <div class="quiz-q-text">1. What does the "Lucas Critique" imply about large-scale structural macroeconometric models?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1-1" value="a"> They are too simple to capture business cycles.</label>
+            <label class="quiz-option"><input type="radio" name="q1-1" value="b"> Their estimated parameters shift when policy changes, making them unreliable for policy analysis.</label>
+            <label class="quiz-option"><input type="radio" name="q1-1" value="c"> They cannot be estimated with standard OLS methods.</label>
+            <label class="quiz-option"><input type="radio" name="q1-1" value="d"> They require rational expectations to be internally consistent.</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q1-1"></div>
+        </div>
+        <div class="quiz-q" data-qid="q1-2">
+          <div class="quiz-q-text">2. Which two papers are considered the founding works of the Real Business Cycle tradition?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1-2" value="a"> Lucas (1976) and Taylor (1993)</label>
+            <label class="quiz-option"><input type="radio" name="q1-2" value="b"> Kydland &amp; Prescott (1982) and Long &amp; Plosser (1983)</label>
+            <label class="quiz-option"><input type="radio" name="q1-2" value="c"> Calvo (1983) and Smets &amp; Wouters (2003)</label>
+            <label class="quiz-option"><input type="radio" name="q1-2" value="d"> Woodford (2003) and Galí (2008)</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q1-2"></div>
+        </div>
+        <div class="quiz-q" data-qid="q1-3">
+          <div class="quiz-q-text">3. In a DSGE model, "General Equilibrium" means:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q1-3" value="a"> Only the goods market is in equilibrium at all times.</label>
+            <label class="quiz-option"><input type="radio" name="q1-3" value="b"> The government budget always balances.</label>
+            <label class="quiz-option"><input type="radio" name="q1-3" value="c"> All markets — goods, labor, asset — clear simultaneously, ensuring consistency across sectors.</label>
+            <label class="quiz-option"><input type="radio" name="q1-3" value="d"> Aggregate demand always equals potential output.</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q1-3"></div>
+        </div>
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-intro', {'q1-1':'b','q1-2':'b','q1-3':'c'}, {
+          'q1-1-b': 'Correct! The Lucas Critique shows that reduced-form parameters are not invariant to policy changes, because rational agents adjust their expectations and behavior when policy shifts.',
+          'q1-1-a': 'Incorrect. The critique is about parameter instability, not model complexity.',
+          'q1-2-b': 'Correct! Kydland &amp; Prescott (1982) and Long &amp; Plosser (1983) established the RBC tradition of explaining cycles via technology shocks in a neoclassical growth model.',
+          'q1-2-a': 'Incorrect. Lucas (1976) stated the critique; Taylor (1993) proposed the Taylor rule — neither is an RBC paper.',
+          'q1-3-c': 'Correct! General equilibrium requires simultaneous market clearing in goods, labor, and financial markets — a central discipline of DSGE modeling.',
+          'q1-3-a': 'Incorrect. GE requires all markets to clear, not just goods.',
+          'q1-3-b': 'Incorrect. Ricardian equivalence is a separate concept.',
+          'q1-3-d': 'Incorrect. Output can deviate from potential (output gap ≠ 0) in New Keynesian DSGE models.'
+        })">Check Answers</button>
+        <div class="quiz-result" id="result-quiz-intro"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 2: HOUSEHOLDS
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-households">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 2</div>
+        <h1 class="section-title">Households</h1>
+        <p class="section-subtitle">Derive household optimality conditions — the Euler equation, labor supply, and budget constraint — from first principles.</p>
+      </div>
+
+      <p>The representative household lives forever, maximizes expected lifetime utility over consumption and labor, and faces a nominal budget constraint. Every behavioral equation we use — from the IS curve to labor market conditions — follows from this optimization problem.</p>
+
+      <h3>Preferences</h3>
+      <p>The household's lifetime utility is:</p>
+      <div class="math-box">
+        <div class="math-label">Lifetime Utility</div>
+        $$\mathcal{U}_0 = E_0 \sum_{t=0}^{\infty} \beta^t \, U(C_t, N_t) = E_0 \sum_{t=0}^{\infty} \beta^t \left[\frac{C_t^{1-\sigma}}{1-\sigma} - \frac{N_t^{1+\varphi}}{1+\varphi}\right]$$
+      </div>
+      <p>where $\beta \in (0,1)$ is the <strong>discount factor</strong>, $C_t$ is consumption, $N_t$ is hours worked, $\sigma > 0$ is the inverse of the <strong>intertemporal elasticity of substitution</strong> (IES), and $\varphi > 0$ is the inverse of the <strong>Frisch elasticity of labor supply</strong>.</p>
+
+      <div class="two-col">
+        <div class="info-box ib-blue" style="margin:0">
+          <div class="ib-icon">📌</div>
+          <div class="ib-content">
+            <div class="ib-title">Discount factor β</div>
+            <div class="ib-body">Calibrated to $\beta \approx 0.99$ at quarterly frequency, implying an annual real interest rate of about 4% in steady state: $\bar{R} = 1/\beta \approx 1.04$.</div>
+          </div>
+        </div>
+        <div class="info-box ib-green" style="margin:0">
+          <div class="ib-icon">📌</div>
+          <div class="ib-content">
+            <div class="ib-title">IES = 1/σ</div>
+            <div class="ib-body">When $\sigma = 1$ utility is logarithmic. The Frisch elasticity $1/\varphi$ governs how much labor responds to wage changes holding marginal utility of wealth constant.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Budget Constraint</h3>
+      <p>The household earns labor income, holds one-period nominal bonds $B_t$, receives firm profits $\Pi_t$, and pays lump-sum taxes $T_t$:</p>
+      <div class="math-box">
+        <div class="math-label">Nominal Budget Constraint</div>
+        $$P_t C_t + Q_t B_t \leq B_{t-1} + W_t N_t + \Pi_t - T_t$$
+      </div>
+      <p>where $P_t$ is the price level, $Q_t = 1/(1+i_t)$ is the price of a nominal bond (inverse of the gross nominal interest rate $1+i_t$), and $W_t$ is the nominal wage.</p>
+
+      <h3>First-Order Conditions</h3>
+      <p>Setting up the Lagrangian and differentiating with respect to $C_t$, $N_t$, and $B_t$ yields three optimality conditions:</p>
+
+      <h4>Euler Equation (Consumption)</h4>
+      <p>Equates the marginal cost of saving (foregone consumption today) with the expected marginal benefit (consumption tomorrow):</p>
+      <div class="math-box">
+        <div class="math-label">Consumption Euler Equation</div>
+        $$C_t^{-\sigma} = \beta \, (1+i_t) \, E_t\!\left[\frac{C_{t+1}^{-\sigma}}{1+\pi_{t+1}}\right] = \beta \, (1+r_t) \, E_t\!\left[C_{t+1}^{-\sigma}\right]$$
+      </div>
+      <p>where $1 + r_t = (1+i_t)/(1+\pi_{t+1})$ is the gross real interest rate and $\pi_{t+1} = P_{t+1}/P_t - 1$ is the inflation rate. This is the most important equation in the model: it says consumption grows when the real interest rate exceeds the discount rate.</p>
+
+      <h4>Labor Supply</h4>
+      <div class="math-box">
+        <div class="math-label">Intratemporal Labor Supply Condition</div>
+        $$\frac{W_t}{P_t} = C_t^{\sigma} \, N_t^{\varphi}$$
+      </div>
+      <p>The real wage equals the household's marginal rate of substitution between leisure and consumption: the disutility of working an extra hour must equal the real purchasing power of the marginal wage.</p>
+
+      <h4>Transversality Condition</h4>
+      <div class="math-box">
+        $$\lim_{T\to\infty} \beta^T \, E_t\!\left[\lambda_{t+T} B_{t+T}\right] = 0$$
+      </div>
+      <p>Rules out Ponzi schemes: households cannot borrow indefinitely. Together with the budget constraint and Euler equation, this pins down a unique optimal consumption path.</p>
+
+      <h3>Log-Linearized Euler Equation</h3>
+      <p>Log-linearizing around the deterministic steady state (denoted with bars, deviations with lower case) gives the IS equation we use throughout the course:</p>
+      <div class="math-box">
+        <div class="math-label">Log-Linearized Euler (IS Equation)</div>
+        $$c_t = E_t[c_{t+1}] - \frac{1}{\sigma}(i_t - E_t[\pi_{t+1}] - \rho)$$
+      </div>
+      <p>where $\rho = -\ln\beta$ is the natural rate of interest in steady state, and lowercase letters denote log-deviations from steady state. This says: when the real interest rate exceeds its natural level, consumption falls — the standard negative IS relationship.</p>
+
+      <h3>Code: Euler Equation &amp; Household Simulation</h3>
+      <div class="code-block-wrap" id="cb-household">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-household','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-household','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-household-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# ── Parameters ──────────────────────────────────────────────
+beta   = 0.99   # Discount factor (quarterly)
+sigma  = 1.0    # Inverse IES (log utility when sigma=1)
+phi    = 1.0    # Inverse Frisch elasticity
+rho    = -np.log(beta)  # Steady-state natural rate ≈ 0.01
+
+# ── Simulate deterministic consumption path ──────────────────
+# Given a path for the real interest rate {r_t}
+T = 40
+np.random.seed(42)
+r_path = rho + 0.02 * np.exp(-0.1 * np.arange(T))  # decaying shock
+
+# Euler equation: c_{t+1} = c_t + (1/sigma)*(r_t - rho)
+# Iterate forward from c_0 = 0 (log deviation)
+c_path = np.zeros(T)
+for t in range(1, T):
+    c_path[t] = c_path[t-1] + (1/sigma) * (r_path[t-1] - rho)
+
+# ── Steady-state checks ──────────────────────────────────────
+C_bar = 0.6        # Steady-state consumption share of output
+N_bar = 1/3        # Steady-state hours (one-third of time endowment)
+W_P_bar = C_bar**sigma * N_bar**phi  # Real wage from labor supply FOC
+
+print(f"Steady-state real wage (W/P):  {W_P_bar:.4f}")
+print(f"Steady-state real rate (r):    {rho*4*100:.2f}% annual")
+print(f"Implied beta:                  {beta:.4f}")
+
+# ── Plot ─────────────────────────────────────────────────────
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4))
+
+ax1.plot(r_path * 400, color='#ef4444', linewidth=2, label='Real rate (ann.)')
+ax1.axhline(rho*400, color='grey', linestyle='--', label='Natural rate')
+ax1.set_title('Real Interest Rate Path', fontweight='bold')
+ax1.set_xlabel('Quarters'); ax1.set_ylabel('Percent (ann.)')
+ax1.legend(); ax1.grid(alpha=0.3)
+
+ax2.plot(c_path * 100, color='#3b82f6', linewidth=2, label='Consumption (log-dev)')
+ax2.axhline(0, color='grey', linestyle='--')
+ax2.set_title('Euler-Consistent Consumption Path', fontweight='bold')
+ax2.set_xlabel('Quarters'); ax2.set_ylabel('% deviation from SS')
+ax2.legend(); ax2.grid(alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('euler_simulation.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("Figure saved to euler_simulation.png")</code></pre>
+        </div>
+        <div class="code-panel" id="cb-household-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Parameters ──────────────────────────────────────────────
+beta  <- 0.99    # Discount factor (quarterly)
+sigma <- 1.0     # Inverse IES (log utility when sigma=1)
+phi   <- 1.0     # Inverse Frisch elasticity
+rho   <- -log(beta)  # Steady-state natural rate ≈ 0.01
+
+# ── Simulate deterministic consumption path ──────────────────
+T <- 40
+r_path <- rho + 0.02 * exp(-0.1 * seq(0, T-1))  # decaying shock
+
+# Euler equation: c_{t+1} = c_t + (1/sigma)*(r_t - rho)
+c_path <- numeric(T)
+for (t in 2:T) {
+  c_path[t] <- c_path[t-1] + (1/sigma) * (r_path[t-1] - rho)
+}
+
+# ── Steady-state checks ──────────────────────────────────────
+C_bar   <- 0.6        # Steady-state consumption share
+N_bar   <- 1/3        # Steady-state hours
+W_P_bar <- C_bar^sigma * N_bar^phi  # Labor supply FOC
+
+cat(sprintf("Steady-state real wage (W/P):  %.4f\n", W_P_bar))
+cat(sprintf("Steady-state real rate (ann.): %.2f%%\n", rho*4*100))
+
+# ── Plot ─────────────────────────────────────────────────────
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+plot(r_path * 400, type = "l", col = "#ef4444", lwd = 2,
+     main = "Real Interest Rate Path",
+     xlab = "Quarters", ylab = "Percent (ann.)")
+abline(h = rho * 400, lty = 2, col = "grey")
+legend("topright", c("Real rate", "Natural rate"),
+       col = c("#ef4444","grey"), lty = c(1,2), lwd = 2)
+
+plot(c_path * 100, type = "l", col = "#3b82f6", lwd = 2,
+     main = "Euler-Consistent Consumption",
+     xlab = "Quarters", ylab = "% deviation from SS")
+abline(h = 0, lty = 2, col = "grey")</code></pre>
+        </div>
+        <button class="run-btn" id="run-household" onclick="runPyodide('run-household','out-household', document.querySelector('#cb-household-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-household"></div>
+      </div>
+
+      <!-- QUIZ 2 -->
+      <div class="quiz-card" id="quiz-households">
+        <div class="quiz-title">🎯 Module 2 Self-Check</div>
+        <div class="quiz-q" data-qid="q2-1">
+          <div class="quiz-q-text">1. In the utility function $U = C_t^{1-\sigma}/(1-\sigma) - N_t^{1+\varphi}/(1+\varphi)$, what does $1/\sigma$ represent?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2-1" value="a"> The Frisch elasticity of labor supply</label>
+            <label class="quiz-option"><input type="radio" name="q2-1" value="b"> The intertemporal elasticity of substitution in consumption</label>
+            <label class="quiz-option"><input type="radio" name="q2-1" value="c"> The elasticity of substitution between goods</label>
+            <label class="quiz-option"><input type="radio" name="q2-1" value="d"> The inverse of the discount rate</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q2-1"></div>
+        </div>
+        <div class="quiz-q" data-qid="q2-2">
+          <div class="quiz-q-text">2. The consumption Euler equation $C_t^{-\sigma} = \beta(1+r_t)E_t[C_{t+1}^{-\sigma}]$ implies that consumption growth is:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2-2" value="a"> Negatively related to the real interest rate</label>
+            <label class="quiz-option"><input type="radio" name="q2-2" value="b"> Positively related to the real interest rate</label>
+            <label class="quiz-option"><input type="radio" name="q2-2" value="c"> Independent of the real interest rate when $\sigma = 0$</label>
+            <label class="quiz-option"><input type="radio" name="q2-2" value="d"> Equal to the nominal interest rate</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q2-2"></div>
+        </div>
+        <div class="quiz-q" data-qid="q2-3">
+          <div class="quiz-q-text">3. The transversality condition in the household's problem rules out:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q2-3" value="a"> Negative consumption in any period</label>
+            <label class="quiz-option"><input type="radio" name="q2-3" value="b"> The possibility of Ponzi schemes — indefinite borrowing with no repayment</label>
+            <label class="quiz-option"><input type="radio" name="q2-3" value="c"> Inflation above the central bank's target</label>
+            <label class="quiz-option"><input type="radio" name="q2-3" value="d"> Negative real wages</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q2-3"></div>
+        </div>
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-households', {'q2-1':'b','q2-2':'b','q2-3':'b'}, {
+          'q2-1-b': 'Correct! 1/σ is the intertemporal elasticity of substitution — how willing households are to shift consumption across time in response to interest rate changes.',
+          'q2-1-a': 'Incorrect. The Frisch elasticity is 1/φ from the labor term.',
+          'q2-2-b': 'Correct! A higher real interest rate raises the reward for saving, increasing future consumption relative to today — positive relationship between real rate and consumption growth.',
+          'q2-2-a': 'Incorrect. A higher real rate makes saving more attractive, so future consumption rises relative to today.',
+          'q2-3-b': 'Correct! The transversality condition ensures households cannot run a Ponzi scheme — the present value of assets must go to zero in the limit, enforcing an intertemporal budget constraint.',
+          'q2-3-a': 'Incorrect. The non-negativity constraint is separate; the TVC is about terminal asset holdings.'
+        })">Check Answers</button>
+        <div class="quiz-result" id="result-quiz-households"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 3: FIRMS & PRICING
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-firms">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 3</div>
+        <h1 class="section-title">Firms &amp; Price Setting</h1>
+        <p class="section-subtitle">Understand how monopolistically competitive firms produce differentiated goods, set prices under Calvo staggering, and give rise to the New Keynesian Phillips Curve.</p>
+      </div>
+
+      <p>The production side of a New Keynesian DSGE model features two layers: a perfectly competitive <strong>final goods firm</strong> that aggregates differentiated varieties into a single consumption good, and a continuum of <strong>intermediate goods producers</strong> operating under monopolistic competition with staggered price-setting.</p>
+
+      <h3>Final Goods Aggregator (Dixit-Stiglitz)</h3>
+      <p>A representative final-goods firm aggregates a continuum of differentiated varieties $Y_t(j)$, $j \in [0,1]$, using the constant-elasticity-of-substitution (CES) technology:</p>
+      <div class="math-box">
+        <div class="math-label">CES Aggregator</div>
+        $$Y_t = \left(\int_0^1 Y_t(j)^{\frac{\varepsilon-1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon-1}}$$
+      </div>
+      <p>where $\varepsilon > 1$ is the <strong>elasticity of substitution</strong> between varieties. Cost minimization yields the demand curve for each variety:</p>
+      <div class="math-box">
+        <div class="math-label">Demand for Variety j</div>
+        $$Y_t(j) = \left(\frac{P_t(j)}{P_t}\right)^{-\varepsilon} Y_t, \qquad P_t = \left(\int_0^1 P_t(j)^{1-\varepsilon} dj\right)^{\frac{1}{1-\varepsilon}}$$
+      </div>
+      <p>The price elasticity of demand is $\varepsilon$, and the implied markup in steady state is $\mu = \varepsilon/(\varepsilon-1)$. Typical calibration: $\varepsilon = 6$ giving a 20% markup.</p>
+
+      <h3>Intermediate Goods Producers</h3>
+      <p>Each firm $j$ uses only labor (for simplicity) with production function:</p>
+      <div class="math-box">
+        $$Y_t(j) = A_t \, N_t(j)^{1-\alpha}$$
+      </div>
+      <p>where $A_t$ is aggregate technology (common to all firms) and $\alpha \in [0,1)$ controls diminishing returns to labor. With constant returns ($\alpha = 0$): $Y_t(j) = A_t N_t(j)$. The nominal marginal cost is:</p>
+      <div class="math-box">
+        <div class="math-label">Nominal Marginal Cost</div>
+        $$MC_t = \frac{W_t}{A_t (1-\alpha) N_t(j)^{-\alpha}} = \frac{W_t}{A_t}$$
+        <p style="font-size:12px;color:#64748b;margin-top:6px">(constant returns case, α = 0)</p>
+      </div>
+      <p>Real marginal cost $mc_t = MC_t / P_t = W_t/(P_t A_t)$ is the key driver of inflation in the Phillips curve.</p>
+
+      <h3>Calvo Pricing</h3>
+      <p>The central nominal friction in New Keynesian models is <strong>Calvo (1983) staggered price-setting</strong>. In each period:</p>
+      <ul style="padding-left:24px;margin:10px 0">
+        <li>With probability $\theta \in (0,1)$, a firm <strong>cannot</strong> reset its price (it's stuck at the old price).</li>
+        <li>With probability $(1-\theta)$, a firm <strong>can</strong> freely choose a new optimal price $P_t^*$.</li>
+      </ul>
+      <p>This means the average duration of a price is $1/(1-\theta)$ periods. At $\theta = 0.75$ (a common calibration), firms reset prices every 4 quarters on average.</p>
+
+      <div class="info-box ib-purple">
+        <div class="ib-icon">🔬</div>
+        <div class="ib-content">
+          <div class="ib-title">Why Calvo and not Menu Costs?</div>
+          <div class="ib-body">Calvo pricing is chosen for tractability: the fraction of price-setters is exogenous, making the model linear. Menu-cost models (Golosov-Lucas) give discrete price changes like in the data but are harder to solve. Calvo remains the workhorse assumption in most central bank DSGE models.</div>
+        </div>
+      </div>
+
+      <h3>Optimal Reset Price</h3>
+      <p>A firm resetting its price at $t$ chooses $P_t^*$ to maximize the expected present value of profits over the (random) interval before the next reset:</p>
+      <div class="math-box">
+        <div class="math-label">Optimal Price-Setting Problem</div>
+        $$\max_{P_t^*} \sum_{k=0}^{\infty} (\beta\theta)^k E_t\!\left[\Lambda_{t,t+k} \left(P_t^* - MC_{t+k}\right) Y_{t+k}(j)\right]$$
+      </div>
+      <p>The FOC yields the optimal reset price as a markup over a weighted average of <em>future</em> marginal costs:</p>
+      <div class="math-box">
+        <div class="math-label">Optimal Reset Price</div>
+        $$P_t^* = \frac{\varepsilon}{\varepsilon - 1} \frac{\sum_{k=0}^{\infty}(\beta\theta)^k E_t[MC_{t+k} Y_{t+k}]}{\sum_{k=0}^{\infty}(\beta\theta)^k E_t[Y_{t+k}]}$$
+      </div>
+      <p>The weight $\beta\theta$ reflects discounting ($\beta$) and the probability of being stuck at this price for another period ($\theta$). Future marginal costs matter because the price may still be in effect then.</p>
+
+      <h3>Price Level Evolution</h3>
+      <p>The aggregate price level evolves according to:</p>
+      <div class="math-box">
+        $$P_t^{1-\varepsilon} = (1-\theta)(P_t^*)^{1-\varepsilon} + \theta P_{t-1}^{1-\varepsilon}$$
+      </div>
+      <p>A fraction $(1-\theta)$ of firms set the new price $P_t^*$; the rest keep $P_{t-1}$ (their old price from last period).</p>
+
+      <h3>The New Keynesian Phillips Curve</h3>
+      <p>Log-linearizing the optimal price-setting condition and price level evolution around zero inflation yields the celebrated New Keynesian Phillips Curve (NKPC):</p>
+      <div class="math-box">
+        <div class="math-label">New Keynesian Phillips Curve</div>
+        $$\pi_t = \beta \, E_t[\pi_{t+1}] + \kappa \, \hat{mc}_t$$
+      </div>
+      <p>where $\hat{mc}_t$ is log-deviation of real marginal cost from steady state, and:</p>
+      <div class="math-box">
+        <div class="math-label">Slope of the NKPC</div>
+        $$\kappa = \frac{(1-\theta)(1-\beta\theta)}{\theta}$$
+      </div>
+      <p>Note that $\kappa$ is <strong>decreasing in $\theta$</strong>: more price stickiness flattens the Phillips curve — firms don't pass cost increases into prices as quickly. As $\theta \to 0$ (flexible prices), $\kappa \to \infty$ and inflation is purely forward-looking. Substituting the labor market equilibrium, $\hat{mc}_t = (\sigma + \varphi) x_t / (1 + \varphi\varepsilon)$, and we get the output-gap formulation:</p>
+      <div class="math-box">
+        <div class="math-label">NKPC in Output Gap Form</div>
+        $$\pi_t = \beta \, E_t[\pi_{t+1}] + \kappa_x \, x_t, \qquad \kappa_x = \frac{(1-\theta)(1-\beta\theta)}{\theta} \cdot \frac{\sigma + \varphi}{1+\varphi\varepsilon}$$
+      </div>
+
+      <h3>Code: Calvo Pricing &amp; NKPC</h3>
+      <div class="code-block-wrap" id="cb-firms">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-firms','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-firms','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-firms-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# ── Parameters ──────────────────────────────────────────────
+beta    = 0.99   # Discount factor
+theta   = 0.75   # Calvo parameter (75% of firms cannot reset each quarter)
+epsilon = 6.0    # Elasticity of substitution (20% markup)
+sigma   = 1.0    # Inverse IES
+phi     = 1.0    # Inverse Frisch elasticity
+
+# ── Derived parameters ───────────────────────────────────────
+markup  = epsilon / (epsilon - 1)          # Steady-state gross markup
+kappa   = (1-theta) * (1-beta*theta) / theta  # Raw NKPC slope
+kappa_x = kappa * (sigma + phi) / (1 + phi*epsilon)  # Output-gap slope
+
+print(f"Steady-state markup:    {markup:.4f}  ({(markup-1)*100:.1f}%)")
+print(f"Mean price duration:    {1/(1-theta):.1f} quarters")
+print(f"NKPC slope (κ):        {kappa:.4f}")
+print(f"NKPC slope (κ_x):      {kappa_x:.4f}")
+
+# ── Sensitivity: κ across θ values ───────────────────────────
+theta_grid = np.linspace(0.05, 0.95, 200)
+kappa_grid = (1 - theta_grid) * (1 - beta*theta_grid) / theta_grid
+dur_grid   = 1 / (1 - theta_grid)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+
+ax1.plot(dur_grid, kappa_grid, color='#3b82f6', linewidth=2.5)
+ax1.axvline(4, color='red', linestyle='--', alpha=0.7, label='θ=0.75 (4 qtrs)')
+ax1.set_xlabel('Mean Price Duration (quarters)')
+ax1.set_ylabel('NKPC Slope κ')
+ax1.set_title('Price Stickiness → Flatter Phillips Curve', fontweight='bold')
+ax1.legend(); ax1.grid(alpha=0.3)
+
+ax2.plot(theta_grid, kappa_grid, color='#10b981', linewidth=2.5)
+ax2.axvline(0.75, color='red', linestyle='--', alpha=0.7, label='θ=0.75 benchmark')
+ax2.set_xlabel('Calvo Parameter θ')
+ax2.set_ylabel('NKPC Slope κ')
+ax2.set_title('NKPC Slope vs. Calvo Parameter', fontweight='bold')
+ax2.legend(); ax2.grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+        <div class="code-panel" id="cb-firms-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Parameters ──────────────────────────────────────────────
+beta    <- 0.99
+theta   <- 0.75   # Calvo parameter
+epsilon <- 6.0    # Elasticity of substitution
+sigma   <- 1.0
+phi     <- 1.0
+
+# ── Derived parameters ───────────────────────────────────────
+markup  <- epsilon / (epsilon - 1)
+kappa   <- (1 - theta) * (1 - beta*theta) / theta
+kappa_x <- kappa * (sigma + phi) / (1 + phi*epsilon)
+
+cat(sprintf("Steady-state markup:   %.4f (%.1f%%)\n", markup, (markup-1)*100))
+cat(sprintf("Mean price duration:   %.1f quarters\n", 1/(1-theta)))
+cat(sprintf("NKPC slope (kappa):    %.4f\n", kappa))
+cat(sprintf("NKPC slope (kappa_x):  %.4f\n", kappa_x))
+
+# ── Sensitivity across theta values ──────────────────────────
+theta_grid <- seq(0.05, 0.95, length.out = 200)
+kappa_grid <- (1 - theta_grid) * (1 - beta*theta_grid) / theta_grid
+dur_grid   <- 1 / (1 - theta_grid)
+
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+plot(dur_grid, kappa_grid, type = "l", col = "#3b82f6", lwd = 2.5,
+     xlab = "Mean Price Duration (quarters)",
+     ylab = "NKPC Slope κ",
+     main = "Price Stickiness → Flatter Phillips Curve")
+abline(v = 4, col = "red", lty = 2)
+legend("topright", "θ=0.75 (4 qtrs)", col="red", lty=2)
+
+plot(theta_grid, kappa_grid, type = "l", col = "#10b981", lwd = 2.5,
+     xlab = "Calvo Parameter θ",
+     ylab = "NKPC Slope κ",
+     main = "NKPC Slope vs. Calvo Parameter")
+abline(v = 0.75, col = "red", lty = 2)</code></pre>
+        </div>
+        <button class="run-btn" id="run-firms" onclick="runPyodide('run-firms','out-firms', document.querySelector('#cb-firms-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-firms"></div>
+      </div>
+
+      <!-- QUIZ 3 -->
+      <div class="quiz-card" id="quiz-firms">
+        <div class="quiz-title">🎯 Module 3 Self-Check</div>
+        <div class="quiz-q" data-qid="q3-1">
+          <div class="quiz-q-text">1. In the Calvo model with parameter θ = 0.75, what is the expected number of quarters between price adjustments?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3-1" value="a"> 1 quarter</label>
+            <label class="quiz-option"><input type="radio" name="q3-1" value="b"> 3 quarters</label>
+            <label class="quiz-option"><input type="radio" name="q3-1" value="c"> 4 quarters (1 year)</label>
+            <label class="quiz-option"><input type="radio" name="q3-1" value="d"> 7.5 quarters</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q3-1"></div>
+        </div>
+        <div class="quiz-q" data-qid="q3-2">
+          <div class="quiz-q-text">2. If the Calvo parameter θ increases (more price stickiness), the NKPC slope κ will:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3-2" value="a"> Increase — inflation becomes more responsive to the output gap</label>
+            <label class="quiz-option"><input type="radio" name="q3-2" value="b"> Decrease — inflation becomes less responsive to the output gap</label>
+            <label class="quiz-option"><input type="radio" name="q3-2" value="c"> Stay the same — κ does not depend on θ</label>
+            <label class="quiz-option"><input type="radio" name="q3-2" value="d"> Become negative</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q3-2"></div>
+        </div>
+        <div class="quiz-q" data-qid="q3-3">
+          <div class="quiz-q-text">3. Why do future marginal costs appear in the optimal price-setting problem (with weight βθ)?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q3-3" value="a"> Because firms discount the future at rate β and must account for the probability θ of being stuck at the current price.</label>
+            <label class="quiz-option"><input type="radio" name="q3-3" value="b"> Because firms expect inflation to be zero on average.</label>
+            <label class="quiz-option"><input type="radio" name="q3-3" value="c"> Because firms have perfect foresight about all future costs.</label>
+            <label class="quiz-option"><input type="radio" name="q3-3" value="d"> Because the central bank commits to a price path.</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q3-3"></div>
+        </div>
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-firms', {'q3-1':'c','q3-2':'b','q3-3':'a'}, {
+          'q3-1-c': 'Correct! Expected duration = 1/(1-θ) = 1/(1-0.75) = 4 quarters. This is the geometric distribution mean.',
+          'q3-1-b': 'Incorrect. Duration = 1/(1-0.75) = 4, not 3.',
+          'q3-2-b': 'Correct! Higher θ means fewer firms adjust, so aggregate prices respond more sluggishly to cost changes. Formally, κ = (1-θ)(1-βθ)/θ is decreasing in θ.',
+          'q3-2-a': 'Incorrect. More stickiness (higher θ) flattens the NKPC.',
+          'q3-3-a': 'Correct! The weight βθ on period t+k future costs reflects: β (time discounting) × θ^k (probability the price set today is still in effect k periods later — each period has probability θ of not being allowed to reset).',
+          'q3-3-b': 'Incorrect. The key is about the probability of being stuck, not inflation expectations per se.'
+        })">Check Answers</button>
+        <div class="quiz-result" id="result-quiz-firms"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 4: MONETARY & FISCAL POLICY
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-policy">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 4</div>
+        <h1 class="section-title">Monetary &amp; Fiscal Policy</h1>
+        <p class="section-subtitle">Characterize monetary policy rules, government budget constraints, and how policy affects equilibrium dynamics.</p>
+      </div>
+
+      <h3>The Taylor Rule</h3>
+      <p>Rather than solving for the optimal policy under commitment, most DSGE models use a simple <strong>Taylor-type interest rate rule</strong>. John Taylor (1993) proposed that the Fed's policy rate could be well described by:</p>
+      <div class="math-box">
+        <div class="math-label">Taylor Rule (1993 Original)</div>
+        $$i_t = \bar{r} + \pi^* + \phi_\pi(\pi_t - \pi^*) + \phi_y \, x_t$$
+      </div>
+      <p>where $\bar{r}$ is the equilibrium real rate, $\pi^*$ is the inflation target, $\phi_\pi > 0$ is the policy response to inflation, and $\phi_y \geq 0$ is the response to the output gap.</p>
+
+      <div class="info-box ib-amber">
+        <div class="ib-icon">⚠️</div>
+        <div class="ib-content">
+          <div class="ib-title">The Taylor Principle</div>
+          <div class="ib-body">Determinacy of equilibrium requires $\phi_\pi > 1$ — the central bank must raise the <em>real</em> interest rate when inflation rises, not just the nominal rate. If $\phi_\pi \leq 1$, inflation becomes self-fulfilling: a belief in higher future inflation triggers higher actual inflation, which the CB accommodates, validating the belief. This is "indeterminacy."</div>
+        </div>
+      </div>
+
+      <h3>Generalized Taylor Rule</h3>
+      <p>In estimated models (e.g., Smets-Wouters), the rule includes interest rate smoothing:</p>
+      <div class="math-box">
+        <div class="math-label">Taylor Rule with Smoothing</div>
+        $$i_t = \rho_i \, i_{t-1} + (1-\rho_i)\left[\bar{r} + \pi^* + \phi_\pi(\pi_t - \pi^*) + \phi_y \, x_t\right] + \phi_{\Delta y}(x_t - x_{t-1}) + \varepsilon_t^{MP}$$
+      </div>
+      <p>where $\rho_i \in (0,1)$ is the <strong>interest rate smoothing parameter</strong> and $\phi_{\Delta y}$ is the response to output growth. Typical estimated values: $\rho_i \approx 0.8$, $\phi_\pi \approx 1.7$, $\phi_y \approx 0.1$.</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📐 Standard Calibration</div>
+          <p>Taylor's original (1993) values: $\phi_\pi = 1.5$, $\phi_y = 0.5$. These have become the benchmark "Taylor rule" coefficients against which estimated rules are compared. Note: Taylor used the GDP gap with coefficient 0.5; many models use 0.125 in quarterly models (0.5/4).</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🔐 Policy Credibility</div>
+          <p>A higher $\phi_\pi$ is associated with better anchoring of inflation expectations. During the Volcker disinflation (1979–83), the Fed adopted a very high implicit $\phi_\pi$, sharply raising real rates to break inflation expectations — at the cost of a deep recession.</p>
+        </div>
+      </div>
+
+      <h3>Market Clearing</h3>
+      <p>In a closed-economy model with government spending $G_t$, goods market clearing requires:</p>
+      <div class="math-box">
+        <div class="math-label">Goods Market Clearing</div>
+        $$Y_t = C_t + G_t + I_t$$
+      </div>
+      <p>In the basic three-equation model without investment or government (or treating $G_t$ as a demand shock absorbed into $r_t^n$), market clearing simplifies to $Y_t = C_t$, so the output gap $x_t \equiv \hat{y}_t - \hat{y}_t^n$ equals the consumption gap.</p>
+
+      <h3>Government Budget Constraint &amp; Fiscal Policy</h3>
+      <div class="math-box">
+        <div class="math-label">Government Flow Budget Constraint</div>
+        $$P_t G_t + B_{t-1} = P_t T_t + Q_t B_t$$
+      </div>
+      <p>Under <strong>Ricardian equivalence</strong> (Barro 1974), the timing of taxes vs. bond issuance is irrelevant: households internalize the government's budget constraint and save the full amount of any tax cut to pay future taxes. DSGE models often assume Ricardian equivalence to simplify. Non-Ricardian households (hand-to-mouth consumers) introduce fiscal multipliers above unity — a key HANK insight.</p>
+
+      <div class="info-box ib-green">
+        <div class="ib-icon">📊</div>
+        <div class="ib-content">
+          <div class="ib-title">Fiscal Multipliers in DSGE</div>
+          <div class="ib-body">In a standard DSGE model with Ricardian equivalence and flexible prices, the government spending multiplier is less than 1 (crowding out). With sticky prices and a binding ZLB, multipliers can exceed 1 (Christiano-Eichenbaum-Rebelo 2011). The multiplier depends critically on the monetary policy response and the proportion of hand-to-mouth consumers.</div>
+        </div>
+      </div>
+
+      <h3>Code: Taylor Rule Dynamics</h3>
+      <div class="code-block-wrap" id="cb-policy">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-policy','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-policy','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-policy-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# ── Taylor Rule Simulation ───────────────────────────────────
+# Simulate how different phi_pi values affect equilibrium under
+# a simple NK model with exogenous output gap path
+
+beta   = 0.99
+sigma  = 1.0
+kappa  = 0.125   # kappa_x (output-gap NKPC slope)
+phi_y  = 0.125   # Taylor rule output gap coefficient (0.5/4 quarterly)
+rho_v  = 0.5     # MP shock persistence
+T      = 40
+
+def simulate_nk(phi_pi, shock_size=0.01, rho_v=0.5, T=40):
+    """
+    Solve 3-equation NK model analytically for a MP shock.
+    Returns IRFs for x (output gap), pi (inflation), i (nom. rate).
+    """
+    # System: A*[x,pi]' = B*[x+1,pi+1]' + C*v
+    # A = [[1+phi_y/sigma, phi_pi/sigma], [-kappa, 1]]
+    # B = [[1, 1/sigma], [0, beta]]
+    # C_mp = [-1/sigma, 0]
+    a11, a12 = 1 + phi_y/sigma, phi_pi/sigma
+    a21, a22 = -kappa, 1
+    b11, b12, b21, b22 = 1, 1/sigma, 0, beta
+
+    rho = rho_v
+    m11 = a11 - rho*b11;  m12 = a12 - rho*b12
+    m21 = a21 - rho*b21;  m22 = a22 - rho*b22
+    det = m11*m22 - m12*m21
+
+    c1, c2 = -1/sigma, 0   # MP shock enters IS
+    ax  = (c1*m22 - c2*m12) / det
+    api = (m11*c2 - m21*c1) / det
+
+    h = np.arange(T)
+    x_irf  = ax  * rho**h * shock_size
+    pi_irf = api * rho**h * shock_size
+    i_irf  = (phi_pi*api + phi_y*ax) * rho**h * shock_size + rho**h * shock_size
+
+    return x_irf*100, pi_irf*400, i_irf*400
+
+fig, axes = plt.subplots(2, 3, figsize=(13, 8))
+phi_pi_vals = [1.1, 1.5, 2.5]
+colors = ['#ef4444', '#f59e0b', '#10b981']
+
+for j, (phi, col) in enumerate(zip(phi_pi_vals, colors)):
+    x, pi, i = simulate_nk(phi)
+    label = f'φ_π = {phi}'
+    axes[0,0].plot(x,  color=col, lw=2, label=label)
+    axes[0,1].plot(pi, color=col, lw=2, label=label)
+    axes[0,2].plot(i,  color=col, lw=2, label=label)
+
+for ax, title in zip(axes[0], ['Output Gap (pp)', 'Inflation (ann., pp)', 'Nominal Rate (ann., pp)']):
+    ax.axhline(0, color='k', lw=0.5); ax.set_xlabel('Quarters')
+    ax.set_title(title, fontweight='bold'); ax.legend(fontsize=9); ax.grid(alpha=0.3)
+
+# Bottom row: output gap vs inflation tradeoff (sacrifice ratio)
+phi_grid = np.linspace(1.01, 3.0, 100)
+peak_x, peak_pi = [], []
+for phi in phi_grid:
+    x, pi, _ = simulate_nk(phi)
+    peak_x.append(abs(x).max())
+    peak_pi.append(abs(pi).max())
+
+axes[1,0].plot(phi_grid, peak_x, '#3b82f6', lw=2)
+axes[1,0].set_xlabel('φ_π'); axes[1,0].set_ylabel('Peak output gap (pp)')
+axes[1,0].set_title('Output Cost vs. Taylor Aggressiveness', fontweight='bold')
+axes[1,0].grid(alpha=0.3)
+
+axes[1,1].plot(phi_grid, peak_pi, '#8b5cf6', lw=2)
+axes[1,1].set_xlabel('φ_π'); axes[1,1].set_ylabel('Peak inflation (ann., pp)')
+axes[1,1].set_title('Inflation Response vs. Aggressiveness', fontweight='bold')
+axes[1,1].grid(alpha=0.3)
+
+axes[1,2].plot(peak_x, peak_pi, 'k-', lw=2)
+axes[1,2].set_xlabel('Peak output gap'); axes[1,2].set_ylabel('Peak inflation')
+axes[1,2].set_title('Output-Inflation Tradeoff Frontier', fontweight='bold')
+axes[1,2].grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+        <div class="code-panel" id="cb-policy-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Taylor Rule Dynamics in R ──────────────────────────────
+beta  <- 0.99; sigma <- 1.0; kappa <- 0.125; phi_y <- 0.125
+
+simulate_nk <- function(phi_pi, rho_v = 0.5, T = 40, shock = 0.01) {
+  a11 <- 1 + phi_y/sigma; a12 <- phi_pi/sigma
+  a21 <- -kappa;           a22 <- 1
+  b11 <- 1; b12 <- 1/sigma; b21 <- 0; b22 <- beta
+
+  m11 <- a11 - rho_v*b11; m12 <- a12 - rho_v*b12
+  m21 <- a21 - rho_v*b21; m22 <- a22 - rho_v*b22
+  det <- m11*m22 - m12*m21
+
+  ax  <- (-1/sigma * m22 - 0 * m12) / det
+  api <- (m11 * 0 - m21 * (-1/sigma)) / det
+
+  h <- 0:(T-1)
+  list(
+    x  = ax  * rho_v^h * shock * 100,
+    pi = api * rho_v^h * shock * 400,
+    i  = ((phi_pi*api + phi_y*ax) * rho_v^h + rho_v^h) * shock * 400
+  )
+}
+
+par(mfrow = c(1,3), mar = c(4,4,3,1))
+phi_vals <- c(1.1, 1.5, 2.5)
+colors   <- c("#ef4444", "#f59e0b", "#10b981")
+
+for (panel in 1:3) {
+  ylabel <- c("Output gap (pp)","Inflation ann. (pp)","Nominal rate ann. (pp)")[panel]
+  plot(0, 0, type="n", xlim=c(0,40), ylim=c(-1.5,0.3),
+       xlab="Quarters", ylab=ylabel,
+       main=c("Output Gap","Inflation","Nominal Rate")[panel])
+  abline(h=0, lty=2, col="grey")
+  for (k in seq_along(phi_vals)) {
+    res <- simulate_nk(phi_vals[k])
+    var <- list(res$x, res$pi, res$i)[[panel]]
+    lines(var, col=colors[k], lwd=2)
+  }
+  legend("bottomright", legend=paste("φ_π =", phi_vals),
+         col=colors, lwd=2, cex=0.8)
+}</code></pre>
+        </div>
+        <button class="run-btn" id="run-policy" onclick="runPyodide('run-policy','out-policy', document.querySelector('#cb-policy-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-policy"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 5: KEY EQUATIONS & LOG-LINEARIZATION
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-equations">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 5</div>
+        <h1 class="section-title">Key Equations &amp; Log-Linearization</h1>
+        <p class="section-subtitle">Master the three-equation New Keynesian model and the log-linearization technique that transforms nonlinear equilibrium conditions into a tractable linear system.</p>
+      </div>
+
+      <h3>The Three-Equation New Keynesian Model</h3>
+      <p>After log-linearizing around the zero-inflation steady state and combining households' Euler equation, firms' price-setting, and the Taylor rule, we arrive at the canonical three-equation system:</p>
+
+      <div class="math-box">
+        <div class="math-label">IS Curve (Dynamic)</div>
+        $$x_t = E_t[x_{t+1}] - \frac{1}{\sigma}\left(i_t - E_t[\pi_{t+1}] - r_t^n\right)$$
+      </div>
+      <div class="math-box">
+        <div class="math-label">New Keynesian Phillips Curve</div>
+        $$\pi_t = \beta \, E_t[\pi_{t+1}] + \kappa \, x_t + u_t$$
+      </div>
+      <div class="math-box">
+        <div class="math-label">Monetary Policy Rule (Taylor)</div>
+        $$i_t = \phi_\pi \pi_t + \phi_y x_t + v_t$$
+      </div>
+
+      <p>where $x_t = y_t - y_t^n$ is the <strong>output gap</strong> (log deviation of actual output from flexible-price potential), $r_t^n$ is the <strong>natural rate of interest</strong> (the real rate that would prevail with flexible prices), $u_t$ is a cost-push shock, and $v_t$ is a monetary policy shock.</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📌 Reading the IS Curve</div>
+          <p>The output gap today equals the expected future gap minus the <em>real interest rate gap</em> $(i_t - E_t\pi_{t+1} - r_t^n)$. When the central bank sets a real rate above $r_t^n$, it contracts demand — the gap falls. This captures the standard IS relationship in microfounded form.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">📌 Reading the NKPC</div>
+          <p>Inflation today is the discounted sum of all future output gaps. Iterating forward: $\pi_t = \kappa \sum_{k=0}^\infty \beta^k E_t[x_{t+k}]$. Inflation is purely forward-looking — it reflects expected future economic activity, not past inflation, unlike backward-looking Phillips curves.</p>
+        </div>
+      </div>
+
+      <h3>Log-Linearization Technique</h3>
+      <p>Log-linearization approximates nonlinear equations around a steady state. The key steps are:</p>
+
+      <div class="card">
+        <div class="card-title">🔧 Step-by-Step Log-Linearization</div>
+        <p><strong>Step 1:</strong> Write the nonlinear equation, e.g., the Euler equation $C_t^{-\sigma} = \beta R_t C_{t+1}^{-\sigma}$.</p>
+        <p><strong>Step 2:</strong> Divide through by the steady-state version: $\bar{C}^{-\sigma} = \beta \bar{R} \bar{C}^{-\sigma}$, confirming $\beta \bar{R} = 1$.</p>
+        <p><strong>Step 3:</strong> Write $C_t = \bar{C}(1 + \hat{c}_t)$, $R_t = \bar{R}(1+\hat{r}_t)$ where hats denote proportional deviations from steady state.</p>
+        <p><strong>Step 4:</strong> Substitute and use the first-order approximation $(1+x)^n \approx 1 + nx$ for small $x$.</p>
+        <p><strong>Step 5:</strong> Cancel steady-state terms, drop products of deviations (second-order small).</p>
+        <p><strong>Result:</strong> $-\sigma \hat{c}_t = \hat{r}_t - \sigma \hat{c}_{t+1}$ → $\hat{c}_t = \hat{c}_{t+1} - \hat{r}_t/\sigma$.</p>
+      </div>
+
+      <div class="math-box">
+        <div class="math-label">General Log-Linearization Formula</div>
+        $$\text{If } Z_t = X_t^\alpha Y_t^\beta, \text{ then } \hat{z}_t \approx \alpha \hat{x}_t + \beta \hat{y}_t$$
+      </div>
+      <p>Products become sums, ratios become differences, and constants drop out. This powerful technique reduces complex nonlinear systems to linear difference equations solvable with standard matrix methods.</p>
+
+      <h3>Natural Rate of Interest</h3>
+      <p>The natural rate $r_t^n$ is the real interest rate consistent with flexible prices (gap = 0, inflation = 0). With technology shocks $a_t$ (AR(1) with persistence $\rho_a$):</p>
+      <div class="math-box">
+        $$r_t^n = \rho - \sigma \frac{(1-\rho_a)\psi_{ya}}{\sigma + \varphi} \, \Delta a_{t+1}$$
+      </div>
+      <p>Technology improvements raise the natural rate — the economy wants to expand, requiring a higher real rate to keep inflation in check. This is why the "neutral rate" fell during the productivity slowdown of the 2000s-2010s.</p>
+
+      <h3>Matrix Form of the Three-Equation System</h3>
+      <p>Substituting the Taylor rule into the IS curve and collecting terms:</p>
+      <div class="math-box">
+        <div class="math-label">System in Matrix Form</div>
+        $$\underbrace{\begin{pmatrix}1 + \phi_y/\sigma & \phi_\pi/\sigma \\ -\kappa & 1\end{pmatrix}}_{A} \begin{pmatrix}x_t \\ \pi_t\end{pmatrix} = \underbrace{\begin{pmatrix}1 & 1/\sigma \\ 0 & \beta\end{pmatrix}}_{B} \begin{pmatrix}E_t x_{t+1} \\ E_t \pi_{t+1}\end{pmatrix} + C \, \text{shocks}_t$$
+      </div>
+      <p>The solution to this system — finding $[x_t, \pi_t]'$ as functions of current and expected shocks — is exactly the Blanchard-Kahn problem covered in Module 7. For AR(1) shocks with persistence $\rho$, the method of undetermined coefficients gives the closed-form solution $(A - \rho B)^{-1} C$.</p>
+
+      <div class="code-block-wrap" id="cb-equations">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-equations','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-equations','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-equations-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+
+def nk3eq_solution(beta=0.99, sigma=1.0, kappa=0.125,
+                   phi_pi=1.5, phi_y=0.125, rho=0.5,
+                   shock='monetary'):
+    """
+    Analytical solution of the 3-equation NK model.
+    Returns impact coefficients [a_x, a_pi] such that:
+        x_t  = a_x  * shock_t
+        pi_t = a_pi * shock_t
+    for an AR(1) shock with persistence rho.
+    
+    shock: 'monetary' (enters IS via -1/sigma)
+           'demand'   (enters IS directly)
+           'costpush' (enters NKPC directly)
+    """
+    # System: A * Y = B * E[Y+1] + C * shock
+    A = np.array([[1 + phi_y/sigma, phi_pi/sigma],
+                  [-kappa,          1           ]])
+    B = np.array([[1,   1/sigma],
+                  [0,   beta   ]])
+    
+    # Shock loadings
+    shock_map = {
+        'monetary': np.array([-1/sigma, 0]),  # enters IS (after sub. TR)
+        'demand':   np.array([1.0,      0]),  # natural rate shock to IS
+        'costpush': np.array([0.0,      1]),  # enters NKPC
+    }
+    C = shock_map[shock]
+    
+    # (A - rho*B) * coeff = C  →  coeff = (A - rho*B)^{-1} C
+    M = A - rho * B
+    coeff = np.linalg.solve(M, C)
+    return coeff  # [a_x, a_pi]
+
+# ── Demonstrate all three shocks ─────────────────────────────
+T = 20
+h = np.arange(T)
+params = dict(beta=0.99, sigma=1.0, kappa=0.125, phi_pi=1.5, phi_y=0.125, rho=0.5)
+
+print("=" * 55)
+print(f"{'Shock':<12} {'a_x':>10} {'a_pi':>10}")
+print("-" * 55)
+for s in ['monetary', 'demand', 'costpush']:
+    a = nk3eq_solution(**params, shock=s)
+    print(f"{s:<12} {a[0]:>10.4f} {a[1]:>10.4f}")
+print("=" * 55)
+
+# Log-linearization example: Euler equation
+print("\n── Log-linearizing Euler equation around SS ─────────")
+print("Nonlinear: C_t^{-sigma} = beta * R_t * C_{t+1}^{-sigma}")
+print("Log-linear: c_t = c_{t+1} - (1/sigma)*r_t")
+print(f"With sigma={params['sigma']}: c_t = c_{{t+1}} - r_t")</code></pre>
+        </div>
+        <div class="code-panel" id="cb-equations-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── 3-Equation NK Model Solution ─────────────────────────
+nk3eq_solution <- function(beta=0.99, sigma=1.0, kappa=0.125,
+                           phi_pi=1.5, phi_y=0.125, rho=0.5,
+                           shock=c("monetary","demand","costpush")) {
+  shock <- match.arg(shock)
+  
+  A <- matrix(c(1 + phi_y/sigma, -kappa, phi_pi/sigma, 1), nrow=2)
+  B <- matrix(c(1, 0, 1/sigma, beta), nrow=2)
+  
+  C <- switch(shock,
+    monetary = c(-1/sigma, 0),
+    demand   = c(1.0,      0),
+    costpush = c(0.0,      1)
+  )
+  
+  M <- A - rho * B
+  solve(M, C)   # returns [a_x, a_pi]
+}
+
+# ── Print results for all shocks ─────────────────────────
+cat(sprintf("%-12s %10s %10s\n", "Shock", "a_x", "a_pi"))
+cat(rep("-", 34), "\n", sep="")
+for (s in c("monetary","demand","costpush")) {
+  a <- nk3eq_solution(shock=s)
+  cat(sprintf("%-12s %10.4f %10.4f\n", s, a[1], a[2]))
+}
+
+# ── IRF generation ────────────────────────────────────────
+T <- 20; h <- 0:(T-1)
+a_mp <- nk3eq_solution(shock="monetary")
+x_irf  <- a_mp[1] * 0.5^h * 100      # % deviations
+pi_irf <- a_mp[2] * 0.5^h * 400      # annualized
+
+cat(sprintf("\nMP shock: peak output gap = %.3f pp\n", min(x_irf)))
+cat(sprintf("MP shock: peak inflation  = %.3f pp\n", min(pi_irf)))</code></pre>
+        </div>
+        <button class="run-btn" id="run-equations" onclick="runPyodide('run-equations','out-equations', document.querySelector('#cb-equations-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-equations"></div>
+      </div>
+
+      <!-- QUIZ 5 -->
+      <div class="quiz-card" id="quiz-equations">
+        <div class="quiz-title">🎯 Module 5 Self-Check</div>
+        <div class="quiz-q" data-qid="q5-1">
+          <div class="quiz-q-text">1. In the log-linearized IS curve, what happens to the output gap when the real interest rate exceeds the natural rate?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5-1" value="a"> The output gap rises — higher rates stimulate investment</label>
+            <label class="quiz-option"><input type="radio" name="q5-1" value="b"> The output gap falls — households defer consumption</label>
+            <label class="quiz-option"><input type="radio" name="q5-1" value="c"> The output gap is unchanged — Ricardian equivalence holds</label>
+            <label class="quiz-option"><input type="radio" name="q5-1" value="d"> Inflation rises immediately</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q5-1"></div>
+        </div>
+        <div class="quiz-q" data-qid="q5-2">
+          <div class="quiz-q-text">2. The New Keynesian Phillips Curve is "forward-looking" because:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5-2" value="a"> Firms set prices based on past wage growth</label>
+            <label class="quiz-option"><input type="radio" name="q5-2" value="b"> Inflation depends on expected future output gaps, not past inflation</label>
+            <label class="quiz-option"><input type="radio" name="q5-2" value="c"> The central bank announces future interest rates</label>
+            <label class="quiz-option"><input type="radio" name="q5-2" value="d"> Consumers form adaptive expectations</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q5-2"></div>
+        </div>
+        <div class="quiz-q" data-qid="q5-3">
+          <div class="quiz-q-text">3. In log-linearization, products of variables like $X_t \cdot Y_t$ become (approximately):</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q5-3" value="a"> $\hat{x}_t \cdot \hat{y}_t$</label>
+            <label class="quiz-option"><input type="radio" name="q5-3" value="b"> $\bar{X}\bar{Y}(1 + \hat{x}_t + \hat{y}_t)$</label>
+            <label class="quiz-option"><input type="radio" name="q5-3" value="c"> $\bar{X}\bar{Y}(1 + \hat{x}_t \cdot \hat{y}_t)$</label>
+            <label class="quiz-option"><input type="radio" name="q5-3" value="d"> $\hat{x}_t^2 + \hat{y}_t^2$</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q5-3"></div>
+        </div>
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-equations', {'q5-1':'b','q5-2':'b','q5-3':'b'}, {
+          'q5-1-b': 'Correct! When r_t > r_t^n, saving is more rewarding than spending, so households reduce current consumption and the output gap falls. This is the contractionary effect of tight monetary policy.',
+          'q5-1-a': 'Incorrect. Higher real rates raise the return to saving, reducing demand.',
+          'q5-2-b': 'Correct! Iterating the NKPC forward: π_t = κ Σβ^k E_t[x_{t+k}]. Inflation today is the discounted present value of all future output gaps. Past inflation does not appear (unlike adaptive expectations models).',
+          'q5-2-a': 'Incorrect. In the Calvo model, price-setting is forward-looking.',
+          'q5-3-b': 'Correct! Log-linearizing: Z_t = X_t Y_t → z_t ≈ x_t + y_t in log-deviations, or equivalently Z_t ≈ X̄Ȳ(1 + x̂_t + ŷ_t) in level deviations. Cross-products x̂_t ŷ_t are second-order small and dropped.',
+          'q5-3-a': 'Incorrect. The cross-product is second-order small and is exactly what we drop in first-order approximation.',
+          'q5-3-c': 'Incorrect. It should be +, not ×.'
+        })">Check Answers</button>
+        <div class="quiz-result" id="result-quiz-equations"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 6: INTERACTIVE SIMULATION
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-simulation">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 6</div>
+        <h1 class="section-title">Interactive IRF Simulation</h1>
+        <p class="section-subtitle">Adjust model parameters in real time and observe how impulse response functions change. Explore monetary policy, demand, and cost-push shocks.</p>
+      </div>
+
+      <div class="info-box ib-blue">
+        <div class="ib-icon">⚡</div>
+        <div class="ib-content">
+          <div class="ib-title">How This Simulation Works</div>
+          <div class="ib-body">The simulation solves the 3-equation NK model analytically using the method of undetermined coefficients. For an AR(1) shock $z_t = \rho z_{t-1} + \varepsilon_t$, the equilibrium takes the form $[x_t, \pi_t]' = [a_x, a_\pi]' z_t$ where $[a_x, a_\pi]' = (A - \rho B)^{-1}C$. Charts update instantly as you move sliders.</div>
+        </div>
+      </div>
+
+      <div class="sim-panel">
+        <div class="sim-header">
+          <div>
+            <h3>Three-Equation New Keynesian Model — IRF Explorer</h3>
+            <p>Impulse Responses to a 1 percentage point shock (annualized)</p>
+          </div>
+          <button class="btn btn-ghost" style="color:#94a3b8;border-color:#334155" onclick="resetSimParams()">↺ Reset</button>
+        </div>
+        <div class="sim-body">
+          <div class="sim-controls">
+            <div class="shock-tabs">
+              <button class="shock-tab active" onclick="setShock('monetary',this)">MP Shock</button>
+              <button class="shock-tab" onclick="setShock('demand',this)">Demand</button>
+              <button class="shock-tab" onclick="setShock('costpush',this)">Cost-Push</button>
+            </div>
+            <h4>Household Parameters</h4>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">β — Discount factor</span><span class="param-value" id="v-beta">0.99</span></div>
+              <input type="range" id="s-beta" min="0.90" max="0.999" step="0.001" value="0.99" oninput="updateSim()">
+              <div class="param-desc">Quarterly (≈4% annual real rate)</div>
+            </div>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">σ — Inverse IES</span><span class="param-value" id="v-sigma">1.00</span></div>
+              <input type="range" id="s-sigma" min="0.25" max="4.0" step="0.05" value="1.0" oninput="updateSim()">
+              <div class="param-desc">Log utility when σ=1</div>
+            </div>
+            <h4>Price Setting</h4>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">θ — Calvo parameter</span><span class="param-value" id="v-theta">0.75</span></div>
+              <input type="range" id="s-theta" min="0.05" max="0.95" step="0.01" value="0.75" oninput="updateSim()">
+              <div class="param-desc">Fraction unable to reprice</div>
+            </div>
+            <h4>Taylor Rule</h4>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">φ<sub>π</sub> — Inflation response</span><span class="param-value" id="v-phi-pi">1.50</span></div>
+              <input type="range" id="s-phi-pi" min="1.01" max="3.5" step="0.01" value="1.5" oninput="updateSim()">
+              <div class="param-desc">Taylor principle: φ_π > 1</div>
+            </div>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">φ<sub>y</sub> — Output gap response</span><span class="param-value" id="v-phi-y">0.13</span></div>
+              <input type="range" id="s-phi-y" min="0.0" max="0.5" step="0.01" value="0.125" oninput="updateSim()">
+              <div class="param-desc">Taylor (1993): 0.5/4 = 0.125</div>
+            </div>
+            <h4>Shock Persistence</h4>
+            <div class="param-group">
+              <div class="param-label"><span class="param-name">ρ — AR(1) persistence</span><span class="param-value" id="v-rho">0.50</span></div>
+              <input type="range" id="s-rho" min="0.0" max="0.98" step="0.01" value="0.5" oninput="updateSim()">
+              <div class="param-desc">Shock half-life = ln(0.5)/ln(ρ)</div>
+            </div>
+          </div>
+          <div class="sim-chart-area">
+            <div class="irf-tabs">
+              <button class="irf-tab active" onclick="setIRFView('all',this)">All Variables</button>
+              <button class="irf-tab" onclick="setIRFView('x',this)">Output Gap</button>
+              <button class="irf-tab" onclick="setIRFView('pi',this)">Inflation</button>
+              <button class="irf-tab" onclick="setIRFView('i',this)">Interest Rate</button>
+            </div>
+            <div id="irf-plot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-top:20px">
+        <div class="card">
+          <div class="card-title">🔍 What to Explore</div>
+          <ul>
+            <li>Raise <strong>φ_π above 2</strong> — watch inflation stabilize faster but output cost increase</li>
+            <li>Set <strong>θ → 0.9</strong> (very sticky prices) — the NKPC flattens, inflation barely responds</li>
+            <li>Try <strong>ρ → 0.9</strong> (persistent shock) — prolonged recession vs. transitory</li>
+            <li>Switch to <strong>cost-push shock</strong> — observe the inflation-output tradeoff (stagflation)</li>
+            <li>Reduce <strong>σ below 0.5</strong> — higher IES amplifies interest rate effects</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Reading the IRFs</div>
+          <p>All IRFs show responses in <strong>percentage points</strong>. Inflation and interest rates are <strong>annualized</strong> (multiplied by 4). The shock is normalized to 1 percentage point (annualized). The output gap is in level deviations from potential.</p>
+          <p>After a <strong>monetary policy tightening</strong> (positive $v_t$), we expect: $i_t \uparrow$, $x_t \downarrow$, $\pi_t \downarrow$ — the classic monetary policy transmission mechanism.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 7: SOLUTION METHODS
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-solution">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 7</div>
+        <h1 class="section-title">Solution Methods</h1>
+        <p class="section-subtitle">Learn the Blanchard-Kahn conditions, state-space representation, and perturbation methods for solving linear rational expectations models.</p>
+      </div>
+
+      <p>DSGE models are systems of stochastic difference equations with forward-looking expectations. Solving them requires finding a <strong>recursive equilibrium</strong> — a mapping from today's state variables to today's endogenous variables — that satisfies all equilibrium conditions, is consistent with rational expectations, and remains stable. The dominant approach is to find a <strong>linear state-space solution</strong> via eigenvalue decomposition.</p>
+
+      <h3>The Generic Linear RE System</h3>
+      <p>After log-linearization, virtually all DSGE models can be written as:</p>
+      <div class="math-box">
+        <div class="math-label">Generic Linear Rational Expectations System</div>
+        $$A \, E_t[Y_{t+1}] = B \, Y_t + C \, \varepsilon_t$$
+      </div>
+      <p>where $Y_t$ is the vector of endogenous variables, $\varepsilon_t$ is the vector of exogenous shocks, and $A$, $B$, $C$ are coefficient matrices derived from the model's equilibrium conditions. Equivalently, using the notation common in policy applications:</p>
+      <div class="math-box">
+        $$\Gamma_0 \, y_t = \Gamma_1 \, y_{t-1} + \Psi \, \varepsilon_t + \Pi \, \eta_t$$
+      </div>
+      <p>where $\eta_t = y_t - E_{t-1}[y_t]$ are expectation errors (endogenous). This is the Sims (2002) canonical form, used in the <code>gensys</code> solver.</p>
+
+      <h3>Blanchard-Kahn Conditions</h3>
+      <p>Blanchard and Kahn (1980) established the conditions for a unique stable solution. Partition the system into <strong>predetermined</strong> variables (state variables known at $t$, like capital $k_t$, lagged shocks) and <strong>non-predetermined</strong> (jump variables, like consumption $c_t$, inflation $\pi_t$).</p>
+
+      <div class="math-box">
+        <div class="math-label">Blanchard-Kahn Theorem</div>
+        <p style="margin:0;font-size:14px;color:#1e3a5f">Let $\lambda_1, \ldots, \lambda_n$ be the generalized eigenvalues of $(B, A)$. Let $n_1$ be the number with $|\lambda_i| > 1$ (explosive) and $n_2$ be the number of non-predetermined variables. Then:</p>
+        <ul style="margin-top:8px;padding-left:20px;font-size:14px;color:#1e3a5f">
+          <li>$n_1 = n_2$: <strong>Unique stable solution</strong> (determinacy)</li>
+          <li>$n_1 &lt; n_2$: <strong>Indeterminacy</strong> (multiple equilibria, sunspot solutions)</li>
+          <li>$n_1 > n_2$: <strong>Non-existence</strong> (no stable equilibrium)</li>
+        </ul>
+      </div>
+
+      <p>In the 3-equation NK model with $\phi_\pi > 1$ (Taylor principle satisfied), there are exactly 2 non-predetermined variables $[x_t, \pi_t]$ and 2 explosive eigenvalues — BK conditions are met. When $\phi_\pi < 1$, one eigenvalue falls inside the unit circle, giving indeterminacy.</p>
+
+      <h3>State-Space Solution</h3>
+      <p>The stable solution takes the state-space form:</p>
+      <div class="math-box">
+        <div class="math-label">Policy Function (Recursive Equilibrium)</div>
+        $$\begin{aligned}
+        s_{t+1} &= F \, s_t + G \, \varepsilon_{t+1} \quad \text{(state equation)} \\
+        y_t &= H \, s_t \quad \text{(observation equation)}
+        \end{aligned}$$
+      </div>
+      <p>where $s_t$ is the state vector (exogenous shocks + lagged endogenous states), $y_t$ are the observables, and $F$, $G$, $H$ are derived from the eigenvalue decomposition of the system. The matrices $F$ and $H$ constitute the model's <strong>policy functions</strong>.</p>
+
+      <h3>Computing the Solution via Schur Decomposition</h3>
+      <p>The standard algorithm (Klein 2000, Sims 2002) proceeds via the <strong>generalized Schur (QZ) decomposition</strong>:</p>
+      <ol style="padding-left:24px;margin:10px 0">
+        <li>Compute QZ decomposition: $A = Q S Z^H$, $B = Q T Z^H$</li>
+        <li>Reorder so unstable eigenvalues (from $T_{ii}/S_{ii}$) appear in the top-left block</li>
+        <li>Partition the reordered system into stable and unstable subspaces</li>
+        <li>The stable manifold gives the policy function — a mapping from states to jump variables</li>
+        <li>Use the boundary condition (transversality) to select the stable solution</li>
+      </ol>
+
+      <h3>Perturbation Methods</h3>
+      <p>For nonlinear models or higher-order approximations, <strong>perturbation methods</strong> expand the solution in a Taylor series around the steady state, indexed by a small parameter $\xi$ (the "perturbation parameter" scaling the variance of shocks):</p>
+      <div class="math-box">
+        $$y_t = y^{(0)} + \xi \, y_t^{(1)} + \tfrac{1}{2}\xi^2 y_t^{(2)} + \cdots$$
+      </div>
+      <p>The first-order approximation ($y_t^{(1)}$) recovers the standard log-linear solution — certainty equivalence holds and risk does not affect the decision rules. The <strong>second-order approximation</strong> ($y_t^{(2)}$) introduces a risk premium: higher variance of shocks raises precautionary saving and affects steady-state levels. Used in welfare analysis and models with ZLB or occasionally-binding constraints.</p>
+
+      <div class="two-col">
+        <div class="info-box ib-green" style="margin:0">
+          <div class="ib-icon">✅</div>
+          <div class="ib-content">
+            <div class="ib-title">First-Order: Log-Linear Solution</div>
+            <div class="ib-body">Certainty equivalence: variances don't matter for decision rules. Fast, analytically tractable. Used for policy analysis, estimation, IRF computation. Software: Dynare, RISE, gensys.</div>
+          </div>
+        </div>
+        <div class="info-box ib-amber" style="margin:0">
+          <div class="ib-icon">⚡</div>
+          <div class="ib-content">
+            <div class="ib-title">Second-Order: Risk Matters</div>
+            <div class="ib-body">Precautionary savings, risk premia, asymmetric responses. Needed for: welfare comparisons, asset pricing in DSGE, occasionally-binding constraints. Slower but captures nonlinear dynamics.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Code: Blanchard-Kahn Check &amp; State-Space Solution</h3>
+      <div class="code-block-wrap" id="cb-solution">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-solution','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-solution','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-solution-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+from scipy.linalg import schur, ordqz
+
+def check_bk(A, B, n_forward, label="System"):
+    """
+    Check Blanchard-Kahn conditions.
+    
+    Args:
+        A: left-hand side matrix (coefficient on E_t[Y_{t+1}])
+        B: right-hand side matrix (coefficient on Y_t)
+        n_forward: number of non-predetermined (forward-looking) variables
+    
+    Solves: A * E[Y+1] = B * Y  →  generalized eigenvalues of (B, A)
+    """
+    eigenvalues, _ = np.linalg.eig(np.linalg.solve(A, B))
+    n_explosive = np.sum(np.abs(eigenvalues) > 1)
+    
+    print(f"\n── {label} ──────────────────────────")
+    print(f"Eigenvalues (|λ|):  {np.abs(eigenvalues).round(4)}")
+    print(f"Explosive roots:    {n_explosive}")
+    print(f"Forward variables:  {n_forward}")
+    
+    if n_explosive == n_forward:
+        print("✓  DETERMINATE: unique stable solution")
+    elif n_explosive < n_forward:
+        print("✗  INDETERMINATE: multiple equilibria (φ_π too low?)")
+    else:
+        print("✗  NON-EXISTENT: no stable equilibrium")
+    
+    return n_explosive == n_forward
+
+# ── NK model matrices ─────────────────────────────────────
+def nk_matrices(beta=0.99, sigma=1.0, kappa=0.125, phi_pi=1.5, phi_y=0.125):
+    A = np.array([[1 + phi_y/sigma, phi_pi/sigma],
+                  [-kappa,           1           ]])
+    B = np.array([[1,  1/sigma],
+                  [0,  beta   ]])
+    return A, B
+
+# Test with Taylor principle satisfied
+A, B = nk_matrices(phi_pi=1.5)
+check_bk(A, B, n_forward=2, label="φ_π=1.5 (determinate)")
+
+# Test with Taylor principle violated
+A_ind, B_ind = nk_matrices(phi_pi=0.8)
+check_bk(A_ind, B_ind, n_forward=2, label="φ_π=0.8 (indeterminate)")
+
+# ── State-space solution via method of undetermined coefficients ──
+def nk_state_space(beta=0.99, sigma=1.0, kappa=0.125,
+                   phi_pi=1.5, phi_y=0.125, rho_v=0.5, rho_a=0.9):
+    """
+    Full state-space solution for NK model with:
+    - MP shock v_t (persistence rho_v)
+    - Technology shock a_t (persistence rho_a)
+    
+    State vector: s_t = [v_t, a_t]
+    Endogenous:   y_t = [x_t, pi_t, i_t]
+    """
+    A, B = nk_matrices(beta, sigma, kappa, phi_pi, phi_y)
+    
+    solutions = {}
+    for name, rho, C in [
+        ('MP shock',   rho_v, np.array([-1/sigma, 0])),
+        ('Tech shock', rho_a, np.array([sigma*(1-rho_a), 0]))  # simplified
+    ]:
+        M = A - rho * B
+        coeff = np.linalg.solve(M, C)
+        ax, api = coeff
+        ai = phi_pi * api + phi_y * ax + (1.0 if 'MP' in name else 0)
+        solutions[name] = {'a_x': ax, 'a_pi': api, 'a_i': ai, 'rho': rho}
+    
+    print("\n── Policy Functions (IRF impact coefficients) ──")
+    print(f"{'Shock':<15} {'a_x':>8} {'a_pi':>8} {'a_i':>8} {'ρ':>6}")
+    print("-" * 50)
+    for name, sol in solutions.items():
+        print(f"{name:<15} {sol['a_x']:>8.4f} {sol['a_pi']:>8.4f} "
+              f"{sol['a_i']:>8.4f} {sol['rho']:>6.2f}")
+
+nk_state_space()</code></pre>
+        </div>
+        <div class="code-panel" id="cb-solution-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Blanchard-Kahn Check ─────────────────────────────────
+check_bk <- function(A, B, n_forward, label="System") {
+  # Eigenvalues of A^{-1} B
+  eigenvalues <- eigen(solve(A) %*% B)$values
+  n_explosive <- sum(Mod(eigenvalues) > 1)
+  
+  cat(sprintf("\n── %s ──\n", label))
+  cat(sprintf("Eigenvalue moduli: %s\n",
+      paste(round(Mod(eigenvalues), 4), collapse=", ")))
+  cat(sprintf("Explosive roots:   %d\n", n_explosive))
+  cat(sprintf("Forward variables: %d\n", n_forward))
+  
+  if (n_explosive == n_forward) {
+    cat("✓  DETERMINATE: unique stable solution\n")
+  } else if (n_explosive < n_forward) {
+    cat("✗  INDETERMINATE: multiple equilibria\n")
+  } else {
+    cat("✗  NON-EXISTENT: no stable equilibrium\n")
+  }
+  invisible(n_explosive == n_forward)
+}
+
+nk_matrices <- function(beta=0.99, sigma=1.0, kappa=0.125,
+                        phi_pi=1.5, phi_y=0.125) {
+  A <- matrix(c(1+phi_y/sigma, -kappa, phi_pi/sigma, 1), 2, 2)
+  B <- matrix(c(1, 0, 1/sigma, beta), 2, 2)
+  list(A=A, B=B)
+}
+
+# Test cases
+m1 <- nk_matrices(phi_pi=1.5)
+check_bk(m1$A, m1$B, n_forward=2, label="phi_pi=1.5 (determinate)")
+
+m2 <- nk_matrices(phi_pi=0.8)
+check_bk(m2$A, m2$B, n_forward=2, label="phi_pi=0.8 (indeterminate)")
+
+# ── Compute IRF coefficients for all shocks ───────────────
+cat("\n── Policy Functions ──\n")
+solve_nk <- function(phi_pi=1.5, rho=0.5, shock=c("monetary","demand","costpush")) {
+  shock <- match.arg(shock)
+  A <- matrix(c(1+0.125/1.0, -0.125, phi_pi/1.0, 1), 2, 2)
+  B <- matrix(c(1, 0, 1/1.0, 0.99), 2, 2)
+  C <- switch(shock,
+    monetary=c(-1/1.0,0), demand=c(1,0), costpush=c(0,1))
+  M <- A - rho*B
+  solve(M, C)
+}
+for (phi in c(1.1, 1.5, 2.5)) {
+  a <- solve_nk(phi_pi=phi, rho=0.5, shock="monetary")
+  cat(sprintf("phi_pi=%.1f: a_x=%.4f, a_pi=%.4f\n", phi, a[1], a[2]))
+}</code></pre>
+        </div>
+        <button class="run-btn" id="run-solution" onclick="runPyodide('run-solution','out-solution', document.querySelector('#cb-solution-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-solution"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 8: BAYESIAN ESTIMATION
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-estimation">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 8</div>
+        <h1 class="section-title">Bayesian Estimation</h1>
+        <p class="section-subtitle">Estimate DSGE model parameters using Bayesian methods: prior distributions, the Kalman filter likelihood, and Markov Chain Monte Carlo sampling.</p>
+      </div>
+
+      <p>DSGE models contain deep structural parameters — $\beta$, $\sigma$, $\theta$, $\phi_\pi$, etc. — that cannot be directly observed. The Bayesian approach combines <strong>prior beliefs</strong> (from theory or microeconomic evidence) with <strong>data likelihood</strong> (computed via the Kalman filter) to produce <strong>posterior distributions</strong> over parameters. This approach, pioneered for DSGE by Smets and Wouters (2003), dominates modern empirical macro.</p>
+
+      <h3>Bayes' Theorem Applied to DSGE</h3>
+      <div class="math-box">
+        <div class="math-label">Bayes' Theorem for DSGE Parameters</div>
+        $$\underbrace{p(\Theta | Y)}_{\text{posterior}} \propto \underbrace{p(Y | \Theta)}_{\text{likelihood}} \cdot \underbrace{p(\Theta)}_{\text{prior}}$$
+      </div>
+      <p>where $\Theta$ is the vector of model parameters and $Y$ is the observed data. The posterior combines what we know before seeing data (prior) with what data tells us (likelihood). The posterior is rarely available in closed form, so we approximate it via MCMC.</p>
+
+      <h3>Step 1: Prior Distributions</h3>
+      <p>Priors encode economic theory and microeconomic evidence. Common choices:</p>
+      <div class="card">
+        <div class="card-title">📋 Typical Prior Distributions (Smets-Wouters Style)</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
+          <thead>
+            <tr style="border-bottom:2px solid #e2e8f0">
+              <th style="padding:8px;text-align:left;color:#64748b">Parameter</th>
+              <th style="padding:8px;text-align:left;color:#64748b">Prior Distribution</th>
+              <th style="padding:8px;text-align:left;color:#64748b">Mean</th>
+              <th style="padding:8px;text-align:left;color:#64748b">Std Dev</th>
+              <th style="padding:8px;text-align:left;color:#64748b">Motivation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px">β (discount)</td><td>Beta</td><td>0.9985</td><td>0.002</td><td>Quarterly, near 1</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px">σ (inv IES)</td><td>Normal</td><td>1.5</td><td>0.375</td><td>Macro estimates</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px">θ (Calvo)</td><td>Beta</td><td>0.7</td><td>0.10</td><td>Annual repricing</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px">φ_π (Taylor)</td><td>Normal</td><td>1.7</td><td>0.30</td><td>Taylor principle</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px">φ_y (Taylor)</td><td>Normal</td><td>0.125</td><td>0.05</td><td>Mild output response</td></tr>
+            <tr><td style="padding:8px">ρ_i (smoothing)</td><td>Beta</td><td>0.75</td><td>0.10</td><td>Interest rate inertia</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Step 2: Kalman Filter Likelihood</h3>
+      <p>Given parameters $\Theta$, the state-space form $(F, G, H)$ is fully determined. The <strong>Kalman filter</strong> recursively computes the likelihood of the observed data under the model:</p>
+      <div class="math-box">
+        <div class="math-label">Kalman Filter Recursion</div>
+        $$\begin{aligned}
+        s_{t|t-1} &= F \, s_{t-1|t-1} \quad\quad \text{(prediction)} \\
+        P_{t|t-1} &= F \, P_{t-1|t-1} F^T + GQG^T \\
+        \nu_t &= y_t - H \, s_{t|t-1} \quad \text{(innovation)} \\
+        S_t &= H \, P_{t|t-1} H^T + R \\
+        K_t &= P_{t|t-1} H^T S_t^{-1} \quad\text{(Kalman gain)} \\
+        s_{t|t} &= s_{t|t-1} + K_t \nu_t \quad \text{(update)} \\
+        P_{t|t} &= (I - K_t H) P_{t|t-1}
+        \end{aligned}$$
+      </div>
+      <p>The log-likelihood is the sum of Gaussian log-likelihoods of the innovations:</p>
+      <div class="math-box">
+        $$\ln \mathcal{L}(\Theta | Y) = -\frac{T}{2}\ln(2\pi) - \frac{1}{2}\sum_{t=1}^T \left[\ln |S_t| + \nu_t^T S_t^{-1} \nu_t\right]$$
+      </div>
+
+      <h3>Step 3: MCMC Sampling (Metropolis-Hastings)</h3>
+      <p>Since the posterior is not analytically tractable, we sample from it using the <strong>Random Walk Metropolis-Hastings</strong> algorithm:</p>
+      <ol style="padding-left:24px;margin:10px 0">
+        <li>Initialize at mode $\Theta^{(0)}$ (from numerical optimization of posterior)</li>
+        <li>Propose $\Theta^* = \Theta^{(i-1)} + c \cdot \Sigma^{1/2} u$, $u \sim N(0, I)$</li>
+        <li>Accept with probability $\alpha = \min\!\left(1, \frac{p(\Theta^*|Y)}{p(\Theta^{(i-1)}|Y)}\right)$</li>
+        <li>If accepted: $\Theta^{(i)} = \Theta^*$; else $\Theta^{(i)} = \Theta^{(i-1)}$</li>
+        <li>Repeat for $N$ iterations; discard burn-in; compute posterior moments</li>
+      </ol>
+      <p>The scaling $c$ and proposal covariance $\Sigma$ are tuned for an acceptance rate of 20–30%.</p>
+
+      <div class="info-box ib-blue">
+        <div class="ib-icon">🔬</div>
+        <div class="ib-content">
+          <div class="ib-title">Identification in DSGE Models</div>
+          <div class="ib-body">Not all parameters are separately identifiable from aggregate data. Structural identification (Canova-Sala 2009, Komunjer-Ng 2011) must be verified before estimation. Common issue: σ (IES) and φ_π are often weakly identified from standard observables. Using a richer observation equation (including bond yields, firm-level data) helps.</div>
+        </div>
+      </div>
+
+      <h3>Code: Kalman Filter &amp; Bayesian Estimation</h3>
+      <div class="code-block-wrap" id="cb-estimation">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-estimation','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-estimation','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-estimation-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+from scipy.optimize import minimize
+import matplotlib.pyplot as plt
+
+# ═══════════════════════════════════════════════════════════
+# KALMAN FILTER
+# State: s_t = [v_t, a_t]  (MP shock, tech shock)
+# Obs:   y_t = [x_t, pi_t] = H @ s_t  (policy function output)
+# ═══════════════════════════════════════════════════════════
+
+def build_ss(beta, sigma, kappa, phi_pi, phi_y, rho_v, rho_a):
+    """Build state-space matrices for 2-shock NK model."""
+    A = np.array([[1+phi_y/sigma, phi_pi/sigma], [-kappa, 1]])
+    B = np.array([[1, 1/sigma], [0, beta]])
+
+    # Policy function coefficients for each shock
+    C_v = np.array([-1/sigma, 0])           # MP shock
+    C_a = np.array([sigma*(1-rho_a), 0])    # simplified tech shock
+    
+    Mv = A - rho_v*B;  Cv_sol = np.linalg.solve(Mv, C_v)  # [ax_v, api_v]
+    Ma = A - rho_a*B;  Ca_sol = np.linalg.solve(Ma, C_a)  # [ax_a, api_a]
+    
+    # H matrix: y_t = H @ [v_t, a_t]'
+    H = np.array([[Cv_sol[0], Ca_sol[0]],   # x_t
+                  [Cv_sol[1], Ca_sol[1]]])   # pi_t (quarterly)
+    
+    # F matrix: s_{t+1} = F @ s_t + G @ eps_{t+1}
+    F = np.array([[rho_v, 0], [0, rho_a]])
+    
+    return F, H
+
+def kalman_loglik(params, y_data):
+    """Kalman filter log-likelihood for the NK model."""
+    beta, sigma, kappa, phi_pi, phi_y, rho_v, rho_a = params
+    
+    # Stability / prior bounds
+    if not (0.9 < beta < 0.999 and sigma > 0.1 and
+            0.01 < kappa < 0.8 and phi_pi > 1.0 and
+            0 <= phi_y < 1 and 0 < rho_v < 1 and 0 < rho_a < 1):
+        return -np.inf
+
+    try:
+        F, H = build_ss(beta, sigma, kappa, phi_pi, phi_y, rho_v, rho_a)
+    except np.linalg.LinAlgError:
+        return -np.inf
+    
+    # Shock covariances
+    Q = np.diag([0.01**2, 0.01**2])   # shock std devs
+    R = np.diag([1e-6, 1e-6])          # measurement error (near zero)
+    
+    n = F.shape[0]
+    T = len(y_data)
+    
+    # Initialize (unconditional mean of AR(1))
+    s = np.zeros(n)
+    # Solve Riccati for P0: P = F P F' + Q (unconditional)
+    from scipy.linalg import solve_discrete_lyapunov
+    P = solve_discrete_lyapunov(F, Q)
+    
+    log_lik = 0.0
+    for t in range(T):
+        y_pred = H @ s
+        inn = y_data[t] - y_pred          # innovation
+        S = H @ P @ H.T + R
+        
+        try:
+            sign, logdet = np.linalg.slogdet(S)
+            log_lik -= 0.5*(logdet + inn @ np.linalg.solve(S, inn))
+        except:
+            return -np.inf
+        
+        K = P @ H.T @ np.linalg.inv(S)   # Kalman gain
+        s = F @ (s + K @ inn)             # predict next state
+        P = F @ (np.eye(n) - K @ H) @ P @ F.T + Q
+    
+    return log_lik
+
+# ─── Simulate fake data to illustrate estimation ─────────────
+np.random.seed(2024)
+T = 100
+true_params = [0.99, 1.0, 0.125, 1.5, 0.125, 0.5, 0.9]
+F_true, H_true = build_ss(*true_params)
+Q_true = np.diag([0.01**2, 0.01**2])
+
+# Simulate
+states = np.zeros((T, 2))
+obs    = np.zeros((T, 2))
+s = np.zeros(2)
+for t in range(T):
+    eps = np.random.multivariate_normal([0,0], Q_true)
+    s = F_true @ s + eps
+    states[t] = s
+    obs[t] = H_true @ s
+
+print("Simulated data statistics:")
+print(f"  Output gap:   mean={obs[:,0].mean():.4f}, std={obs[:,0].std():.4f}")
+print(f"  Inflation:    mean={obs[:,1].mean():.4f}, std={obs[:,1].std():.4f}")
+
+# Evaluate likelihood at true parameters
+ll_true = kalman_loglik(true_params, obs)
+print(f"\nLog-likelihood at true params: {ll_true:.2f}")
+
+# ─── Posterior mode search ────────────────────────────────
+def neg_log_posterior(params):
+    ll = kalman_loglik(params, obs)
+    if not np.isfinite(ll):
+        return 1e10
+    # Log-normal-ish priors (simplified)
+    lp  = -0.5*((params[1]-1.5)/0.375)**2   # sigma ~ N(1.5, 0.375)
+    lp += -0.5*((params[3]-1.7)/0.30)**2    # phi_pi ~ N(1.7, 0.3)
+    return -(ll + lp)
+
+res = minimize(neg_log_posterior, true_params,
+               method='Nelder-Mead',
+               options={'maxiter': 2000, 'xatol': 1e-5})
+print(f"\nPosterior mode found: LL={-res.fun:.2f}")
+print("Parameter estimates vs. truth:")
+names = ['beta','sigma','kappa','phi_pi','phi_y','rho_v','rho_a']
+for n, t, e in zip(names, true_params, res.x):
+    print(f"  {n:<8}: true={t:.3f}, estimated={e:.3f}")</code></pre>
+        </div>
+        <div class="code-panel" id="cb-estimation-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Kalman Filter in R ────────────────────────────────────
+kalman_loglik_r <- function(F, H, Q, R, y_data) {
+  n <- nrow(F); T_data <- nrow(y_data)
+  
+  # Unconditional covariance (discrete Lyapunov)
+  # Simple iterative solution
+  P <- Q
+  for (i in 1:500) P <- F %*% P %*% t(F) + Q
+  s <- rep(0, n)
+  
+  log_lik <- 0
+  for (t in 1:T_data) {
+    y_pred  <- H %*% s
+    inn     <- y_data[t,] - y_pred
+    S       <- H %*% P %*% t(H) + R
+    Sinv    <- solve(S)
+    log_lik <- log_lik - 0.5*(log(det(S)) + t(inn) %*% Sinv %*% inn)
+    K <- P %*% t(H) %*% Sinv              # Kalman gain
+    s <- F %*% (s + K %*% inn)            # Predict
+    P <- F %*% (diag(n) - K %*% H) %*% P %*% t(F) + Q
+  }
+  as.numeric(log_lik)
+}
+
+# Build state-space for NK model
+build_ss_r <- function(beta=0.99, sigma=1.0, kappa=0.125,
+                       phi_pi=1.5, phi_y=0.125,
+                       rho_v=0.5, rho_a=0.9) {
+  A <- matrix(c(1+phi_y/sigma,-kappa,phi_pi/sigma,1), 2, 2)
+  B <- matrix(c(1,0,1/sigma,beta), 2, 2)
+  
+  Mv <- A - rho_v*B; Cv <- c(-1/sigma, 0)
+  Ma <- A - rho_a*B; Ca <- c(sigma*(1-rho_a), 0)
+  
+  cv <- solve(Mv, Cv);  ca <- solve(Ma, Ca)
+  
+  H <- rbind(c(cv[1], ca[1]),
+             c(cv[2], ca[2]))   # 2x2: [x_t; pi_t] = H @ [v_t; a_t]
+  F <- diag(c(rho_v, rho_a))
+  list(F=F, H=H)
+}
+
+# Simulate data
+set.seed(2024); T_data <- 100
+ss  <- build_ss_r()
+Q_m <- diag(c(0.01^2, 0.01^2))
+R_m <- diag(c(1e-6, 1e-6))
+
+states <- matrix(0, T_data, 2); obs <- matrix(0, T_data, 2)
+s <- c(0,0)
+for (t in 1:T_data) {
+  eps    <- c(rnorm(1, 0, 0.01), rnorm(1, 0, 0.01))
+  s      <- ss$F %*% s + eps
+  states[t,] <- s
+  obs[t,]    <- ss$H %*% s
+}
+
+# Evaluate likelihood
+ll <- kalman_loglik_r(ss$F, ss$H, Q_m, R_m, obs)
+cat(sprintf("Log-likelihood at true parameters: %.2f\n", ll))
+cat(sprintf("Output gap   — mean: %.4f, sd: %.4f\n",
+    mean(obs[,1]), sd(obs[,1])))
+cat(sprintf("Inflation    — mean: %.4f, sd: %.4f\n",
+    mean(obs[,2]), sd(obs[,2])))</code></pre>
+        </div>
+        <button class="run-btn" id="run-estimation" onclick="runPyodide('run-estimation','out-estimation', document.querySelector('#cb-estimation-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-estimation"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+    <!-- ═══════════════════════════════════════════════════
+         MODULE 9: ADVANCED TOPICS
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-advanced">
+      <div class="section-header">
+        <div class="section-badge">📍 Module 9</div>
+        <h1 class="section-title">Advanced Topics</h1>
+        <p class="section-subtitle">Heterogeneous agents, financial frictions, open-economy DSGE, and Heterogeneous Agent New Keynesian (HANK) models.</p>
+      </div>
+
+      <h3>9.1 Heterogeneous Agent Models</h3>
+      <p>The representative-agent assumption is convenient but misses crucial distributional dynamics. <strong>Bewley-Huggett-Aiyagari</strong> models replace the representative agent with a continuum of households facing idiosyncratic income uncertainty and incomplete markets (they can only self-insure by holding non-negative assets).</p>
+
+      <div class="math-box">
+        <div class="math-label">Household Problem — Bewley-Aiyagari</div>
+        $$V(a, z) = \max_{c, a'} \frac{c^{1-\sigma}}{1-\sigma} + \beta E[V(a', z') | z]$$
+        $$\text{s.t.} \quad c + a' = (1+r)a + wz, \quad a' \geq \underline{a}$$
+      </div>
+      <p>where $z$ is idiosyncratic productivity (Markov chain), $a$ is asset holdings, and $\underline{a} \geq 0$ is a borrowing constraint. The distribution of agents over $(a, z)$ is endogenous and constitutes part of the state space. The general equilibrium condition sets the interest rate to clear the asset market: $\int a \, d\mu(a,z) = K$ (capital).</p>
+
+      <div class="info-box ib-purple">
+        <div class="ib-icon">🔬</div>
+        <div class="ib-content">
+          <div class="ib-title">The Krusell-Smith Algorithm</div>
+          <div class="ib-body">Krusell and Smith (1998) showed that the mean of the wealth distribution almost fully captures the relevant cross-sectional state for aggregate dynamics. This "bounded rationality" approach allows a tractable solution: agents use a simple law of motion for aggregate capital as a proxy for the distribution.</div>
+        </div>
+      </div>
+
+      <h3>9.2 Financial Frictions — The BGG Accelerator</h3>
+      <p>Bernanke, Gertler, and Gilchrist (1999) introduce <strong>financial frictions</strong> through a costly state verification (CSV) problem. Entrepreneurs borrow from banks but have private information about project returns. Banks must pay a monitoring cost to verify defaults, creating a <strong>external finance premium</strong> above the risk-free rate:</p>
+      <div class="math-box">
+        <div class="math-label">External Finance Premium</div>
+        $$E_t\!\left[\frac{R^k_{t+1}}{R_{t+1}}\right] = s\!\left(\frac{N_t}{Q_t K_{t+1}}\right), \quad s' < 0$$
+      </div>
+      <p>where $N_t$ is entrepreneur net worth, $Q_t K_{t+1}$ is total assets. When net worth falls (e.g., after a bad shock), the premium rises, investment contracts, output falls, net worth falls further — the <strong>financial accelerator</strong>. This mechanism amplifies and propagates shocks through credit markets.</p>
+
+      <h3>9.3 Zero Lower Bound (ZLB)</h3>
+      <p>The nominal interest rate cannot fall below zero (approximately), creating a <strong>kink</strong> in the policy rule. With conventional Taylor rules, the ZLB creates a liquidity trap: large deflationary shocks raise real rates (since $i_t = 0$ and $\pi_t < 0$ implies $r_t = -\pi_t > 0$), deepening the recession further.</p>
+      <div class="math-box">
+        $$i_t = \max\!\left[0, \; \phi_\pi \pi_t + \phi_y x_t + v_t\right]$$
+      </div>
+      <p>Solving at the ZLB requires global methods (projection methods, piecewise linear, extended path). Key results: fiscal multipliers are large at the ZLB (Christiano-Eichenbaum-Rebelo 2011), forward guidance is powerful but prone to the "forward guidance puzzle" (Del Negro et al.).</p>
+
+      <h3>9.4 Open-Economy DSGE</h3>
+      <p>In a two-country open-economy model (Galí-Monacelli 2005), domestic and foreign goods are imperfect substitutes. New channels arise:</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🌍 Terms of Trade (ToT)</div>
+          <p>$S_t = P_{F,t}/P_{H,t}$ — the relative price of foreign vs. domestic goods. ToT appreciation makes domestic goods relatively expensive, shifting demand toward foreign goods (substitution effect) and hurting domestic output.</p>
+          <div class="math-box" style="margin-top:10px">$$\pi_{H,t} = \beta E_t[\pi_{H,t+1}] + \kappa_\alpha x_t$$</div>
+          <p>where $\kappa_\alpha$ depends on openness $\alpha$ and home bias.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">💱 Uncovered Interest Parity</div>
+          <p>Capital flows equalize expected returns across countries. In log-linear form:</p>
+          <div class="math-box">$$i_t - i_t^* = E_t[\Delta e_{t+1}] + \psi_t$$</div>
+          <p>where $e_t$ is the log exchange rate and $\psi_t$ is an UIP premium (risk or convenience yield). Deviations from UIP are empirically large and persistent (the "UIP puzzle").</p>
+        </div>
+      </div>
+
+      <h3>9.5 HANK Models</h3>
+      <p>The <strong>Heterogeneous Agent New Keynesian (HANK)</strong> framework (Kaplan, Moll, Violante 2018) integrates Bewley-style household heterogeneity into a full New Keynesian model with nominal rigidities. This is currently the frontier of DSGE research.</p>
+
+      <div class="card">
+        <div class="card-title">🔑 Key Insights from HANK vs. RANK</div>
+        <ul>
+          <li><strong>Fiscal multipliers differ:</strong> With hand-to-mouth (HtM) consumers who spend their entire income, fiscal transfers have high multipliers. In RANK (no HtM), multipliers are low due to Ricardian equivalence.</li>
+          <li><strong>Monetary transmission is indirect:</strong> In RANK, monetary policy works primarily through the intertemporal Euler equation (direct channel). In HANK, the direct channel is weak (only the wealthy respond to rates); most transmission goes through indirect channels — employment income and dividend income of constrained agents.</li>
+          <li><strong>Distributional effects matter for aggregate dynamics:</strong> The marginal propensity to consume (MPC) out of transfers is heterogeneous. Wealthy HtM agents (high illiquid wealth, low liquid wealth) have high MPCs despite non-zero net worth — a key empirical finding from the PSID.</li>
+          <li><strong>Inequality and monetary policy:</strong> Rate cuts disproportionately benefit debtors (lower interest payments) and hurt net savers — distributional effects of monetary policy become quantitatively important.</li>
+        </ul>
+      </div>
+
+      <div class="math-box">
+        <div class="math-label">HANK: Household Problem (Two-Asset Version)</div>
+        $$V(b, a, z) = \max_{c, b', a'} u(c) + \beta E[V(b', a', z') | z]$$
+        $$\text{s.t.} \quad c + b' + a' = (1+r^b)b + (1+r^a)a + wz\ell - \chi(a'-a)$$
+      </div>
+      <p>where $b$ is liquid wealth, $a$ is illiquid wealth (housing, retirement accounts), and $\chi(\cdot)$ is a portfolio adjustment cost making illiquid assets genuinely illiquid at high frequency. The distribution $\Gamma_t(b, a, z)$ co-evolves with aggregate variables.</p>
+
+      <div class="info-box ib-green">
+        <div class="ib-icon">📊</div>
+        <div class="ib-content">
+          <div class="ib-title">Solving HANK: Sequence-Space Jacobians</div>
+          <div class="ib-body">The Auclert-Bardóczy-Rognlie-Straub (2021) "sequence-space Jacobian" (SSJ) method makes HANK models as computationally tractable as RANK for first-order dynamics. The key insight: compute the Jacobian of aggregate outcomes with respect to aggregate sequences using automatic differentiation and fake-news algorithm, then solve the linearized system directly.</div>
+        </div>
+      </div>
+
+      <h3>Code: Aiyagari Steady State</h3>
+      <div class="code-block-wrap" id="cb-advanced">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-advanced','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-advanced','r')">R</button>
+        </div>
+        <div class="code-panel active" id="cb-advanced-python">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">import numpy as np
+from scipy.optimize import brentq
+
+# ═══════════════════════════════════════════════════════════
+# AIYAGARI (1994) MODEL — STEADY STATE
+# Households face idiosyncratic income risk, incomplete markets
+# Aggregate capital determined in GE by asset market clearing
+# ═══════════════════════════════════════════════════════════
+
+# ── Parameters ──────────────────────────────────────────────
+beta   = 0.96     # Annual discount factor
+sigma  = 1.5      # Risk aversion (CRRA utility)
+alpha  = 0.36     # Capital share in production
+delta  = 0.08     # Annual depreciation rate
+a_min  = 0.0      # Borrowing constraint (natural)
+a_max  = 40.0     # Upper end of asset grid
+n_a    = 200      # Grid points for assets
+rho_z  = 0.9      # Persistence of log-income AR(1)
+sig_z  = 0.2      # Std dev of income shocks
+
+# ── Income process (Rouwenhorst discretization, 5 states) ──
+n_z = 5
+z_vals = np.linspace(-2*sig_z, 2*sig_z, n_z)  # log-income grid
+z_vals = np.exp(z_vals - z_vals.mean())         # normalize mean to 1
+
+# Markov transition (simplified: equal spacing Rouwenhorst)
+p = (1 + rho_z) / 2
+Pi = np.zeros((n_z, n_z))
+Pi[0,0] = p; Pi[0,1] = 1-p
+Pi[-1,-2] = 1-p; Pi[-1,-1] = p
+for i in range(1, n_z-1):
+    Pi[i, i-1] = (1-p)/2; Pi[i,i] = (p); Pi[i,i+1] = (1-p)/2
+    Pi[i,:] /= Pi[i,:].sum()  # normalize rows
+
+# Stationary distribution of income
+from numpy.linalg import eig
+eigvals, eigvecs = eig(Pi.T)
+stat_dist = np.abs(eigvecs[:, np.argmax(eigvals.real)])
+stat_dist /= stat_dist.sum()
+
+# ── Asset grid ───────────────────────────────────────────────
+a_grid = np.linspace(a_min, a_max, n_a)
+
+# ── Policy function via VFI ──────────────────────────────────
+def solve_household(r, w, tol=1e-6, max_iter=500):
+    """
+    Solve household problem given prices (r, w).
+    Returns policy function c(a, z) and savings a'(a, z).
+    """
+    # Pre-compute consumption matrix: c(a, a', z) = (1+r)*a + w*z - a'
+    # Shape: (n_a, n_z, n_a) — [current_a, income_z, future_a]
+    budget = (1+r) * a_grid[:, None, None] + w * z_vals[None, :, None]
+    c_mat = budget - a_grid[None, None, :]  # c = budget - a'
+    
+    # CRRA utility (mask infeasible)
+    u_mat = np.where(c_mat > 0,
+                     c_mat**(1-sigma) / (1-sigma) if sigma != 1 else np.log(c_mat),
+                     -np.inf)
+    
+    V = np.zeros((n_a, n_z))
+    for it in range(max_iter):
+        EV = V @ Pi.T                           # (n_a, n_z): E[V(a', z')]
+        Q  = u_mat + beta * EV[None, None, :]  # (n_a, n_z, n_a)
+        V_new = Q.max(axis=2)
+        pol_idx = Q.argmax(axis=2)
+        
+        diff = np.max(np.abs(V_new - V))
+        V = V_new
+        if diff < tol:
+            break
+    
+    a_pol = a_grid[pol_idx]   # savings policy function (n_a, n_z)
+    c_pol = budget[:,:,0] + (1+r)*a_grid[:,None] + w*z_vals[None,:] - a_pol
+    return a_pol, c_pol, V
+
+# ── Find GE interest rate ────────────────────────────────────
+def excess_asset_demand(r):
+    """Asset market clearing: K_demand(r) - K_supply(r) = 0"""
+    w = (1-alpha) * (alpha/(r+delta))**(alpha/(1-alpha))  # factor prices from firm FOC
+    K = (alpha/(r+delta))**(1/(1-alpha))                  # capital demand from firms
+    
+    a_pol, _, _ = solve_household(r, w)
+    
+    # Compute stationary distribution over (a, z)
+    # Simple simulation approach
+    n_sim = 20000
+    assets = np.ones(n_sim) * a_grid[n_a//5]
+    income_idx = np.random.choice(n_z, n_sim, p=stat_dist)
+    
+    for _ in range(200):  # simulate to stationarity
+        pol_for_agent = np.array([a_pol[np.searchsorted(a_grid, assets[i]), income_idx[i]]
+                                   for i in range(n_sim)])
+        assets = pol_for_agent
+        for i in range(n_sim):
+            income_idx[i] = np.random.choice(n_z, p=Pi[income_idx[i]])
+    
+    K_supply = assets.mean()
+    return K_supply - K
+
+# Compute at a few interest rates (not full bisection for brevity)
+r_vals = [0.01, 0.03, 0.05]
+print("Aiyagari Steady-State Analysis")
+print(f"{'r':>8} {'K_demand':>12} {'K_supply':>12} {'Excess':>12}")
+print("-" * 46)
+for r in r_vals:
+    w = (1-alpha) * (alpha/(r+delta))**(alpha/(1-alpha))
+    K_d = (alpha/(r+delta))**(1/(1-alpha))
+    # Approximate K_supply from household savings (simplified, 1 round VFI)
+    a_pol, c_pol, _ = solve_household(r, w, max_iter=100)
+    K_s_approx = a_pol.mean()  # rough approximation
+    print(f"{r:>8.3f} {K_d:>12.3f} {K_s_approx:>12.3f} {K_s_approx - K_d:>12.3f}")
+
+print("\nNote: Full GE requires iteration until K_supply = K_demand.")
+print("At the equilibrium r*, precautionary savings push r* < 1/β - 1.")</code></pre>
+        </div>
+        <div class="code-panel" id="cb-advanced-r">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-r"># ── Aiyagari Steady State in R ────────────────────────────
+# Simplified version illustrating the structure
+
+# Parameters
+beta  <- 0.96; sigma <- 1.5; alpha <- 0.36; delta <- 0.08
+n_a   <- 100
+a_grid <- seq(0, 20, length.out=n_a)
+n_z   <- 3
+z_vals <- c(0.5, 1.0, 1.5)   # income states
+Pi    <- matrix(c(0.9, 0.1, 0.0,
+                  0.1, 0.8, 0.1,
+                  0.0, 0.1, 0.9), 3, 3, byrow=TRUE)
+
+# CRRA utility
+u_fn <- function(c) ifelse(c > 0, c^(1-sigma)/(1-sigma), -1e10)
+
+# Solve household problem for given prices
+solve_hh <- function(r, w, max_iter=300, tol=1e-6) {
+  V <- matrix(0, n_a, n_z)
+  pol <- matrix(1, n_a, n_z)  # policy index
+
+  for (it in 1:max_iter) {
+    EV <- V %*% t(Pi)   # expected continuation value
+    V_new <- matrix(-Inf, n_a, n_z)
+
+    for (iz in 1:n_z) {
+      budget <- (1+r)*a_grid + w*z_vals[iz]
+      for (ia in 1:n_a) {
+        c_vec  <- budget[ia] - a_grid
+        util   <- u_fn(c_vec)
+        Q      <- util + beta * EV[, iz]
+        best   <- which.max(Q)
+        V_new[ia, iz] <- Q[best]
+        pol[ia, iz]   <- best
+      }
+    }
+    if (max(abs(V_new - V)) < tol) break
+    V <- V_new
+  }
+  list(pol=pol, V=V)
+}
+
+# Compute at r = 0.04
+r <- 0.04
+w <- (1-alpha)*(alpha/(r+delta))^(alpha/(1-alpha))
+K_demand <- (alpha/(r+delta))^(1/(1-alpha))
+
+cat(sprintf("At r = %.2f:\n", r))
+cat(sprintf("  Wage w        = %.4f\n", w))
+cat(sprintf("  Capital demand = %.4f\n", K_demand))
+
+res <- solve_hh(r, w, max_iter=200)
+avg_savings <- mean(a_grid[res$pol])
+cat(sprintf("  Avg. savings  = %.4f\n", avg_savings))
+cat(sprintf("  Excess demand = %.4f\n", avg_savings - K_demand))
+cat("\nIn GE: iterate r until avg. savings = capital demand.")</code></pre>
+        </div>
+        <button class="run-btn" id="run-advanced" onclick="runPyodide('run-advanced','out-advanced', document.querySelector('#cb-advanced-python code').textContent)">▶ Run in Browser (Python)</button>
+        <div class="pyodide-output" id="out-advanced"></div>
+      </div>
+
+      <!-- QUIZ 9 -->
+      <div class="quiz-card" id="quiz-advanced">
+        <div class="quiz-title">🎯 Module 9 Self-Check</div>
+        <div class="quiz-q" data-qid="q9-1">
+          <div class="quiz-q-text">1. In the HANK model (vs. RANK), the main channel through which monetary policy affects aggregate consumption is:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q9-1" value="a"> The direct intertemporal substitution channel (Euler equation) — same as RANK</label>
+            <label class="quiz-option"><input type="radio" name="q9-1" value="b"> Indirect income channels — changes in employment and wages that hit hand-to-mouth consumers</label>
+            <label class="quiz-option"><input type="radio" name="q9-1" value="c"> Government transfers automatically triggered by the Taylor rule</label>
+            <label class="quiz-option"><input type="radio" name="q9-1" value="d"> The exchange rate channel in the open economy</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q9-1"></div>
+        </div>
+        <div class="quiz-q" data-qid="q9-2">
+          <div class="quiz-q-text">2. The "financial accelerator" (BGG 1999) amplifies shocks because:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q9-2" value="a"> Central banks are slow to respond to shocks</label>
+            <label class="quiz-option"><input type="radio" name="q9-2" value="b"> A negative shock reduces entrepreneur net worth, raises the external finance premium, reduces investment, further reduces net worth — creating a feedback loop</label>
+            <label class="quiz-option"><input type="radio" name="q9-2" value="c"> Higher uncertainty makes firms delay investment indefinitely</label>
+            <label class="quiz-option"><input type="radio" name="q9-2" value="d"> The Taylor rule becomes inactive at the zero lower bound</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q9-2"></div>
+        </div>
+        <div class="quiz-q" data-qid="q9-3">
+          <div class="quiz-q-text">3. In an Aiyagari (1994) model, the equilibrium real interest rate is below the discount rate (r* &lt; 1/β − 1) because:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="q9-3" value="a"> Firms are monopolistically competitive and earn positive profits</label>
+            <label class="quiz-option"><input type="radio" name="q9-3" value="b"> Precautionary saving motives drive asset demand above the representative-agent level, pushing down the equilibrium interest rate</label>
+            <label class="quiz-option"><input type="radio" name="q9-3" value="c"> The government borrows from households, crowding out investment</label>
+            <label class="quiz-option"><input type="radio" name="q9-3" value="d"> Capital depreciates faster than in the representative-agent model</label>
+          </div>
+          <div class="quiz-feedback" id="fb-q9-3"></div>
+        </div>
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-advanced', {'q9-1':'b','q9-2':'b','q9-3':'b'}, {
+          'q9-1-b': 'Correct! Kaplan, Moll, Violante (2018) show that in HANK, the direct Euler-equation channel is quantitatively small because many households are at the borrowing constraint and cannot substitute intertemporally. Monetary policy mainly works by affecting income of constrained households through labor markets.',
+          'q9-1-a': 'Incorrect. This is the RANK channel. In HANK, most households are hand-to-mouth or wealthy hand-to-mouth and do not respond strongly to interest rate changes.',
+          'q9-2-b': 'Correct! The BGG accelerator creates a feedback: shock → ↓ net worth → ↑ external finance premium → ↓ investment → ↓ output → ↓ net worth. This amplification mechanism is absent in frictionless models.',
+          'q9-2-a': 'Incorrect. The accelerator is a within-period amplification mechanism, not about policy lags.',
+          'q9-3-b': 'Correct! Facing idiosyncratic income risk and incomplete markets, households engage in precautionary saving — they demand more assets than the representative agent would. This excess demand pushes down the equilibrium interest rate below the representative-agent value.',
+          'q9-3-a': 'Incorrect. Monopolistic competition creates a markup wedge, but the key driver of low r* in Aiyagari is precautionary saving.',
+          'q9-3-c': 'Incorrect. Aiyagari (1994) focuses on precautionary savings with exogenous government (or no government).'
+        })">Check Answers</button>
+        <div class="quiz-result" id="result-quiz-advanced"></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════
+         FINAL QUIZ
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="s-quiz">
+      <div class="section-header">
+        <div class="section-badge">📍 Final Assessment</div>
+        <h1 class="section-title">Final Assessment</h1>
+        <p class="section-subtitle">Test your mastery of the full DSGE curriculum — from foundations to advanced topics.</p>
+      </div>
+
+      <div class="quiz-card" id="quiz-final">
+        <div class="quiz-title">🎓 Comprehensive Final Quiz (10 Questions)</div>
+
+        <div class="quiz-q" data-qid="qf-1">
+          <div class="quiz-q-text">1. In the steady state of the NK model with $\beta = 0.99$ (quarterly), what is the annualized natural real interest rate?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-1" value="a"> 1% per year</label>
+            <label class="quiz-option"><input type="radio" name="qf-1" value="b"> 4% per year (approximately)</label>
+            <label class="quiz-option"><input type="radio" name="qf-1" value="c"> 10% per year</label>
+            <label class="quiz-option"><input type="radio" name="qf-1" value="d"> 0% — no natural rate in NK models</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-1"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-2">
+          <div class="quiz-q-text">2. Which of the following correctly describes the Calvo (1983) pricing mechanism?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-2" value="a"> All firms adjust prices every period but pay a menu cost</label>
+            <label class="quiz-option"><input type="radio" name="qf-2" value="b"> A fixed fraction (1-θ) of randomly chosen firms can reset their price each period</label>
+            <label class="quiz-option"><input type="radio" name="qf-2" value="c"> Firms observe a public signal before choosing whether to adjust</label>
+            <label class="quiz-option"><input type="radio" name="qf-2" value="d"> All prices are set one period in advance (Taylor staggering)</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-2"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-3">
+          <div class="quiz-q-text">3. In the 3-equation NK model, a positive monetary policy shock $v_t > 0$ (unexpected rate hike) causes:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-3" value="a"> Output gap rises, inflation rises, nominal rate rises</label>
+            <label class="quiz-option"><input type="radio" name="qf-3" value="b"> Output gap falls, inflation falls, nominal rate rises</label>
+            <label class="quiz-option"><input type="radio" name="qf-3" value">c"> Output gap rises, inflation falls, nominal rate rises</label>
+            <label class="quiz-option"><input type="radio" name="qf-3" value="d"> Output gap falls, inflation rises, nominal rate rises</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-3"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-4">
+          <div class="quiz-q-text">4. The NKPC slope $\kappa = (1-\theta)(1-\beta\theta)/\theta$ approaches zero as $\theta \to 1$. This means:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-4" value="a"> With nearly fully flexible prices, inflation responds explosively to the output gap</label>
+            <label class="quiz-option"><input type="radio" name="qf-4" value="b"> With nearly fully rigid prices, inflation barely responds to the output gap — the curve is almost flat</label>
+            <label class="quiz-option"><input type="radio" name="qf-4" value="c"> Inflation equals the discount factor times expected inflation, regardless of output</label>
+            <label class="quiz-option"><input type="radio" name="qf-4" value="d"> The Calvo parameter has no effect on inflation dynamics</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-4"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-5">
+          <div class="quiz-q-text">5. The Blanchard-Kahn condition for a unique stable equilibrium requires that the number of explosive eigenvalues equals:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-5" value="a"> The total number of variables in the system</label>
+            <label class="quiz-option"><input type="radio" name="qf-5" value="b"> The number of predetermined (backward-looking) variables</label>
+            <label class="quiz-option"><input type="radio" name="qf-5" value="c"> The number of non-predetermined (forward-looking, jump) variables</label>
+            <label class="quiz-option"><input type="radio" name="qf-5" value="d"> The number of structural shocks</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-5"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-6">
+          <div class="quiz-q-text">6. Bayesian estimation of DSGE models uses the Kalman filter primarily to:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-6" value="a"> Generate impulse response functions</label>
+            <label class="quiz-option"><input type="radio" name="qf-6" value="b"> Compute the likelihood of observed data given model parameters</label>
+            <label class="quiz-option"><input type="radio" name="qf-6" value="c"> Calibrate the discount factor β</label>
+            <label class="quiz-option"><input type="radio" name="qf-6" value="d"> Sample from the prior distribution</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-6"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-7">
+          <div class="quiz-q-text">7. A positive cost-push shock $u_t > 0$ in the NKPC creates a policy dilemma because:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-7" value="a"> It raises both inflation and the output gap simultaneously</label>
+            <label class="quiz-option"><input type="radio" name="qf-7" value="b"> It raises inflation but requires a fall in the output gap to bring inflation back to target — a tradeoff between stabilizing inflation and output</label>
+            <label class="quiz-option"><input type="radio" name="qf-7" value="c"> It lowers the natural rate of interest, making the ZLB binding</label>
+            <label class="quiz-option"><input type="radio" name="qf-7" value="d"> It violates the Taylor principle by making φ_π negative</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-7"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-8">
+          <div class="quiz-q-text">8. In the Smets-Wouters (2003, 2007) model, what was the key empirical finding?</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-8" value="a"> DSGE models cannot match the moments of macroeconomic data</label>
+            <label class="quiz-option"><input type="radio" name="qf-8" value="b"> A medium-scale DSGE model estimated by Bayesian methods fits the data comparably to an unrestricted Bayesian VAR</label>
+            <label class="quiz-option"><input type="radio" name="qf-8" value="c"> Technology shocks explain 100% of business cycle variance</label>
+            <label class="quiz-option"><input type="radio" name="qf-8" value="d"> The Calvo parameter should be calibrated near zero for realism</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-8"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-9">
+          <div class="quiz-q-text">9. The "forward guidance puzzle" in New Keynesian models refers to:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-9" value="a"> The failure of the Taylor rule to prevent indeterminacy</label>
+            <label class="quiz-option"><input type="radio" name="qf-9" value="b"> The standard NK model predicts implausibly large effects of promises about future interest rates many periods ahead</label>
+            <label class="quiz-option"><input type="radio" name="qf-9" value="c"> Households cannot observe the central bank's forward guidance announcements</label>
+            <label class="quiz-option"><input type="radio" name="qf-9" value="d"> Forward guidance is only effective at the zero lower bound</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-9"></div>
+        </div>
+
+        <div class="quiz-q" data-qid="qf-10">
+          <div class="quiz-q-text">10. Second-order perturbation methods (vs. first-order) are necessary when:</div>
+          <div class="quiz-options">
+            <label class="quiz-option"><input type="radio" name="qf-10" value="a"> The model has more than three equations</label>
+            <label class="quiz-option"><input type="radio" name="qf-10" value="b"> Shock variances affect decision rules — e.g., precautionary savings, risk premia, welfare comparisons</label>
+            <label class="quiz-option"><input type="radio" name="qf-10" value="c"> The Calvo parameter exceeds 0.5</label>
+            <label class="quiz-option"><input type="radio" name="qf-10" value="d"> The model is estimated with Bayesian methods</label>
+          </div>
+          <div class="quiz-feedback" id="fb-qf-10"></div>
+        </div>
+
+        <button class="quiz-submit" onclick="gradeQuiz('quiz-final', {
+          'qf-1':'b','qf-2':'b','qf-3':'b','qf-4':'b','qf-5':'c',
+          'qf-6':'b','qf-7':'b','qf-8':'b','qf-9':'b','qf-10':'b'
+        }, {
+          'qf-1-b': 'Correct! r* = 1/β − 1 = 1/0.99 − 1 ≈ 0.0101 per quarter, annualized as 4 × 1.01% ≈ 4%. This is the steady-state real interest rate in the NK model.',
+          'qf-1-a': 'Incorrect. 1/0.99 − 1 ≈ 1.01% quarterly, which annualizes to about 4%, not 1%.',
+          'qf-2-b': 'Correct! In each period, a random fraction (1-θ) of firms is drawn to be able to reset their price optimally; the remaining fraction θ keep their old price unchanged.',
+          'qf-2-a': 'Incorrect. Menu-cost models (Golosov-Lucas) work this way, not Calvo.',
+          'qf-3-b': 'Correct! A monetary tightening (v_t > 0) raises the real interest rate, depressing demand (x_t falls). Lower demand reduces marginal cost, so inflation falls. The nominal rate rises through the Taylor rule plus the shock.',
+          'qf-3-d': 'Incorrect. Cost-push shocks create stagflation (x↓, π↑), but MP shocks cause x and π to move together.',
+          'qf-4-b': 'Correct! As θ → 1 (prices nearly completely rigid), κ → 0, meaning the Phillips curve becomes nearly flat — inflation is nearly unresponsive to the output gap. This "Phillips curve flattening" is empirically relevant post-1990.',
+          'qf-4-a': 'Incorrect. As θ → 1, more stickiness means less inflation response, not more.',
+          'qf-5-c': 'Correct! BK conditions: # explosive eigenvalues = # non-predetermined (forward-looking, jump) variables. Too few: indeterminacy. Too many: non-existence.',
+          'qf-5-b': 'Incorrect. Predetermined variables are anchored by initial conditions; the BK condition pins down the jump variables.',
+          'qf-6-b': 'Correct! The Kalman filter provides the exact log-likelihood p(Y|Θ) for the linear Gaussian state-space model, which is then combined with the prior via Bayes theorem. MCMC samples from the posterior.',
+          'qf-6-a': 'Incorrect. IRFs come from the policy function, not the Kalman filter per se.',
+          'qf-7-b': 'Correct! A cost-push shock π↑ with x unchanged — stabilizing inflation (raising i) would cause x to fall further. The CB must choose: accept higher inflation or accept lower output. This inflation-output tradeoff is absent after demand shocks (where x and π move together).',
+          'qf-7-a': 'Incorrect. Cost-push shock raises π but reduces x (stagflation) — not both rising.',
+          'qf-8-b': 'Correct! This was the landmark finding of Smets and Wouters (2003) that legitimized DSGE models for empirical central banking — the model''s marginal likelihood was competitive with a 7-variable BVAR on Euro area data.',
+          'qf-8-c': 'Incorrect. SW found a rich mix of shocks (preference, technology, markup, monetary, fiscal) drive business cycles.',
+          'qf-9-b': 'Correct! In the standard linearized NK model, a promise to keep rates low for N periods ahead has effects that grow exponentially in N — even promises 10+ years ahead have enormous impact. This is empirically implausible and driven by no discounting of the future in rational expectations.',
+          'qf-9-a': 'Incorrect. Indeterminacy concerns φ_π < 1 (Taylor principle violation), not forward guidance.',
+          'qf-10-b': 'Correct! First-order (log-linear) approximations exhibit certainty equivalence: shock variances do not affect decision rules. Second-order methods are needed for: precautionary motives, risk premia in asset prices, welfare analysis (Jensen''s inequality), and occasionally-binding constraints.',
+          'qf-10-a': 'Incorrect. The number of equations does not determine the required approximation order.'
+        })">Submit Final Exam</button>
+        <div class="quiz-result" id="result-quiz-final" style="font-size:16px;margin-top:16px"></div>
+      </div>
+    </section>
+
+  </div><!-- end #content -->
+</div><!-- end #main -->
+
+<!-- ═══════════════════════════════════════════════════
+     GLOSSARY MODAL
+═══════════════════════════════════════════════════ -->
+<div id="glossary-modal">
+  <div id="glossary-overlay" onclick="closeGlossary()"></div>
+  <div id="glossary-panel">
+    <button class="glossary-close" onclick="closeGlossary()">✕</button>
+    <h2>📚 DSGE Glossary</h2>
+    <p>Key terms and definitions from the course.</p>
+    <input type="text" id="glossary-search" placeholder="Search terms..." oninput="filterGlossary(this.value)">
+    <div id="glossary-items"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// GLOSSARY DATA
+// ═══════════════════════════════════════════════════════════
+const GLOSSARY = [
+  { term: "DSGE", tag: "Core", def: "Dynamic Stochastic General Equilibrium — a class of macroeconomic models where forward-looking agents optimize over time under uncertainty, with all markets clearing simultaneously." },
+  { term: "Euler Equation", tag: "Household", def: "The first-order condition for optimal intertemporal consumption allocation. States that the marginal utility of consuming today equals the expected discounted marginal utility of consuming tomorrow, adjusted for the real return on savings." },
+  { term: "Calvo Pricing", tag: "Firms", def: "A model of nominal price stickiness where each firm, independently each period, receives a price-adjustment opportunity with probability (1−θ). The expected duration of any given price is 1/(1−θ) periods." },
+  { term: "NKPC", tag: "Equations", def: "New Keynesian Phillips Curve: π_t = β E_t[π_{t+1}] + κ x_t. Inflation is a weighted sum of all expected future output gaps — purely forward-looking. The slope κ = (1−θ)(1−βθ)/θ is decreasing in price stickiness θ." },
+  { term: "Taylor Rule", tag: "Policy", def: "An interest rate rule i_t = r̄ + π* + φ_π(π_t − π*) + φ_y x_t + v_t. Proposed by John Taylor (1993). The Taylor Principle requires φ_π > 1 for determinacy." },
+  { term: "Taylor Principle", tag: "Policy", def: "The requirement that the central bank raises the real interest rate when inflation rises, i.e., the nominal rate response to inflation φ_π exceeds 1. Necessary for a unique stable (determinate) equilibrium." },
+  { term: "Output Gap", tag: "Core", def: "x_t = y_t − y_t^n: the difference between log actual output and log potential output (the level that would prevail with flexible prices). A negative gap indicates economic slack." },
+  { term: "Natural Rate of Interest", tag: "Core", def: "r_t^n: the real interest rate consistent with output at potential and stable inflation. The NK model implies this fluctuates with technology shocks. Secular decline in r_n post-2000 is central to the ZLB debate." },
+  { term: "IS Curve (Dynamic)", tag: "Equations", def: "x_t = E_t[x_{t+1}] − (1/σ)(i_t − E_t[π_{t+1}] − r_t^n). The New Keynesian IS curve: current output gap depends on expected future output gap and the real interest rate gap." },
+  { term: "Discount Factor β", tag: "Household", def: "β ∈ (0,1): the weight placed on utility next period relative to today. At quarterly frequency, β ≈ 0.99, implying a steady-state annual real rate of ≈4%. Relates to the subjective rate of time preference ρ = −ln β." },
+  { term: "IES", tag: "Household", def: "Intertemporal Elasticity of Substitution in consumption = 1/σ. Measures how much households substitute consumption across time in response to interest rate changes. Log utility (σ=1) gives IES=1." },
+  { term: "Frisch Elasticity", tag: "Household", def: "1/φ: the elasticity of labor supply with respect to the wage, holding the marginal utility of wealth constant. A high Frisch elasticity means households respond strongly to wage changes by adjusting hours." },
+  { term: "Blanchard-Kahn", tag: "Solution", def: "Conditions for a unique stable rational expectations equilibrium: the number of explosive eigenvalues of the system must equal the number of non-predetermined (jump) variables. If fewer: indeterminacy; if more: non-existence." },
+  { term: "Determinacy", tag: "Solution", def: "A unique stable equilibrium exists given the model's policy rule and parameters. In the NK model, the Taylor Principle (φ_π > 1) is the key condition for determinacy." },
+  { term: "Indeterminacy", tag: "Solution", def: "Multiple stable equilibria exist — including sunspot equilibria where self-fulfilling expectations drive fluctuations even without any fundamental shocks. Occurs in NK when the Taylor Principle is violated (φ_π < 1)." },
+  { term: "State-Space Form", tag: "Solution", def: "A recursive representation: s_{t+1} = F s_t + G ε_{t+1} (state equation), y_t = H s_t (observation equation). F, H are the model's 'policy functions' derived from the linear RE solution." },
+  { term: "Perturbation Methods", tag: "Solution", def: "Approximate solutions as Taylor series expansions around the non-stochastic steady state, indexed by σ (shock variance). First-order = log-linear (certainty equivalence). Second-order captures risk effects." },
+  { term: "Kalman Filter", tag: "Estimation", def: "An algorithm for recursive Bayesian inference on latent states in a linear Gaussian state-space model. Used in DSGE estimation to compute the likelihood p(Y|Θ) given parameters." },
+  { term: "Bayesian Estimation", tag: "Estimation", def: "Combines prior information p(Θ) with data likelihood p(Y|Θ) to form the posterior p(Θ|Y) ∝ p(Y|Θ)·p(Θ). MCMC (typically Metropolis-Hastings) samples from the posterior." },
+  { term: "MCMC", tag: "Estimation", def: "Markov Chain Monte Carlo — a class of algorithms (Metropolis-Hastings, Gibbs sampler, HMC) for sampling from intractable posterior distributions. Generates a correlated chain of draws that converges to the target distribution." },
+  { term: "Metropolis-Hastings", tag: "Estimation", def: "A specific MCMC algorithm: propose a new parameter draw from a proposal distribution, accept with probability min(1, posterior_new/posterior_old). Most common algorithm for DSGE posterior sampling." },
+  { term: "HANK", tag: "Advanced", def: "Heterogeneous Agent New Keynesian model (Kaplan-Moll-Violante 2018). Integrates Bewley-style incomplete markets (idiosyncratic risk, borrowing constraints) into a NK model with nominal rigidities and aggregate shocks." },
+  { term: "Financial Accelerator", tag: "Advanced", def: "Mechanism (Bernanke-Gertler-Gilchrist 1999) by which financial frictions amplify and propagate shocks: adverse shock → ↓ net worth → ↑ external finance premium → ↓ investment → ↓ output → ↓ net worth (feedback loop)." },
+  { term: "ZLB", tag: "Advanced", def: "Zero Lower Bound on nominal interest rates: i_t ≥ 0. When the natural rate falls below zero, conventional monetary policy becomes ineffective. Requires global solution methods; changes fiscal and forward-guidance multipliers." },
+  { term: "RBC", tag: "Core", def: "Real Business Cycle model (Kydland-Prescott 1982): a DSGE model without nominal rigidities where technology shocks drive all business cycle fluctuations. Monetary policy is irrelevant (money is neutral)." },
+  { term: "Log-Linearization", tag: "Equations", def: "First-order Taylor approximation of equilibrium conditions in log-deviations from steady state. Products become sums, ratios become differences. Reduces nonlinear systems to linear difference equations." },
+  { term: "Transversality Condition", tag: "Household", def: "lim_{T→∞} β^T E_t[λ_{t+T} B_{t+T}] = 0. Rules out Ponzi schemes; ensures households do not borrow indefinitely. Together with the Euler equation and budget constraint, pins down a unique optimal path." },
+  { term: "Markup", tag: "Firms", def: "μ = ε/(ε−1): the ratio of price to marginal cost charged by monopolistically competitive firms. With ε=6, μ = 1.2 (20% markup). Inversely related to the elasticity of substitution between varieties." },
+  { term: "CES Aggregator", tag: "Firms", def: "Constant Elasticity of Substitution: Y = (∫ Y(j)^{(ε-1)/ε} dj)^{ε/(ε-1)}. Used to aggregate differentiated varieties. Gives each variety a downward-sloping demand curve with elasticity ε." },
+  { term: "UIP", tag: "Advanced", def: "Uncovered Interest Parity: i_t − i_t* = E_t[Δe_{t+1}]. Predicts that currency expected returns are equalized across countries. Empirically violated (UIP puzzle); open-economy DSGE models often add risk premium shocks." },
+  { term: "IRF", tag: "Core", def: "Impulse Response Function: the dynamic response of model variables to a one-unit unexpected shock. In linear DSGE, IRFs decay geometrically (for AR(1) shocks): variable_h = coeff × ρ^h." },
+  { term: "Smets-Wouters", tag: "Core", def: "Seminal DSGE papers (Euro Area 2003; US 2007) by Frank Smets and Raf Wouters. Estimated medium-scale NK DSGE models with 7 structural shocks using Bayesian methods. Matched BVAR fit." }
+];
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION & PROGRESS TRACKING
+// ═══════════════════════════════════════════════════════════
+const SECTIONS = ['s-intro','s-households','s-firms','s-policy','s-equations',
+                  's-simulation','s-solution','s-estimation','s-advanced','s-quiz'];
+const visited = new Set();
+
+function initNav() {
+  // Smooth scroll for sidebar links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // IntersectionObserver for active section
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        markVisited(id);
+        updateActiveNav(id);
+      }
+    });
+  }, { rootMargin: '-10% 0px -60% 0px' });
+
+  SECTIONS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+}
+
+function markVisited(id) {
+  if (!visited.has(id)) {
+    visited.add(id);
+    const dot = document.querySelector(`.nav-dot[data-section="${id}"]`);
+    if (dot) dot.classList.add('visited');
+    updateProgress();
+  }
+}
+
+function updateActiveNav(activeId) {
+  document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+  SECTIONS.forEach(id => {
+    const dot = document.querySelector(`.nav-dot[data-section="${id}"]`);
+    if (dot) dot.classList.toggle('active', id === activeId);
+  });
+  const activeLink = document.querySelector(`.nav-link[href="#${activeId}"]`);
+  if (activeLink) activeLink.classList.add('active');
+  document.getElementById('topbar-title').textContent =
+    activeLink?.querySelector('.nav-label')?.textContent
+    ? `DSGE Course — ${activeLink.querySelector('.nav-label').textContent}`
+    : 'DSGE Models: An Interactive Graduate Course';
+}
+
+function updateProgress() {
+  const pct = Math.round((visited.size / SECTIONS.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+// ═══════════════════════════════════════════════════════════
+// IRF SIMULATION
+// ═══════════════════════════════════════════════════════════
+let currentShock = 'monetary';
+let currentIRFView = 'all';
+const PERIODS = 20;
+
+function getParams() {
+  return {
+    beta:   parseFloat(document.getElementById('s-beta').value),
+    sigma:  parseFloat(document.getElementById('s-sigma').value),
+    theta:  parseFloat(document.getElementById('s-theta').value),
+    phi_pi: parseFloat(document.getElementById('s-phi-pi').value),
+    phi_y:  parseFloat(document.getElementById('s-phi-y').value),
+    rho:    parseFloat(document.getElementById('s-rho').value),
+  };
+}
+
+function computeKappa(beta, theta) {
+  return (1 - theta) * (1 - beta * theta) / theta;
+}
+
+function computeIRF(p, shock) {
+  const { beta, sigma, theta, phi_pi, phi_y, rho } = p;
+  const kappa = computeKappa(beta, theta);
+
+  // A matrix
+  const a11 = 1 + phi_y / sigma, a12 = phi_pi / sigma;
+  const a21 = -kappa, a22 = 1;
+  // B matrix
+  const b11 = 1, b12 = 1 / sigma, b21 = 0, b22 = beta;
+  // M = A - rho*B
+  const m11 = a11 - rho*b11, m12 = a12 - rho*b12;
+  const m21 = a21 - rho*b21, m22 = a22 - rho*b22;
+  const det = m11*m22 - m12*m21;
+
+  if (Math.abs(det) < 1e-10) return null;
+
+  let c1, c2;
+  if (shock === 'monetary')  { c1 = -1/sigma; c2 = 0; }
+  else if (shock === 'demand') { c1 = 1.0;    c2 = 0; }
+  else                         { c1 = 0.0;    c2 = 1; }  // cost-push
+
+  const ax  = (c1*m22 - c2*m12) / det;
+  const api = (m11*c2 - m21*c1) / det;
+
+  const SCALE = 1/sigma * 400;  // normalize to 1pp annualized shock
+  const norm = shock === 'monetary' ? SCALE : 400;
+
+  const horizon = Array.from({length: PERIODS}, (_, i) => i);
+  const x_irf  = horizon.map(h => ax  * Math.pow(rho, h) * norm * sigma);
+  const pi_irf = horizon.map(h => api * Math.pow(rho, h) * norm * sigma);
+  const i_irf  = horizon.map(h => {
+    const xh = ax  * Math.pow(rho, h) * norm * sigma;
+    const ph = api * Math.pow(rho, h) * norm * sigma;
+    const shk = (shock === 'monetary') ? Math.pow(rho, h) * norm * sigma : 0;
+    return phi_pi * ph + phi_y * xh + shk;
+  });
+  const r_irf = horizon.map((h, idx) => {
+    const pi_next = api * Math.pow(rho, h+1) * norm * sigma;
+    return i_irf[idx] - pi_next;
+  });
+
+  return { horizon, x: x_irf, pi: pi_irf, i: i_irf, r: r_irf };
+}
+
+function updateSim() {
+  const p = getParams();
+
+  // Update displayed values
+  document.getElementById('v-beta').textContent    = p.beta.toFixed(3);
+  document.getElementById('v-sigma').textContent   = p.sigma.toFixed(2);
+  document.getElementById('v-theta').textContent   = p.theta.toFixed(2);
+  document.getElementById('v-phi-pi').textContent  = p.phi_pi.toFixed(2);
+  document.getElementById('v-phi-y').textContent   = p.phi_y.toFixed(2);
+  document.getElementById('v-rho').textContent     = p.rho.toFixed(2);
+
+  const irf = computeIRF(p, currentShock);
+  if (!irf) return;
+
+  const colors = { x: '#3b82f6', pi: '#ef4444', i: '#10b981', r: '#8b5cf6' };
+  const labels = { x: 'Output Gap (pp)', pi: 'Inflation Ann. (pp)', i: 'Nom. Rate Ann. (pp)', r: 'Real Rate Ann. (pp)' };
+
+  let traces;
+  if (currentIRFView === 'all') {
+    traces = Object.entries({ x: irf.x, pi: irf.pi, i: irf.i, r: irf.r }).map(([k, v]) => ({
+      x: irf.horizon, y: v, name: labels[k], line: { color: colors[k], width: 2.5 },
+      mode: 'lines+markers', marker: { size: 4, color: colors[k] },
+    }));
+  } else {
+    const v = irf[currentIRFView];
+    traces = [{ x: irf.horizon, y: v, name: labels[currentIRFView],
+                line: { color: colors[currentIRFView], width: 2.5 },
+                mode: 'lines+markers', marker: { size: 5, color: colors[currentIRFView] } }];
+  }
+
+  const shockLabel = { monetary: 'Monetary Policy Shock (1pp rate hike)',
+                       demand: 'Positive Demand Shock', costpush: 'Cost-Push Shock' }[currentShock];
+  const layout = {
+    title: { text: `IRFs — ${shockLabel}`, font: { size: 13 } },
+    xaxis: { title: 'Quarters', gridcolor: '#f1f5f9' },
+    yaxis: { title: 'Deviation (pp)', gridcolor: '#f1f5f9', zeroline: true, zerolinecolor: '#94a3b8', zerolinewidth: 1.5 },
+    legend: { orientation: 'h', y: -0.25 },
+    margin: { l: 52, r: 20, t: 44, b: 60 },
+    paper_bgcolor: 'white', plot_bgcolor: 'white',
+    shapes: [{ type: 'line', x0: 0, x1: PERIODS-1, y0: 0, y1: 0,
+               line: { color: '#94a3b8', width: 1, dash: 'dot' } }],
+  };
+
+  Plotly.react('irf-plot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+function setShock(type, btn) {
+  currentShock = type;
+  document.querySelectorAll('.shock-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  updateSim();
+}
+
+function setIRFView(view, btn) {
+  currentIRFView = view;
+  document.querySelectorAll('.irf-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  updateSim();
+}
+
+function resetSimParams() {
+  const defaults = {
+    's-beta': 0.99, 's-sigma': 1.0, 's-theta': 0.75,
+    's-phi-pi': 1.5, 's-phi-y': 0.125, 's-rho': 0.5
+  };
+  Object.entries(defaults).forEach(([id, val]) => {
+    document.getElementById(id).value = val;
+  });
+  updateSim();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CODE TAB SWITCHING & COPY
+// ═══════════════════════════════════════════════════════════
+function switchTab(blockId, lang) {
+  const panels = document.querySelectorAll(`#${blockId} .code-panel`);
+  const tabs   = document.querySelectorAll(`#${blockId} .code-tab`);
+  panels.forEach(p => p.classList.remove('active'));
+  tabs.forEach(t => t.classList.remove('active'));
+
+  const targetPanel = document.getElementById(`${blockId}-${lang}`);
+  if (targetPanel) targetPanel.classList.add('active');
+
+  const tabIdx = lang === 'python' ? 0 : 1;
+  if (tabs[tabIdx]) tabs[tabIdx].classList.add('active');
+
+  // Move copy button to active panel
+  const allCopyBtns = document.querySelectorAll(`#${blockId} .copy-btn`);
+  allCopyBtns.forEach(btn => {
+    if (btn.closest('.code-panel')) {
+      btn.style.display = btn.closest('.code-panel').classList.contains('active') ? '' : 'none';
+    }
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-panel')?.querySelector('code') ||
+              btn.parentElement.querySelector('code');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// QUIZ SYSTEM
+// ═══════════════════════════════════════════════════════════
+function gradeQuiz(quizId, answers, feedback) {
+  const quiz = document.getElementById(quizId);
+  let correct = 0, total = Object.keys(answers).length;
+
+  for (const [qname, correctVal] of Object.entries(answers)) {
+    const selected = quiz.querySelector(`input[name="${qname}"]:checked`);
+    const fb = document.getElementById(`fb-${qname}`);
+    const options = quiz.querySelectorAll(`input[name="${qname}"]`);
+
+    if (!selected) {
+      if (fb) { fb.textContent = 'Please select an answer.'; fb.className = 'quiz-feedback show wrong'; }
+      continue;
+    }
+
+    const val = selected.value;
+    const isCorrect = val === correctVal;
+    if (isCorrect) correct++;
+
+    // Style the selected option
+    options.forEach(opt => {
+      const label = opt.parentElement;
+      label.classList.remove('correct', 'wrong');
+      if (opt.checked) label.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (opt.value === correctVal && !isCorrect) label.classList.add('correct');
+      opt.disabled = true;
+    });
+
+    // Show feedback
+    if (fb) {
+      const fbKey = `${qname}-${val}`;
+      const fbText = feedback[fbKey] || (isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${correctVal}.`);
+      fb.innerHTML = (isCorrect ? '✅ ' : '❌ ') + fbText;
+      fb.className = `quiz-feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+    }
+  }
+
+  // Show result
+  const resultEl = document.getElementById(`result-${quizId}`);
+  if (resultEl) {
+    const pct = Math.round(correct/total*100);
+    const emoji = pct === 100 ? '🏆' : pct >= 70 ? '✅' : '📚';
+    resultEl.innerHTML = `${emoji} You scored <strong>${correct}/${total}</strong> (${pct}%). ${
+      pct === 100 ? 'Perfect score!' : pct >= 70 ? 'Good understanding!' : 'Review the material and try again.'
+    }`;
+    resultEl.classList.add('show');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// GLOSSARY
+// ═══════════════════════════════════════════════════════════
+const TAG_COLORS = {
+  'Core': '#3b82f6', 'Household': '#10b981', 'Firms': '#f59e0b',
+  'Policy': '#ef4444', 'Equations': '#8b5cf6', 'Solution': '#0891b2',
+  'Estimation': '#0d9488', 'Advanced': '#7c3aed'
+};
+
+function renderGlossary(items) {
+  const container = document.getElementById('glossary-items');
+  container.innerHTML = items.map(item => `
+    <div class="glossary-item">
+      <div class="glossary-term">
+        ${item.term}
+        <span class="g-tag" style="background:${TAG_COLORS[item.tag]}20;color:${TAG_COLORS[item.tag]}">${item.tag}</span>
+      </div>
+      <div class="glossary-def">${item.def}</div>
+    </div>
+  `).join('');
+}
+
+function filterGlossary(query) {
+  const q = query.toLowerCase();
+  const filtered = q ? GLOSSARY.filter(g =>
+    g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q) || g.tag.toLowerCase().includes(q)
+  ) : GLOSSARY;
+  renderGlossary(filtered);
+}
+
+function openGlossary() {
+  document.getElementById('glossary-modal').classList.add('open');
+  renderGlossary(GLOSSARY);
+}
+function closeGlossary() {
+  document.getElementById('glossary-modal').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════
+// PYODIDE (in-browser Python)
+// ═══════════════════════════════════════════════════════════
+let pyodideReady = false;
+let pyodideInstance = null;
+let pyodideLoading = false;
+const pyodideQueue = [];
+
+async function loadPyodideIfNeeded() {
+  if (pyodideReady) return pyodideInstance;
+  if (pyodideLoading) {
+    return new Promise(resolve => pyodideQueue.push(resolve));
+  }
+  pyodideLoading = true;
+
+  // Dynamically load Pyodide
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+  document.head.appendChild(script);
+
+  await new Promise(resolve => { script.onload = resolve; });
+  pyodideInstance = await loadPyodide();
+  await pyodideInstance.loadPackagesFromImports('import numpy as np\nimport matplotlib\nimport scipy');
+
+  try { await pyodideInstance.loadPackage(['numpy', 'scipy', 'matplotlib']); } catch(e) {}
+
+  pyodideReady = true;
+  pyodideLoading = false;
+  pyodideQueue.forEach(resolve => resolve(pyodideInstance));
+  return pyodideInstance;
+}
+
+async function runPyodide(btnId, outputId, code) {
+  const btn = document.getElementById(btnId);
+  const out = document.getElementById(outputId);
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Loading Python…';
+  out.textContent = 'Loading Python runtime (first run may take 20–30s)…';
+  out.classList.add('visible');
+
+  try {
+    const py = await loadPyodideIfNeeded();
+    btn.textContent = '▶ Running…';
+    out.textContent = 'Running…';
+
+    // Redirect stdout
+    py.runPython(`
+import sys, io
+_stdout_capture = io.StringIO()
+sys.stdout = _stdout_capture
+`);
+
+    // Strip matplotlib.pyplot.show() calls (no display in pyodide easily)
+    const safeCode = code.replace(/plt\.show\(\)/g, 'pass  # plt.show() skipped in browser')
+                         .replace(/plt\.savefig\([^)]+\)/g, 'pass  # savefig skipped');
+
+    py.runPython(safeCode);
+    const output = py.runPython('_stdout_capture.getvalue()');
+    py.runPython('sys.stdout = sys.__stdout__');
+
+    out.textContent = output || '✓ Ran successfully (no text output)';
+  } catch(err) {
+    out.textContent = '❌ Error: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ Run in Browser (Python)';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  updateSim();  // Initialize the IRF chart
+
+  // Mobile menu
+  if (window.innerWidth <= 900) {
+    document.getElementById('mobile-menu-btn').style.display = 'inline-flex';
+  }
+  window.addEventListener('resize', () => {
+    document.getElementById('mobile-menu-btn').style.display =
+      window.innerWidth <= 900 ? 'inline-flex' : 'none';
+  });
+
+  // MathJax re-render hint
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+});
+</script>
+</body>
+</html>
