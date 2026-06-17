@@ -1,6 +1,6 @@
 # DSGE Models: An Interactive Graduate Course
 
-A single-file, self-contained interactive course on Dynamic Stochastic General Equilibrium (DSGE) models — from foundational concepts to frontier research. Open `dsge.html` directly in any modern browser. No server, no build tools, no installation required.
+A self-contained interactive course on Dynamic Stochastic General Equilibrium (DSGE) models — from foundational concepts to frontier research. 
 
 ## Contents
 
@@ -37,7 +37,7 @@ Every module includes annotated Python and R code with:
 ## Usage
 
 ```bash
-git clone https://github.com/your-username/dsge-course.git
+git clone https://github.com/sandwidinarcisse/dsge-course.git
 cd dsge-course
 open dsge.html        # macOS
 start dsge.html       # Windows
