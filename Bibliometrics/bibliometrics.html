@@ -1,0 +1,3103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliometrics: An Interactive Course</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --navy: #1a2e4a;
+  --blue: #2563eb;
+  --blue-light: #3b82f6;
+  --teal: #0891b2;
+  --teal-light: #06b6d4;
+  --green: #059669;
+  --amber: #d97706;
+  --red: #dc2626;
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --sidebar-w: 270px;
+  --header-h: 60px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:15px;line-height:1.6}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);background:var(--navy);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:transform .3s}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-track{background:transparent}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
+.sidebar-brand{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-brand h2{color:#fff;font-size:16px;font-weight:700;line-height:1.3}
+.sidebar-brand span{color:var(--teal-light);font-size:12px;font-weight:400}
+.sidebar-progress-bar{height:3px;background:rgba(255,255,255,.1);margin:12px 20px 0;border-radius:2px}
+.sidebar-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue-light));border-radius:2px;transition:width .4s ease;width:0%}
+.progress-text{color:rgba(255,255,255,.5);font-size:11px;padding:6px 20px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-nav{padding:8px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;cursor:pointer;border-left:3px solid transparent;position:relative}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;border-left-color:rgba(255,255,255,.3)}
+.nav-item.active{background:rgba(37,99,235,.3);color:#fff;border-left-color:var(--blue-light)}
+.nav-item.completed{color:rgba(255,255,255,.85)}
+.nav-item .nav-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-weight:600}
+.nav-item.completed .nav-icon{background:var(--green);color:#fff}
+.nav-item.active .nav-icon{background:var(--blue-light);color:#fff}
+.nav-label{flex:1}
+.nav-check{font-size:10px;color:var(--green);opacity:0}
+.nav-item.completed .nav-check{opacity:1}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar-footer p{color:rgba(255,255,255,.4);font-size:11px;line-height:1.5}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;min-height:100vh}
+.top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar h1{font-size:17px;font-weight:600;color:var(--text)}
+.top-bar-right{display:flex;align-items:center;gap:16px}
+.badge{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+#hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+
+/* CONTENT */
+.content{padding:40px;max-width:1000px}
+.module{display:none;animation:fadeIn .3s ease}
+.module.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO BANNER */
+.module-hero{background:linear-gradient(135deg,var(--navy) 0%,#1e4080 50%,var(--teal) 100%);border-radius:16px;padding:40px;margin-bottom:32px;color:#fff;position:relative;overflow:hidden}
+.module-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.module-hero::after{content:'';position:absolute;bottom:-60px;right:60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.03)}
+.module-tag{background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;display:inline-block;margin-bottom:12px}
+.module-hero h2{font-size:28px;font-weight:700;margin-bottom:10px;line-height:1.2}
+.module-hero p{color:rgba(255,255,255,.8);font-size:15px;max-width:650px;line-height:1.7}
+.module-meta{display:flex;gap:24px;margin-top:20px}
+.module-meta span{font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px}
+.module-meta strong{color:rgba(255,255,255,.9)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card h3 .icon{font-size:20px}
+.card h4{font-size:15px;font-weight:600;color:var(--text);margin:20px 0 10px}
+.card p{color:var(--text-muted);line-height:1.8;margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;transition:transform .2s,box-shadow .2s}
+.metric-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.metric-card .metric-icon{font-size:28px;margin-bottom:8px}
+.metric-card .metric-value{font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.metric-card .metric-label{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+/* INFO BOXES */
+.info-box{border-radius:10px;padding:16px 20px;margin:16px 0;border-left:4px solid}
+.info-box.blue{background:#eff6ff;border-color:var(--blue)}
+.info-box.teal{background:#f0fdfa;border-color:var(--teal)}
+.info-box.amber{background:#fffbeb;border-color:var(--amber)}
+.info-box.green{background:#f0fdf4;border-color:var(--green)}
+.info-box.red{background:#fef2f2;border-color:var(--red)}
+.info-box strong{display:block;font-size:13px;font-weight:700;margin-bottom:4px}
+.info-box p{font-size:13.5px;color:var(--text);margin:0;line-height:1.6}
+
+/* FORMULA */
+.formula{background:var(--navy);color:#e2e8f0;padding:14px 20px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:14px;margin:16px 0;text-align:center;letter-spacing:.5px}
+.formula span{color:var(--teal-light)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:16px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-weight:600;font-size:13px}
+td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:var(--surface2)}
+tr:hover td{background:#eff6ff}
+
+/* CODE BLOCKS */
+.code-block{margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid #2d3748}
+.code-header{background:#1a202c;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.code-lang{font-size:12px;font-weight:600;color:#a0aec0;display:flex;align-items:center;gap:8px}
+.lang-badge{padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.lang-badge.python{background:#3776ab22;color:#4fc3f7;border:1px solid #3776ab44}
+.lang-badge.r{background:#27668522;color:#75b8dc;border:1px solid #27668544}
+.copy-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#a0aec0;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.copy-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+.copy-btn.copied{background:var(--green);color:#fff;border-color:var(--green)}
+.code-block pre{margin:0!important;border-radius:0!important}
+.code-block pre code{font-family:'JetBrains Mono',monospace!important;font-size:13px!important;padding:18px 20px!important}
+
+/* PYODIDE RUNNER */
+.pyodide-runner{margin:16px 0;border-radius:10px;overflow:hidden;border:2px solid #3776ab}
+.pyodide-header{background:#1e3a5f;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.pyodide-header span{color:#4fc3f7;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.run-btn{background:linear-gradient(135deg,#3776ab,#2196f3);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(33,150,243,.4)}
+.run-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.pyodide-runner textarea{width:100%;background:#1a202c;color:#e2e8f0;border:none;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;resize:vertical;min-height:120px;outline:none;line-height:1.6}
+.pyodide-output{background:#0d1117;padding:14px 20px;min-height:40px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee787;white-space:pre-wrap;border-top:1px solid #21262d;display:none}
+.pyodide-output.visible{display:block}
+.pyodide-output.error{color:#f85149}
+.pyodide-status{background:#1e3a5f;padding:6px 16px;font-size:11px;color:#4fc3f7;display:none}
+.pyodide-status.visible{display:block}
+
+/* INTERACTIVE TOOLS */
+.tool-section{background:linear-gradient(135deg,#eff6ff,#f0fdfa);border:1px solid #bfdbfe;border-radius:12px;padding:28px;margin:24px 0}
+.tool-section h3{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.tool-section > p{color:var(--text-muted);font-size:14px;margin-bottom:20px}
+.input-group{margin-bottom:16px}
+.input-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.input-group input,.input-group textarea,.input-group select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;transition:border-color .2s;outline:none}
+.input-group input:focus,.input-group textarea:focus,.input-group select:focus{border-color:var(--blue)}
+.tool-btn{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.tool-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.35)}
+.tool-result{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-top:20px;display:none}
+.tool-result.show{display:block}
+.result-big{font-size:48px;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding:10px 0}
+.result-label{text-align:center;font-size:14px;color:var(--text-muted);margin-top:4px}
+.citation-bars{display:flex;gap:4px;align-items:flex-end;height:80px;margin-top:16px;padding:0 4px}
+.cit-bar{background:var(--blue);border-radius:4px 4px 0 0;min-width:24px;flex:1;transition:all .3s;position:relative}
+.cit-bar.highlighted{background:var(--teal)}
+.cit-bar span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--text)}
+.h-line{position:absolute;width:100%;border-top:2px dashed var(--red);margin-top:-1px}
+
+/* QUIZ */
+.quiz-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;margin:24px 0}
+.quiz-section h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.quiz-question{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.quiz-question:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.quiz-q{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.5}
+.quiz-q span{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:8px;flex-shrink:0}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;transition:all .2s;display:flex;align-items:center;gap:10px;color:var(--text)}
+.option:hover{border-color:var(--blue);background:#eff6ff}
+.option.selected{border-color:var(--blue);background:#eff6ff;color:var(--blue);font-weight:500}
+.option.correct{border-color:var(--green);background:#f0fdf4;color:var(--green);font-weight:500}
+.option.wrong{border-color:var(--red);background:#fef2f2;color:var(--red);font-weight:500}
+.option-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.option.selected .option-radio{border-color:var(--blue);background:var(--blue)}
+.option.correct .option-radio{border-color:var(--green);background:var(--green)}
+.option.wrong .option-radio{border-color:var(--red);background:var(--red)}
+.option-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:0}
+.option.selected .option-radio::after,.option.correct .option-radio::after,.option.wrong .option-radio::after{opacity:1}
+.quiz-feedback{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13.5px;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.quiz-feedback.wrong{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.quiz-submit{margin-top:20px}
+.quiz-score{background:linear-gradient(135deg,var(--navy),#1e4080);color:#fff;border-radius:10px;padding:20px;text-align:center;margin-top:20px;display:none}
+.quiz-score.show{display:block}
+.score-num{font-size:36px;font-weight:800;color:var(--teal-light)}
+.score-label{font-size:14px;color:rgba(255,255,255,.7);margin-top:4px}
+
+/* CHARTS */
+.chart-container{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0}
+.chart-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.chart-controls label{font-size:13px;font-weight:600;color:var(--text)}
+.chart-controls input[type=range]{flex:1;min-width:120px;accent-color:var(--blue)}
+.chart-controls span{font-size:13px;color:var(--blue);font-weight:700;min-width:40px}
+.chart-wrapper{position:relative;height:280px}
+
+/* NETWORK */
+#network-graph{width:100%;height:420px;background:#0d1117;border-radius:12px;overflow:hidden;border:1px solid #21262d}
+.node-tooltip{position:absolute;background:rgba(15,23,42,.95);color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;pointer-events:none;z-index:999;display:none;border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(8px);max-width:200px}
+.network-legend{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+.legend-dot{width:12px;height:12px;border-radius:50%}
+
+/* TIMELINE */
+.timeline{margin:16px 0}
+.timeline-item{display:flex;gap:16px;margin-bottom:20px;position:relative}
+.timeline-item::before{content:'';position:absolute;left:19px;top:40px;bottom:-4px;width:2px;background:var(--border)}
+.timeline-item:last-child::before{display:none}
+.timeline-dot{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.timeline-content{flex:1;padding-bottom:4px}
+.timeline-year{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.timeline-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.timeline-desc{font-size:13.5px;color:var(--text-muted);line-height:1.6}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tag{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
+.tag.blue{background:#eff6ff;border-color:#bfdbfe;color:var(--blue)}
+.tag.teal{background:#f0fdfa;border-color:#99f6e4;color:var(--teal)}
+.tag.green{background:#f0fdf4;border-color:#bbf7d0;color:var(--green)}
+.tag.amber{background:#fffbeb;border-color:#fde68a;color:var(--amber)}
+.tag.red{background:#fef2f2;border-color:#fecaca;color:var(--red)}
+
+/* COMPLETION */
+.complete-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:32px;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Inter',sans-serif;transition:all .2s}
+.complete-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.complete-btn.done{background:linear-gradient(135deg,var(--green),#16a34a);cursor:default;transform:none}
+
+/* NAV BUTTONS */
+.module-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;font-family:'Inter',sans-serif;border:1.5px solid}
+.nav-btn.prev{border-color:var(--border);background:#fff;color:var(--text)}
+.nav-btn.prev:hover{border-color:var(--blue);color:var(--blue)}
+.nav-btn.next{border-color:var(--blue);background:var(--blue);color:#fff}
+.nav-btn.next:hover{background:var(--blue-light);box-shadow:0 4px 12px rgba(37,99,235,.35)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #hamburger{display:block}
+  .content{padding:24px 16px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .module-hero{padding:24px}
+  .module-hero h2{font-size:22px}
+}
+/* SCROLLBAR */
+#main::-webkit-scrollbar{width:6px}
+#main::-webkit-scrollbar-track{background:var(--bg)}
+#main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <h2>📊 Bibliometrics</h2>
+    <span>Interactive Course</span>
+    <div class="sidebar-progress-bar"><div class="sidebar-progress-fill" id="sidebarFill"></div></div>
+  </div>
+  <div class="progress-text" id="progressText">0 of 8 modules completed</div>
+  <div class="sidebar-nav">
+    <div class="nav-item active" onclick="showModule(0)" id="nav-0"><div class="nav-icon">1</div><span class="nav-label">Introduction</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(1)" id="nav-1"><div class="nav-icon">2</div><span class="nav-label">Core Metrics</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(2)" id="nav-2"><div class="nav-icon">3</div><span class="nav-label">Bibliometric Laws</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(3)" id="nav-3"><div class="nav-icon">4</div><span class="nav-label">Network Analysis</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(4)" id="nav-4"><div class="nav-icon">5</div><span class="nav-label">Database Sources</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(5)" id="nav-5"><div class="nav-icon">6</div><span class="nav-label">Science Mapping</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(6)" id="nav-6"><div class="nav-icon">7</div><span class="nav-label">Research Evaluation</span><span class="nav-check">✓</span></div>
+    <div class="nav-item" onclick="showModule(7)" id="nav-7"><div class="nav-icon">8</div><span class="nav-label">Limitations &amp; Critiques</span><span class="nav-check">✓</span></div>
+  </div>
+  <div class="sidebar-footer"><p>Build with ❤️ for researchers. CDN: Chart.js · D3 · Pyodide · highlight.js</p></div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="top-bar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button id="hamburger" onclick="toggleSidebar()" style="border:none;background:none;font-size:20px;cursor:pointer">☰</button>
+      <h1 id="topBarTitle">Module 1 — Introduction to Bibliometrics</h1>
+    </div>
+    <div class="top-bar-right"><div class="badge" id="topBadge">Module 1/8</div></div>
+  </div>
+
+  <div class="content">
+    <!-- TOOLTIP -->
+    <div class="node-tooltip" id="nodeTooltip"></div>
+
+<!-- ======================== MODULE 0: INTRODUCTION ======================== -->
+<div class="module active" id="module-0">
+  <div class="module-hero">
+    <div class="module-tag">📖 Module 1</div>
+    <h2>Introduction to Bibliometrics</h2>
+    <p>Explore the history, scope, and foundational concepts of bibliometrics — the quantitative study of scientific literature and its impact on knowledge creation.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~25 min</strong></span>
+      <span>📚 <strong>4 sections</strong></span>
+      <span>🎯 <strong>Beginner</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🔍</span>What is Bibliometrics?</h3>
+    <p>Bibliometrics is the application of <strong>statistical and mathematical methods</strong> to books and other media within the field of library science and information science. The term was coined by Alan Pritchard in <strong>1969</strong> as an alternative to "statistical bibliography."</p>
+    <p>At its core, bibliometrics answers questions like: <em>Who publishes the most? Which journals are most influential? How do ideas spread across disciplines?</em></p>
+    <div class="info-box blue">
+      <strong>📌 Key Definition</strong>
+      <p>Bibliometrics = quantitative analysis of written publications (books, articles, patents) to measure scientific productivity, impact, and knowledge diffusion.</p>
+    </div>
+    <h4>Closely Related Fields</h4>
+    <div class="tags">
+      <span class="tag blue">Scientometrics</span>
+      <span class="tag teal">Informetrics</span>
+      <span class="tag green">Webometrics</span>
+      <span class="tag amber">Altmetrics</span>
+      <span class="tag red">Technometrics</span>
+    </div>
+    <p><strong>Scientometrics</strong> focuses specifically on the growth and structure of science. <strong>Informetrics</strong> is the broader umbrella term. <strong>Webometrics</strong> applies these methods to the web. <strong>Altmetrics</strong> measures online attention (tweets, downloads, news mentions).</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🕐</span>Historical Timeline</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">📜</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1917</div>
+          <div class="timeline-title">Cole & Eales — First Bibliometric Study</div>
+          <div class="timeline-desc">Analysis of comparative anatomy literature — widely considered the first true bibliometric study, counting publications by country and author.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📈</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1926</div>
+          <div class="timeline-title">Lotka's Law of Scientific Productivity</div>
+          <div class="timeline-desc">Alfred Lotka discovered that a few scientists produce most of the scientific output — described by an inverse square law.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📰</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1934</div>
+          <div class="timeline-title">Bradford's Law of Scattering</div>
+          <div class="timeline-desc">Samuel Bradford showed that a small core of journals produces most relevant articles in any given field, with diminishing returns as coverage broadens.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🔤</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1949</div>
+          <div class="timeline-title">Zipf's Law of Word Frequency</div>
+          <div class="timeline-desc">George Kingsley Zipf formalized the power-law relationship between word rank and frequency in natural language — later applied to citation patterns.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🗂️</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1955–1960</div>
+          <div class="timeline-title">Eugene Garfield — Citation Index</div>
+          <div class="timeline-desc">Garfield proposed and created the Science Citation Index (SCI), the first database tracking scientific citations — revolutionizing research evaluation.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📊</div>
+        <div class="timeline-content">
+          <div class="timeline-year">1969</div>
+          <div class="timeline-title">Pritchard Coins "Bibliometrics"</div>
+          <div class="timeline-desc">Alan Pritchard formally introduced the term "bibliometrics" in his paper, giving the field a unified identity distinct from "statistical bibliography."</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🏆</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2005</div>
+          <div class="timeline-title">Hirsch Proposes the h-index</div>
+          <div class="timeline-desc">Jorge Hirsch introduced the h-index — a single number capturing both productivity and citation impact — now the most widely used author-level metric.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🌐</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2010s–present</div>
+          <div class="timeline-title">Open Science &amp; Altmetrics</div>
+          <div class="timeline-desc">Rise of open access, Dimensions, Semantic Scholar, and altmetrics platforms. Machine learning applied to citation networks. The Leiden Manifesto (2015) critiques metric misuse.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🎯</span>Scope and Applications</h3>
+    <div class="grid-2">
+      <div>
+        <h4>Research Assessment</h4>
+        <p>Universities, funding agencies, and governments use bibliometrics to evaluate research output, allocate funding (e.g., UK REF, Australian ERA), and benchmark institutions.</p>
+        <h4>Journal Ranking</h4>
+        <p>Publishers and librarians use impact factors, SJR, and SNIP to rank journals for subscription decisions, author submission choices, and prestige ranking.</p>
+      </div>
+      <div>
+        <h4>Science Policy</h4>
+        <p>Policymakers map research trends, identify emerging fields, track interdisciplinary collaboration, and monitor national competitiveness in science and technology.</p>
+        <h4>Knowledge Discovery</h4>
+        <p>Researchers use bibliometric maps to navigate large literature, discover seminal papers, identify research gaps, and find potential collaborators.</p>
+      </div>
+    </div>
+    <div class="info-box amber">
+      <strong>⚠️ Important Caveat</strong>
+      <p>Bibliometrics are powerful tools but <strong>should never be used in isolation</strong>. They are most valuable when combined with expert peer review. The Leiden Manifesto (2015) and DORA Declaration outline best practices for responsible use.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Getting Started with Python</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Basic bibliometric data setup</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import pandas as pd
+import numpy as np
+
+# Sample publication dataset
+data = {
+    'title': [
+        'Deep Learning for Medical Imaging',
+        'BERT: Pre-training of Deep Bidirectional Transformers',
+        'Attention is All You Need',
+        'Generative Adversarial Networks',
+        'ImageNet Classification with Deep Convolutional Neural Networks'
+    ],
+    'authors': ['Smith J, Jones A', 'Devlin J et al.', 'Vaswani A et al.',
+                'Goodfellow I et al.', 'Krizhevsky A et al.'],
+    'year': [2021, 2018, 2017, 2014, 2012],
+    'journal': ['Nature Medicine', 'NAACL', 'NeurIPS', 'NeurIPS', 'NeurIPS'],
+    'citations': [142, 45231, 62847, 38921, 89234]
+}
+
+df = pd.DataFrame(data)
+print("=== Publication Dataset ===")
+print(df[['title', 'year', 'citations']].to_string(index=False))
+print(f"\nTotal papers: {len(df)}")
+print(f"Total citations: {df['citations'].sum():,}")
+print(f"Mean citations: {df['citations'].mean():.1f}")
+print(f"Median citations: {df['citations'].median():.1f}")
+print(f"\nMost cited: {df.loc[df['citations'].idxmax(), 'title'][:40]}...")</code></pre>
+    </div>
+
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser (Pyodide)</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="0">▶ Run</button>
+      </div>
+      <textarea id="pycode-0">import pandas as pd
+import numpy as np
+
+data = {
+    'title': ['Deep Learning', 'BERT', 'Attention', 'GANs', 'AlexNet'],
+    'year': [2021, 2018, 2017, 2014, 2012],
+    'citations': [142, 45231, 62847, 38921, 89234]
+}
+df = pd.DataFrame(data)
+print("Publication Dataset:")
+print(df.to_string(index=False))
+print(f"\nTotal citations: {df['citations'].sum():,}")
+print(f"Mean citations: {df['citations'].mean():.1f}")</textarea>
+      <div class="pyodide-status" id="pystatus-0"></div>
+      <div class="pyodide-output" id="pyout-0"></div>
+    </div>
+
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Introduction with bibliometrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r"># Install and load bibliometrix
+# install.packages("bibliometrix")
+library(bibliometrix)
+library(tidyverse)
+
+# Load a sample Web of Science export file
+# M <- convert2df("wos_export.bib", dbsource = "wos", format = "bibtex")
+
+# For demo: Create a sample data frame
+df <- data.frame(
+  TI = c("Deep Learning for Medical Imaging", "Attention is All You Need",
+          "Generative Adversarial Networks"),
+  PY = c(2021, 2017, 2014),
+  TC = c(142, 62847, 38921),
+  SO = c("Nature Medicine", "NeurIPS", "NeurIPS"),
+  stringsAsFactors = FALSE
+)
+
+# Basic summary statistics
+cat("=== Bibliometric Summary ===\n")
+cat(sprintf("Total papers: %d\n", nrow(df)))
+cat(sprintf("Year range: %d-%d\n", min(df$PY), max(df$PY)))
+cat(sprintf("Total citations: %s\n", format(sum(df$TC), big.mark=",")))
+cat(sprintf("Mean citations: %.1f\n", mean(df$TC)))
+
+# Citation distribution
+df %>%
+  arrange(desc(TC)) %>%
+  mutate(rank = row_number()) %>%
+  select(rank, TI, PY, TC)</code></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 0 -->
+  <div class="quiz-section">
+    <h3>🎯 Module 1 Quiz</h3>
+    <div class="quiz-question" id="q0-0">
+      <div class="quiz-q"><span>1</span>Who coined the term "bibliometrics"?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q0-0','A')"><div class="option-radio"></div>Eugene Garfield</div>
+        <div class="option" onclick="selectOption(this,'q0-0','B')"><div class="option-radio"></div>Alan Pritchard</div>
+        <div class="option" onclick="selectOption(this,'q0-0','C')"><div class="option-radio"></div>Jorge Hirsch</div>
+        <div class="option" onclick="selectOption(this,'q0-0','D')"><div class="option-radio"></div>Alfred Lotka</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q0-0"></div>
+    </div>
+    <div class="quiz-question" id="q0-1">
+      <div class="quiz-q"><span>2</span>The Science Citation Index was created by:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q0-1','A')"><div class="option-radio"></div>Samuel Bradford</div>
+        <div class="option" onclick="selectOption(this,'q0-1','B')"><div class="option-radio"></div>Alan Pritchard</div>
+        <div class="option" onclick="selectOption(this,'q0-1','C')"><div class="option-radio"></div>Eugene Garfield</div>
+        <div class="option" onclick="selectOption(this,'q0-1','D')"><div class="option-radio"></div>George Zipf</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q0-1"></div>
+    </div>
+    <div class="quiz-question" id="q0-2">
+      <div class="quiz-q"><span>3</span>Which term describes the measurement of online attention for research (tweets, news, downloads)?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q0-2','A')"><div class="option-radio"></div>Webometrics</div>
+        <div class="option" onclick="selectOption(this,'q0-2','B')"><div class="option-radio"></div>Scientometrics</div>
+        <div class="option" onclick="selectOption(this,'q0-2','C')"><div class="option-radio"></div>Altmetrics</div>
+        <div class="option" onclick="selectOption(this,'q0-2','D')"><div class="option-radio"></div>Informetrics</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q0-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q0',['B','C','C'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q0"></div>
+  </div>
+
+  <div class="module-nav">
+    <span></span>
+    <button class="nav-btn next" onclick="showModule(1)">Next: Core Metrics →</button>
+  </div>
+  <button class="complete-btn" id="complete-0" onclick="completeModule(0)">✓ Mark Module 1 Complete</button>
+</div>
+<!-- ======================== MODULE 1: CORE METRICS ======================== -->
+<div class="module" id="module-1">
+  <div class="module-hero">
+    <div class="module-tag">📊 Module 2</div>
+    <h2>Core Bibliometric Metrics</h2>
+    <p>Master the essential metrics used to measure scientific impact at the author, journal, and document level — from citation counts to the h-index, Impact Factor, and beyond.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~35 min</strong></span>
+      <span>📚 <strong>5 sections</strong></span>
+      <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+  </div>
+
+  <!-- METRIC OVERVIEW -->
+  <div class="grid-3">
+    <div class="metric-card">
+      <div class="metric-icon">📄</div>
+      <div class="metric-value">Document</div>
+      <div class="metric-label">Citation count, field-weighted citation impact</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">👤</div>
+      <div class="metric-value">Author</div>
+      <div class="metric-label">h-index, g-index, i10-index, m-quotient</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">📰</div>
+      <div class="metric-value">Journal</div>
+      <div class="metric-label">Impact Factor, CiteScore, SJR, SNIP, Eigenfactor</div>
+    </div>
+  </div>
+
+  <!-- H-INDEX -->
+  <div class="card">
+    <h3><span class="icon">🏆</span>The h-index (Hirsch Index)</h3>
+    <p>Proposed by physicist Jorge Hirsch in 2005, the h-index combines <strong>productivity</strong> and <strong>citation impact</strong> into a single number. An author has h-index <em>h</em> if exactly <em>h</em> of their papers have each been cited at least <em>h</em> times.</p>
+    <div class="formula">h-index = largest <span>h</span> such that <span>h</span> papers each have ≥ <span>h</span> citations</div>
+    <h4>Example Calculation</h4>
+    <p>Sort papers by citations descending: <strong>[45, 32, 18, 12, 8, 5, 3, 1]</strong><br>
+    Paper 1: 45 ≥ 1 ✓ | Paper 2: 32 ≥ 2 ✓ | Paper 3: 18 ≥ 3 ✓ | Paper 4: 12 ≥ 4 ✓ | Paper 5: 8 ≥ 5 ✓ | Paper 6: 5 ≥ 6 ✗ → <strong>h = 5</strong></p>
+    <div class="info-box teal">
+      <strong>Related Variants</strong>
+      <p><strong>g-index</strong>: top g papers together received g² citations (rewards highly-cited single papers more). <strong>i10-index</strong> (Google Scholar): number of papers with ≥10 citations. <strong>m-quotient</strong>: h ÷ years since first publication.</p>
+    </div>
+    <h4>Typical h-index Benchmarks</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Career Stage</th><th>Typical h-index Range</th><th>Note</th></tr>
+        <tr><td>PhD student</td><td>1–3</td><td>Early career, few publications</td></tr>
+        <tr><td>Postdoc / early career</td><td>3–10</td><td>Growing publication record</td></tr>
+        <tr><td>Mid-career researcher</td><td>10–25</td><td>Established in field</td></tr>
+        <tr><td>Senior professor</td><td>25–60</td><td>Highly productive career</td></tr>
+        <tr><td>Nobel laureates (avg.)</td><td>~50–100+</td><td>Field varies greatly</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- H-INDEX CALCULATOR -->
+  <div class="tool-section">
+    <h3>🧮 Interactive h-index Calculator</h3>
+    <p>Enter a comma-separated list of citation counts for each paper. The tool will compute your h-index, g-index, and i10-index live.</p>
+    <div class="input-group">
+      <label>Citation counts (comma-separated, e.g.: 45, 32, 18, 12, 8, 5, 3, 1)</label>
+      <textarea id="citInput" rows="2" placeholder="45, 32, 18, 12, 8, 5, 3, 1" oninput="calcHIndex()">45, 32, 18, 12, 8, 5, 3, 1</textarea>
+    </div>
+    <button class="tool-btn" onclick="calcHIndex()">Calculate Indices</button>
+    <div class="tool-result show" id="hindexResult">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center">
+        <div><div class="result-big" id="hVal">5</div><div class="result-label">h-index</div></div>
+        <div><div class="result-big" id="gVal">8</div><div class="result-label">g-index</div></div>
+        <div><div class="result-big" id="i10Val">3</div><div class="result-label">i10-index</div></div>
+      </div>
+      <div style="margin-top:20px">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:600">Citation Bars (sorted descending) — teal = counts toward h-index</p>
+        <div class="citation-bars" id="citBars"></div>
+        <div style="margin-top:24px;padding:14px;background:var(--surface2);border-radius:8px;font-size:13px">
+          <span id="hindexExplanation"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPACT FACTOR -->
+  <div class="card">
+    <h3><span class="icon">📰</span>Journal Impact Factor (JIF)</h3>
+    <p>Created by Eugene Garfield, the <strong>Journal Impact Factor</strong> measures the average number of citations received by articles published in a journal during the previous two years. Published annually in Clarivate's Journal Citation Reports (JCR).</p>
+    <div class="formula">IF<sub>year</sub> = <span>Citations in year Y to articles in years Y-1 and Y-2</span> / <span>Citable articles published in Y-1 and Y-2</span></div>
+    <h4>Limitations of the Impact Factor</h4>
+    <p>The IF has well-known flaws: it is <strong>skewed by a few highly-cited articles</strong>, <strong>field-dependent</strong> (biology journals have far higher IFs than math journals), manipulable through editorial practices (excessive self-citation, publishing reviews), and uses only a 2-year window that disadvantages slow-maturing fields.</p>
+    <div class="grid-2">
+      <div class="info-box teal">
+        <strong>CiteScore (Scopus/Elsevier)</strong>
+        <p>Uses a 4-year window and includes all document types (not just "citable items"). Generally correlates with JIF but captures more citations for slowly-cited fields.</p>
+      </div>
+      <div class="info-box green">
+        <strong>SNIP &amp; SJR</strong>
+        <p><strong>SNIP</strong> (Source Normalized Impact per Paper) normalizes for field differences. <strong>SJR</strong> (SCImago Journal Rank) weights citations by the prestige of the citing journal — similar to PageRank.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IF CALCULATOR -->
+  <div class="tool-section">
+    <h3>📊 Impact Factor Simulator</h3>
+    <p>Enter citations and article counts for a 2-year window to compute a journal's Impact Factor.</p>
+    <div class="grid-2">
+      <div>
+        <div class="input-group">
+          <label>Citations in current year to Year Y-1 articles</label>
+          <input type="number" id="citeY1" value="380" min="0" oninput="calcIF()">
+        </div>
+        <div class="input-group">
+          <label>Citations in current year to Year Y-2 articles</label>
+          <input type="number" id="citeY2" value="290" min="0" oninput="calcIF()">
+        </div>
+      </div>
+      <div>
+        <div class="input-group">
+          <label>Citable articles published in Year Y-1</label>
+          <input type="number" id="artY1" value="120" min="1" oninput="calcIF()">
+        </div>
+        <div class="input-group">
+          <label>Citable articles published in Year Y-2</label>
+          <input type="number" id="artY2" value="115" min="1" oninput="calcIF()">
+        </div>
+      </div>
+    </div>
+    <div class="tool-result show" id="ifResult">
+      <div class="result-big" id="ifVal">2.87</div>
+      <div class="result-label">Journal Impact Factor</div>
+      <div style="margin-top:16px;font-size:13px;color:var(--text-muted);background:var(--surface2);padding:12px 16px;border-radius:8px" id="ifExplain"></div>
+    </div>
+  </div>
+
+  <!-- CODE SECTION -->
+  <div class="card">
+    <h3><span class="icon">💻</span>Computing Metrics in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> h-index, g-index, IF calculation</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import numpy as np
+import pandas as pd
+
+def compute_h_index(citations):
+    """Compute h-index from a list of citation counts."""
+    sorted_cits = sorted(citations, reverse=True)
+    h = 0
+    for i, c in enumerate(sorted_cits, 1):
+        if c >= i:
+            h = i
+        else:
+            break
+    return h
+
+def compute_g_index(citations):
+    """Compute g-index: largest g where top-g papers have >= g^2 total citations."""
+    sorted_cits = sorted(citations, reverse=True)
+    cumsum = 0
+    g = 0
+    for i, c in enumerate(sorted_cits, 1):
+        cumsum += c
+        if cumsum >= i**2:
+            g = i
+    return g
+
+def compute_i10_index(citations):
+    """Number of papers with >= 10 citations."""
+    return sum(1 for c in citations if c >= 10)
+
+def compute_impact_factor(cites_y1, cites_y2, articles_y1, articles_y2):
+    """Compute Journal Impact Factor."""
+    total_cites = cites_y1 + cites_y2
+    total_articles = articles_y1 + articles_y2
+    return total_cites / total_articles if total_articles > 0 else 0
+
+# Example: Researcher citation profile
+citations = [89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1]
+
+h = compute_h_index(citations)
+g = compute_g_index(citations)
+i10 = compute_i10_index(citations)
+
+print(f"Papers: {len(citations)}")
+print(f"Total citations: {sum(citations)}")
+print(f"h-index: {h}")
+print(f"g-index: {g}")
+print(f"i10-index: {i10}")
+
+# Journal IF example
+IF = compute_impact_factor(380, 290, 120, 115)
+print(f"\nJournal Impact Factor: {IF:.3f}")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="1">▶ Run</button>
+      </div>
+      <textarea id="pycode-1">def compute_h_index(citations):
+    sorted_cits = sorted(citations, reverse=True)
+    h = 0
+    for i, c in enumerate(sorted_cits, 1):
+        if c >= i:
+            h = i
+        else:
+            break
+    return h
+
+def compute_g_index(citations):
+    sorted_cits = sorted(citations, reverse=True)
+    cumsum = 0; g = 0
+    for i, c in enumerate(sorted_cits, 1):
+        cumsum += c
+        if cumsum >= i**2: g = i
+    return g
+
+citations = [89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1]
+print(f"Citations: {citations}")
+print(f"h-index: {compute_h_index(citations)}")
+print(f"g-index: {compute_g_index(citations)}")
+print(f"i10-index: {sum(1 for c in citations if c >= 10)}")
+print(f"Total citations: {sum(citations)}")</textarea>
+      <div class="pyodide-status" id="pystatus-1"></div>
+      <div class="pyodide-output" id="pyout-1"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Metrics with bibliometrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+
+# Compute h-index from citation vector
+citations <- c(89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1)
+
+compute_h_index <- function(cits) {
+  sorted <- sort(cits, decreasing = TRUE)
+  h <- 0
+  for (i in seq_along(sorted)) {
+    if (sorted[i] >= i) h <- i else break
+  }
+  return(h)
+}
+
+compute_g_index <- function(cits) {
+  sorted <- sort(cits, decreasing = TRUE)
+  cumsum_cits <- cumsum(sorted)
+  g <- max(which(cumsum_cits >= seq_along(sorted)^2))
+  return(g)
+}
+
+h <- compute_h_index(citations)
+g <- compute_g_index(citations)
+i10 <- sum(citations >= 10)
+
+cat(sprintf("h-index: %d\n", h))
+cat(sprintf("g-index: %d\n", g))
+cat(sprintf("i10-index: %d\n", i10))
+cat(sprintf("Total citations: %d\n", sum(citations)))
+
+# With real bibliometrix data:
+# results <- biblioAnalysis(M, sep = ";")
+# summary(results, k = 10, pause = FALSE)</code></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 1 -->
+  <div class="quiz-section">
+    <h3>🎯 Module 2 Quiz</h3>
+    <div class="quiz-question" id="q1-0">
+      <div class="quiz-q"><span>1</span>A researcher has papers with citations [10, 8, 6, 4, 2, 1]. What is their h-index?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q1-0','A')"><div class="option-radio"></div>3</div>
+        <div class="option" onclick="selectOption(this,'q1-0','B')"><div class="option-radio"></div>4</div>
+        <div class="option" onclick="selectOption(this,'q1-0','C')"><div class="option-radio"></div>5</div>
+        <div class="option" onclick="selectOption(this,'q1-0','D')"><div class="option-radio"></div>6</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q1-0"></div>
+    </div>
+    <div class="quiz-question" id="q1-1">
+      <div class="quiz-q"><span>2</span>The Journal Impact Factor uses a window of how many years?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q1-1','A')"><div class="option-radio"></div>1 year</div>
+        <div class="option" onclick="selectOption(this,'q1-1','B')"><div class="option-radio"></div>2 years</div>
+        <div class="option" onclick="selectOption(this,'q1-1','C')"><div class="option-radio"></div>4 years</div>
+        <div class="option" onclick="selectOption(this,'q1-1','D')"><div class="option-radio"></div>5 years</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q1-1"></div>
+    </div>
+    <div class="quiz-question" id="q1-2">
+      <div class="quiz-q"><span>3</span>Which metric normalizes for citation differences across research fields?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q1-2','A')"><div class="option-radio"></div>Impact Factor</div>
+        <div class="option" onclick="selectOption(this,'q1-2','B')"><div class="option-radio"></div>h-index</div>
+        <div class="option" onclick="selectOption(this,'q1-2','C')"><div class="option-radio"></div>SNIP</div>
+        <div class="option" onclick="selectOption(this,'q1-2','D')"><div class="option-radio"></div>i10-index</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q1-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q1',['B','B','C'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q1"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(0)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(2)">Next: Laws →</button>
+  </div>
+  <button class="complete-btn" id="complete-1" onclick="completeModule(1)">✓ Mark Module 2 Complete</button>
+</div>
+<!-- ======================== MODULE 2: LAWS ======================== -->
+<div class="module" id="module-2">
+  <div class="module-hero">
+    <div class="module-tag">📐 Module 3</div>
+    <h2>Bibliometric Laws</h2>
+    <p>Three fundamental empirical laws — Lotka's, Bradford's, and Zipf's — govern the statistical regularities of scientific literature. Explore each interactively with adjustable parameters.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~30 min</strong></span>
+      <span>📚 <strong>3 laws + interactive demos</strong></span>
+      <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+  </div>
+
+  <!-- LOTKA'S LAW -->
+  <div class="card">
+    <h3><span class="icon">📉</span>Lotka's Law of Scientific Productivity</h3>
+    <p>Alfred Lotka (1926) studied the frequency of author contributions in chemical abstracts and discovered an <strong>inverse square law</strong>: the number of authors making <em>n</em> contributions is approximately 1/n² of those making one contribution.</p>
+    <div class="formula">f(n) = <span>C / n<sup>α</sup></span> &nbsp;&nbsp; where α ≈ 2 and C ≈ 0.6079</div>
+    <p>Equivalently: if 60% of authors publish exactly 1 paper, then ~15% publish 2, ~6.7% publish 3, and so on. A small elite of prolific authors accounts for a disproportionate share of total output.</p>
+    <div class="info-box blue">
+      <strong>📌 Rule of Thumb</strong>
+      <p>Roughly <strong>6%</strong> of authors produce <strong>50%</strong> of a field's literature (the "elite core"). This has been verified across chemistry, physics, economics, and many other disciplines.</p>
+    </div>
+    <div class="chart-container">
+      <h4 style="margin-bottom:12px">Interactive Lotka's Law Demo</h4>
+      <div class="chart-controls">
+        <label>Exponent α:</label>
+        <input type="range" id="lotkaAlpha" min="1.5" max="3.5" step="0.1" value="2.0" oninput="updateLotkaChart()">
+        <span id="lotkaAlphaVal">2.0</span>
+        <label style="margin-left:16px">C (constant):</label>
+        <input type="range" id="lotkaC" min="0.3" max="0.9" step="0.05" value="0.6079" oninput="updateLotkaChart()">
+        <span id="lotkaCVal">0.61</span>
+      </div>
+      <div class="chart-wrapper"><canvas id="lotkaChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- BRADFORD'S LAW -->
+  <div class="card">
+    <h3><span class="icon">📚</span>Bradford's Law of Scattering</h3>
+    <p>Samuel Bradford (1934) observed that a <strong>small core of journals</strong> produces most of the relevant literature in any given subject, and as coverage expands, progressively more journals are needed for diminishing returns. Journals divide into zones of equal yield.</p>
+    <div class="formula">n₁ : n₂ : n₃ = <span>1 : k : k²</span> &nbsp;&nbsp; where k is the Bradford multiplier</div>
+    <p>If 5 core journals contain 1/3 of relevant papers, and k≈5, then 25 journals provide the next third, and 125 journals the final third. This helps librarians prioritize journal subscriptions.</p>
+    <div class="info-box teal">
+      <strong>📌 Practical Application</strong>
+      <p>Bradford zones are used to build <strong>core journal lists</strong> for systematic reviews. The first zone ("Bradford core") is the essential collection; beyond zone 3, cost per relevant article becomes prohibitive.</p>
+    </div>
+    <div class="chart-container">
+      <h4 style="margin-bottom:12px">Interactive Bradford's Law Demo</h4>
+      <div class="chart-controls">
+        <label>Core journals (Zone 1):</label>
+        <input type="range" id="bradCoreN" min="2" max="15" step="1" value="5" oninput="updateBradfordChart()">
+        <span id="bradCoreVal">5</span>
+        <label style="margin-left:16px">Bradford multiplier k:</label>
+        <input type="range" id="bradK" min="2" max="8" step="0.5" value="5" oninput="updateBradfordChart()">
+        <span id="bradKVal">5.0</span>
+      </div>
+      <div class="chart-wrapper"><canvas id="bradfordChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ZIPF'S LAW -->
+  <div class="card">
+    <h3><span class="icon">🔤</span>Zipf's Law of Word Frequency</h3>
+    <p>George Kingsley Zipf (1949) observed that in any large corpus of text, the frequency of a word is approximately <strong>inversely proportional to its rank</strong>. The most common word appears roughly twice as often as the second-most-common, three times as often as the third, and so on.</p>
+    <div class="formula">f(r) ∝ <span>1 / r<sup>s</sup></span> &nbsp;&nbsp; where r = rank, s ≈ 1</div>
+    <p>In bibliometrics, Zipf's law applies to <strong>keyword frequencies</strong> in corpora, <strong>citation distributions</strong>, and author productivity. It reflects a general principle of "economy of effort" — a power law governing information creation.</p>
+    <div class="info-box green">
+      <strong>📌 Connection to Bibliometrics</strong>
+      <p>Zipf's law underlies <strong>term extraction</strong> for keyword analysis. Stop words (the, a, of) sit at the top of the Zipf curve; rare but informative terms sit in the middle ("hapax richness zone") — ideal for automatic indexing and keyword co-occurrence analysis.</p>
+    </div>
+    <div class="chart-container">
+      <h4 style="margin-bottom:12px">Interactive Zipf's Law Demo</h4>
+      <div class="chart-controls">
+        <label>Exponent s:</label>
+        <input type="range" id="zipfS" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateZipfChart()">
+        <span id="zipfSVal">1.0</span>
+        <label style="margin-left:16px">Top N words:</label>
+        <input type="range" id="zipfN" min="10" max="50" step="5" value="20" oninput="updateZipfChart()">
+        <span id="zipfNVal">20</span>
+        <label style="margin-left:16px">Scale:</label>
+        <select id="zipfScale" onchange="updateZipfChart()" style="padding:4px 8px;border-radius:4px;border:1px solid var(--border)">
+          <option value="linear">Linear</option>
+          <option value="log">Log-Log</option>
+        </select>
+      </div>
+      <div class="chart-wrapper"><canvas id="zipfChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CODE -->
+  <div class="card">
+    <h3><span class="icon">💻</span>Implementing the Three Laws in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Lotka, Bradford, Zipf</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import numpy as np
+import pandas as pd
+from scipy.stats import linregress
+import matplotlib.pyplot as plt
+
+# ===== LOTKA'S LAW =====
+def lotka_theoretical(n_range, alpha=2.0, C=0.6079):
+    """Theoretical Lotka distribution."""
+    return {n: C / n**alpha for n in n_range}
+
+# Verify: sum of f(n) should ≈ 1 for large range
+n_range = range(1, 100)
+lotka = lotka_theoretical(n_range)
+print("Lotka's Law:")
+for n in [1, 2, 3, 5, 10]:
+    print(f"  f({n:2d}) = {lotka[n]:.4f} ({lotka[n]*100:.2f}%)")
+print(f"  Sum (1-99): {sum(lotka.values()):.4f}")
+
+# ===== BRADFORD'S LAW =====
+def bradford_zones(core_journals, k, zones=3):
+    """Compute Bradford zone sizes."""
+    return [int(core_journals * k**z) for z in range(zones)]
+
+zones = bradford_zones(core_journals=5, k=5, zones=3)
+print(f"\nBradford's Law (core=5, k=5):")
+for i, z in enumerate(zones, 1):
+    print(f"  Zone {i}: {z} journals")
+
+# ===== ZIPF'S LAW =====
+# Simulate word frequency data
+np.random.seed(42)
+ranks = np.arange(1, 51)
+s = 1.0
+frequencies = 1000 / ranks**s  # Theoretical
+noise = np.random.normal(0, 0.05 * frequencies)
+observed = np.maximum(1, frequencies + noise)
+
+# Fit log-log regression
+log_rank = np.log(ranks)
+log_freq = np.log(observed)
+slope, intercept, r, p, _ = linregress(log_rank, log_freq)
+print(f"\nZipf's Law fit:")
+print(f"  Slope (−s): {slope:.3f}")
+print(f"  R²: {r**2:.4f}")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="2">▶ Run</button>
+      </div>
+      <textarea id="pycode-2">import numpy as np
+
+# LOTKA'S LAW
+def lotka(n, alpha=2.0, C=0.6079):
+    return C / n**alpha
+
+print("=== Lotka's Law (alpha=2, C=0.6079) ===")
+for n in [1, 2, 3, 5, 10]:
+    print(f"  f({n}) = {lotka(n):.4f}  ({lotka(n)*100:.2f}% of authors)")
+
+# BRADFORD'S LAW
+print("\n=== Bradford's Law (core=5 journals, k=5) ===")
+core, k = 5, 5
+for zone in range(3):
+    journals = core * (k**zone)
+    print(f"  Zone {zone+1}: {journals} journals")
+
+# ZIPF'S LAW
+print("\n=== Zipf's Law (s=1.0) ===")
+ranks = np.arange(1, 11)
+freqs = 1000 / ranks**1.0
+print("  Rank | Frequency")
+for r, f in zip(ranks, freqs):
+    print(f"  {r:4d} | {f:8.1f}")
+</textarea>
+      <div class="pyodide-status" id="pystatus-2"></div>
+      <div class="pyodide-output" id="pyout-2"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Three laws with bibliometrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+
+# ===== LOTKA'S LAW =====
+# Using bibliometrix with WoS data:
+# L <- lotka(results)  # results from biblioAnalysis()
+# plot(L, "fitted")
+
+# Manual implementation
+lotka_dist <- function(n, alpha = 2, C = 0.6079) C / n^alpha
+
+cat("Lotka's Law:\n")
+for (n in c(1, 2, 3, 5, 10)) {
+  cat(sprintf("  f(%2d) = %.4f (%.2f%%)\n", n, lotka_dist(n), lotka_dist(n)*100))
+}
+
+# ===== BRADFORD'S LAW =====
+# bradford(M)  # automatic with bibliometrix
+
+# Manual Bradford zones
+bradford_zones <- function(n1, k, zones = 3) {
+  sapply(0:(zones-1), function(z) n1 * k^z)
+}
+zones <- bradford_zones(5, 5, 3)
+cat("\nBradford's Law:\n")
+for (i in seq_along(zones)) {
+  cat(sprintf("  Zone %d: %d journals\n", i, zones[i]))
+}
+
+# ===== ZIPF'S LAW =====
+ranks <- 1:20
+freq_theoretical <- 1000 / ranks^1.0
+df_zipf <- data.frame(rank = ranks, freq = freq_theoretical)
+
+# Log-log fit
+fit <- lm(log(freq) ~ log(rank), data = df_zipf)
+cat(sprintf("\nZipf slope (should be ≈ -1): %.3f\n", coef(fit)["log(rank)"]))
+cat(sprintf("R²: %.4f\n", summary(fit)$r.squared))</code></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 2 -->
+  <div class="quiz-section">
+    <h3>🎯 Module 3 Quiz</h3>
+    <div class="quiz-question" id="q2-0">
+      <div class="quiz-q"><span>1</span>Lotka's Law predicts that if 60% of authors publish 1 paper, what percentage publishes 2 papers?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q2-0','A')"><div class="option-radio"></div>30%</div>
+        <div class="option" onclick="selectOption(this,'q2-0','B')"><div class="option-radio"></div>20%</div>
+        <div class="option" onclick="selectOption(this,'q2-0','C')"><div class="option-radio"></div>15%</div>
+        <div class="option" onclick="selectOption(this,'q2-0','D')"><div class="option-radio"></div>7.5%</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q2-0"></div>
+    </div>
+    <div class="quiz-question" id="q2-1">
+      <div class="quiz-q"><span>2</span>Bradford's Law is primarily used by:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q2-1','A')"><div class="option-radio"></div>Computing author h-indices</div>
+        <div class="option" onclick="selectOption(this,'q2-1','B')"><div class="option-radio"></div>Identifying core journals for literature reviews</div>
+        <div class="option" onclick="selectOption(this,'q2-1','C')"><div class="option-radio"></div>Measuring word frequency in texts</div>
+        <div class="option" onclick="selectOption(this,'q2-1','D')"><div class="option-radio"></div>Calculating impact factors</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q2-1"></div>
+    </div>
+    <div class="quiz-question" id="q2-2">
+      <div class="quiz-q"><span>3</span>In Zipf's Law, if the most frequent word appears 1000 times, approximately how many times does the 10th-ranked word appear?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q2-2','A')"><div class="option-radio"></div>100</div>
+        <div class="option" onclick="selectOption(this,'q2-2','B')"><div class="option-radio"></div>500</div>
+        <div class="option" onclick="selectOption(this,'q2-2','C')"><div class="option-radio"></div>10</div>
+        <div class="option" onclick="selectOption(this,'q2-2','D')"><div class="option-radio"></div>1</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q2-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q2',['C','B','A'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q2"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(1)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(3)">Next: Networks →</button>
+  </div>
+  <button class="complete-btn" id="complete-2" onclick="completeModule(2)">✓ Mark Module 3 Complete</button>
+</div>
+<!-- ======================== MODULE 3: NETWORKS ======================== -->
+<div class="module" id="module-3">
+  <div class="module-hero">
+    <div class="module-tag">🕸️ Module 4</div>
+    <h2>Network Analysis in Bibliometrics</h2>
+    <p>Discover how co-citation, bibliographic coupling, and co-authorship networks reveal the intellectual structure of science and collaboration patterns among researchers.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~35 min</strong></span>
+      <span>📚 <strong>4 sections</strong></span>
+      <span>🎯 <strong>Advanced</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🔗</span>Types of Bibliometric Networks</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Network Type</th><th>Nodes</th><th>Links (edges)</th><th>Reveals</th></tr>
+        <tr><td><strong>Co-citation</strong></td><td>Documents / Authors</td><td>Cited together</td><td>Intellectual structure, research fronts</td></tr>
+        <tr><td><strong>Bibliographic Coupling</strong></td><td>Documents</td><td>Shared references</td><td>Thematic similarity between papers</td></tr>
+        <tr><td><strong>Co-authorship</strong></td><td>Authors / Institutions / Countries</td><td>Joint publication</td><td>Collaboration patterns, invisible colleges</td></tr>
+        <tr><td><strong>Keyword Co-occurrence</strong></td><td>Keywords / Terms</td><td>Used in same paper</td><td>Conceptual structure, emerging topics</td></tr>
+        <tr><td><strong>Journal Co-citation</strong></td><td>Journals</td><td>Cited together</td><td>Interdisciplinary bridges</td></tr>
+      </table>
+    </div>
+
+    <h4>Co-citation Analysis</h4>
+    <p><strong>Co-citation</strong> (Small, 1973) occurs when two documents are cited together in a third document. High co-citation frequency indicates the two documents are intellectually related. Author co-citation analysis (White &amp; Griffith, 1981) maps the cognitive structure of a field by clustering co-cited authors.</p>
+    <div class="formula">Co-citation(A, B) = <span>Number of papers that cite both A and B simultaneously</span></div>
+
+    <h4>Bibliographic Coupling</h4>
+    <p><strong>Bibliographic coupling</strong> (Kessler, 1963) links documents that share common references. Unlike co-citation (which looks backward to what documents are cited together), bibliographic coupling is a static relationship — it does not change after publication.</p>
+    <div class="formula">Coupling(A, B) = <span>|References(A) ∩ References(B)|</span></div>
+
+    <div class="info-box blue">
+      <strong>📌 Key Difference</strong>
+      <p><strong>Co-citation</strong> reflects how documents are <em>perceived</em> by the scientific community (retrospective, changes over time). <strong>Bibliographic coupling</strong> reflects intellectual relationship at time of writing (prospective, static). Both complement each other in science mapping.</p>
+    </div>
+  </div>
+
+  <!-- D3 NETWORK -->
+  <div class="card">
+    <h3><span class="icon">🌐</span>Interactive Co-authorship Network</h3>
+    <p>Explore an example co-authorship network. <strong>Drag nodes</strong> to rearrange. <strong>Hover</strong> for details. Node size = publication count; edge thickness = collaboration strength. Colors = research clusters.</p>
+    <div id="network-graph"></div>
+    <div class="network-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Cluster A (ML/AI)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Cluster B (Bioinformatics)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Cluster C (NLP)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Cluster D (Interdisciplinary)</div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-muted)">
+      💡 Tip: Scroll to zoom, drag background to pan, drag nodes to reposition.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Building Networks in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Co-authorship network with NetworkX</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import networkx as nx
+import pandas as pd
+from itertools import combinations
+from collections import Counter
+
+# Sample publication data with multiple authors
+publications = [
+    {'id': 'P1', 'authors': ['Smith J', 'Jones A', 'Brown K']},
+    {'id': 'P2', 'authors': ['Smith J', 'Williams L']},
+    {'id': 'P3', 'authors': ['Jones A', 'Brown K', 'Davis M']},
+    {'id': 'P4', 'authors': ['Williams L', 'Taylor R', 'Smith J']},
+    {'id': 'P5', 'authors': ['Davis M', 'Taylor R']},
+    {'id': 'P6', 'authors': ['Brown K', 'Moore S', 'Jones A']},
+]
+
+# Build co-authorship graph
+G = nx.Graph()
+
+# Add edges for all author pairs within each paper
+edge_weights = Counter()
+for pub in publications:
+    authors = pub['authors']
+    for a1, a2 in combinations(authors, 2):
+        edge = tuple(sorted([a1, a2]))
+        edge_weights[edge] += 1
+
+# Add weighted edges to graph
+for (a1, a2), weight in edge_weights.items():
+    if G.has_edge(a1, a2):
+        G[a1][a2]['weight'] += weight
+    else:
+        G.add_edge(a1, a2, weight=weight)
+
+# Node attributes: publication count
+for pub in publications:
+    for author in pub['authors']:
+        if author not in G.nodes:
+            G.add_node(author)
+        G.nodes[author]['pubs'] = G.nodes[author].get('pubs', 0) + 1
+
+print("=== Co-authorship Network ===")
+print(f"Authors (nodes): {G.number_of_nodes()}")
+print(f"Collaborations (edges): {G.number_of_edges()}")
+print(f"Density: {nx.density(G):.3f}")
+print(f"\nDegree centrality (top collaborators):")
+dc = nx.degree_centrality(G)
+for author, cent in sorted(dc.items(), key=lambda x: -x[1]):
+    print(f"  {author:<15} {cent:.3f}")
+
+print(f"\nBetweenness centrality (bridges):")
+bc = nx.betweenness_centrality(G)
+for author, cent in sorted(bc.items(), key=lambda x: -x[1])[:3]:
+    print(f"  {author:<15} {cent:.3f}")
+
+# Detect communities
+communities = list(nx.community.greedy_modularity_communities(G))
+print(f"\nCommunities detected: {len(communities)}")
+for i, comm in enumerate(communities, 1):
+    print(f"  Group {i}: {', '.join(sorted(comm))}")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="3">▶ Run</button>
+      </div>
+      <textarea id="pycode-3">from itertools import combinations
+from collections import Counter, defaultdict
+
+publications = [
+    {'authors': ['Smith J', 'Jones A', 'Brown K']},
+    {'authors': ['Smith J', 'Williams L']},
+    {'authors': ['Jones A', 'Brown K', 'Davis M']},
+    {'authors': ['Williams L', 'Taylor R', 'Smith J']},
+    {'authors': ['Davis M', 'Taylor R']},
+    {'authors': ['Brown K', 'Moore S', 'Jones A']},
+]
+
+edge_weights = Counter()
+pub_counts = defaultdict(int)
+
+for pub in publications:
+    authors = pub['authors']
+    for a in authors:
+        pub_counts[a] += 1
+    for a1, a2 in combinations(authors, 2):
+        edge = tuple(sorted([a1, a2]))
+        edge_weights[edge] += 1
+
+print("Co-authorship Network:")
+print(f"Authors: {len(pub_counts)}")
+print(f"Collaboration pairs: {len(edge_weights)}")
+print("\nPublication counts:")
+for author, count in sorted(pub_counts.items(), key=lambda x: -x[1]):
+    print(f"  {author}: {count} paper(s)")
+print("\nStrongest collaborations:")
+for (a1, a2), w in sorted(edge_weights.items(), key=lambda x: -x[1])[:5]:
+    print(f"  {a1} -- {a2}: {w}")</textarea>
+      <div class="pyodide-status" id="pystatus-3"></div>
+      <div class="pyodide-output" id="pyout-3"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Co-authorship network with bibliometrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+library(igraph)
+
+# With real data loaded:
+# M <- convert2df("export.bib", dbsource="wos", format="bibtex")
+# results <- biblioAnalysis(M)
+
+# Build co-authorship network using bibliometrix
+# NetMatrix <- biblioNetwork(M, analysis = "collaboration",
+#                             network = "authors", sep = ";")
+
+# For demonstration with igraph:
+authors <- list(
+  c("Smith J", "Jones A", "Brown K"),
+  c("Smith J", "Williams L"),
+  c("Jones A", "Brown K", "Davis M"),
+  c("Williams L", "Taylor R", "Smith J")
+)
+
+# Create edge list
+edges <- do.call(rbind, lapply(authors, function(a) {
+  if (length(a) < 2) return(NULL)
+  t(combn(a, 2))
+}))
+
+# Build and analyze graph
+g <- graph_from_edgelist(edges, directed = FALSE)
+g <- simplify(g, remove.multiple = TRUE, remove.loops = TRUE,
+              edge.attr.comb = list(weight = "sum"))
+
+cat("Network Summary:\n")
+cat(sprintf("  Nodes: %d\n", vcount(g)))
+cat(sprintf("  Edges: %d\n", ecount(g)))
+cat(sprintf("  Density: %.3f\n", edge_density(g)))
+
+# Centrality measures
+cat("\nDegree centrality:\n")
+dc <- degree(g, normalized = TRUE)
+print(sort(dc, decreasing = TRUE))
+
+# Community detection
+communities <- cluster_louvain(g)
+cat(sprintf("\nCommunities: %d\n", length(communities)))</code></pre>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <h3>🎯 Module 4 Quiz</h3>
+    <div class="quiz-question" id="q3-0">
+      <div class="quiz-q"><span>1</span>Co-citation analysis was introduced by:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q3-0','A')"><div class="option-radio"></div>Kessler (1963)</div>
+        <div class="option" onclick="selectOption(this,'q3-0','B')"><div class="option-radio"></div>Small (1973)</div>
+        <div class="option" onclick="selectOption(this,'q3-0','C')"><div class="option-radio"></div>Hirsch (2005)</div>
+        <div class="option" onclick="selectOption(this,'q3-0','D')"><div class="option-radio"></div>Garfield (1955)</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q3-0"></div>
+    </div>
+    <div class="quiz-question" id="q3-1">
+      <div class="quiz-q"><span>2</span>Bibliographic coupling links documents that:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q3-1','A')"><div class="option-radio"></div>Are cited together in a third paper</div>
+        <div class="option" onclick="selectOption(this,'q3-1','B')"><div class="option-radio"></div>Share common references</div>
+        <div class="option" onclick="selectOption(this,'q3-1','C')"><div class="option-radio"></div>Have the same authors</div>
+        <div class="option" onclick="selectOption(this,'q3-1','D')"><div class="option-radio"></div>Were published in the same year</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q3-1"></div>
+    </div>
+    <div class="quiz-question" id="q3-2">
+      <div class="quiz-q"><span>3</span>In co-authorship network analysis, "betweenness centrality" measures:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q3-2','A')"><div class="option-radio"></div>The number of co-authors an author has</div>
+        <div class="option" onclick="selectOption(this,'q3-2','B')"><div class="option-radio"></div>How often an author lies on the shortest path between other authors</div>
+        <div class="option" onclick="selectOption(this,'q3-2','C')"><div class="option-radio"></div>The total number of publications</div>
+        <div class="option" onclick="selectOption(this,'q3-2','D')"><div class="option-radio"></div>The average distance to all other nodes</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q3-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q3',['B','B','B'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q3"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(2)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(4)">Next: Databases →</button>
+  </div>
+  <button class="complete-btn" id="complete-3" onclick="completeModule(3)">✓ Mark Module 4 Complete</button>
+</div>
+<!-- ======================== MODULE 4: DATABASES ======================== -->
+<div class="module" id="module-4">
+  <div class="module-hero">
+    <div class="module-tag">🗄️ Module 5</div>
+    <h2>Bibliographic Database Sources</h2>
+    <p>Compare the major academic databases — Web of Science, Scopus, PubMed, Google Scholar, and emerging platforms — and understand their coverage, strengths, and limitations for bibliometric research.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~25 min</strong></span>
+      <span>📚 <strong>3 sections</strong></span>
+      <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🔎</span>Major Academic Databases</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Database</th><th>Owner</th><th>Coverage</th><th>Strengths</th><th>Weaknesses</th></tr>
+        <tr>
+          <td><strong>Web of Science (WoS)</strong></td>
+          <td>Clarivate</td>
+          <td>~21,000 journals, 1900–</td>
+          <td>Selective quality curation, citation analysis, long historical coverage</td>
+          <td>Expensive, English-language bias, excludes many regional journals</td>
+        </tr>
+        <tr>
+          <td><strong>Scopus</strong></td>
+          <td>Elsevier</td>
+          <td>~27,000 journals, 1970–</td>
+          <td>Broader coverage than WoS, good author disambiguation (SciVal)</td>
+          <td>Limited pre-1970 data, some quality issues with newer additions</td>
+        </tr>
+        <tr>
+          <td><strong>PubMed / MEDLINE</strong></td>
+          <td>NLM (free)</td>
+          <td>~35M records, biomedical focus</td>
+          <td>Free, deep biomedical coverage, MeSH controlled vocabulary</td>
+          <td>No citation data, biomedical only</td>
+        </tr>
+        <tr>
+          <td><strong>Google Scholar</strong></td>
+          <td>Google (free)</td>
+          <td>~200M+ records</td>
+          <td>Broadest coverage, includes grey literature, theses, patents</td>
+          <td>No API, inconsistent data quality, inflated counts, poor deduplication</td>
+        </tr>
+        <tr>
+          <td><strong>Dimensions</strong></td>
+          <td>Digital Science</td>
+          <td>~130M publications</td>
+          <td>Free tier, includes grants, patents, clinical trials; policy links</td>
+          <td>Newer platform, some quality concerns</td>
+        </tr>
+        <tr>
+          <td><strong>OpenAlex</strong></td>
+          <td>OurResearch (free/open)</td>
+          <td>~250M works</td>
+          <td>Fully open API, vast coverage, successor to MAG</td>
+          <td>Still maturing, occasional data inconsistencies</td>
+        </tr>
+        <tr>
+          <td><strong>Semantic Scholar</strong></td>
+          <td>Allen Institute (free)</td>
+          <td>~200M papers</td>
+          <td>AI-powered semantic search, open API, influential citations</td>
+          <td>Coverage varies by field</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">📋</span>Choosing the Right Database</h3>
+    <div class="grid-2">
+      <div class="info-box blue">
+        <strong>For Bibliometric Research / Research Evaluation</strong>
+        <p>Use <strong>Web of Science</strong> or <strong>Scopus</strong> — they provide citation data, author disambiguation, and export formats (BibTeX, RIS, plain text) compatible with tools like bibliometrix, VOSviewer, and CiteSpace.</p>
+      </div>
+      <div class="info-box green">
+        <strong>For Biomedical Systematic Reviews</strong>
+        <p>Start with <strong>PubMed/MEDLINE</strong> for comprehensive biomedical coverage. Supplement with Embase (Elsevier) for European literature. Use MeSH terms for controlled vocabulary searches.</p>
+      </div>
+      <div class="info-box teal">
+        <strong>For Open / Free Research</strong>
+        <p><strong>OpenAlex</strong> provides a free, fully open API with massive coverage. <strong>Unpaywall</strong> and <strong>CORE</strong> provide open-access full texts. <strong>Semantic Scholar</strong> offers influential citations and citation intent classification.</p>
+      </div>
+      <div class="info-box amber">
+        <strong>For Social Sciences &amp; Humanities</strong>
+        <p>WoS includes <strong>SSCI</strong> and <strong>AHCI</strong> — but coverage is limited. <strong>Scopus</strong> is often better for social sciences. Consider specialist databases: <strong>PsycINFO</strong>, <strong>ERIC</strong>, <strong>Sociological Abstracts</strong>.</p>
+      </div>
+    </div>
+    <h4>Key Export Formats for Bibliometric Analysis</h4>
+    <div class="tags">
+      <span class="tag blue">BibTeX (.bib)</span>
+      <span class="tag teal">RIS (.ris)</span>
+      <span class="tag green">Plain Text (.txt — WoS)</span>
+      <span class="tag amber">CSV / Excel</span>
+      <span class="tag">Endnote XML</span>
+    </div>
+    <p>The <strong>bibliometrix</strong> R package and <strong>pyBibX</strong> Python package support most formats. When downloading from WoS, choose "Plain Text" with full record and cited references. From Scopus, choose "CSV" with all fields.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Querying Databases via Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> OpenAlex API — free bibliometric data</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import requests
+import pandas as pd
+
+# OpenAlex is free and open — no API key needed for basic queries
+BASE_URL = "https://api.openalex.org"
+
+def search_works(query, per_page=10, email="your@email.com"):
+    """Search OpenAlex works by query string."""
+    params = {
+        "search": query,
+        "per-page": per_page,
+        "mailto": email,  # polite pool = faster responses
+        "select": "id,title,publication_year,cited_by_count,authorships,primary_location"
+    }
+    resp = requests.get(f"{BASE_URL}/works", params=params)
+    resp.raise_for_status()
+    return resp.json()["results"]
+
+def get_author_metrics(orcid):
+    """Fetch author h-index and metrics from OpenAlex."""
+    resp = requests.get(f"{BASE_URL}/authors/https://orcid.org/{orcid}")
+    resp.raise_for_status()
+    data = resp.json()
+    return {
+        "name": data.get("display_name"),
+        "works_count": data.get("works_count"),
+        "cited_by_count": data.get("cited_by_count"),
+        "h_index": data.get("summary_stats", {}).get("h_index"),
+        "i10_index": data.get("summary_stats", {}).get("i10_index"),
+    }
+
+# Example search (requires internet connection)
+# works = search_works("bibliometrics scientometrics", per_page=5)
+# for w in works:
+#     print(f"{w['publication_year']} | {w['cited_by_count']:5d} cites | {w['title'][:60]}")
+
+# Example author lookup
+# metrics = get_author_metrics("0000-0002-7425-5765")  # replace with real ORCID
+# print(metrics)
+
+# Parse a local Scopus CSV export
+def parse_scopus_csv(filepath):
+    df = pd.read_csv(filepath)
+    required = ['Authors', 'Title', 'Year', 'Cited by', 'Source title']
+    df = df[[c for c in required if c in df.columns]]
+    df['Cited by'] = pd.to_numeric(df.get('Cited by', 0), errors='coerce').fillna(0)
+    return df.sort_values('Cited by', ascending=False)
+
+# df = parse_scopus_csv("scopus_export.csv")
+print("OpenAlex query functions defined.")
+print("Replace the commented-out examples with real searches/ORCID IDs.")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser — Parse simulated Scopus CSV</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="4">▶ Run</button>
+      </div>
+      <textarea id="pycode-4">import io, csv
+
+# Simulate Scopus CSV data
+scopus_csv = """Authors,Title,Year,Cited by,Source title
+Smith J; Jones A,Deep learning review,2022,342,Nature Reviews
+Brown K,Bibliometrics methods,2021,189,Scientometrics
+Lee M; Park S,H-index analysis,2020,95,Journal of Informetrics
+Wang H,Citation networks,2019,67,JASIST
+Garcia R,Impact factor critique,2023,23,PLoS ONE"""
+
+rows = list(csv.DictReader(io.StringIO(scopus_csv)))
+print(f"{'Year':<6}{'Citations':>10}  {'Source':<25} Title")
+print("-"*75)
+for r in sorted(rows, key=lambda x: -int(x['Cited by'])):
+    print(f"{r['Year']:<6}{r['Cited by']:>10}  {r['Source title']:<25} {r['Title'][:30]}")
+
+total = sum(int(r['Cited by']) for r in rows)
+print(f"\nTotal papers: {len(rows)}")
+print(f"Total citations: {total}")
+print(f"Mean citations: {total/len(rows):.1f}")</textarea>
+      <div class="pyodide-status" id="pystatus-4"></div>
+      <div class="pyodide-output" id="pyout-4"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Loading WoS &amp; Scopus exports</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+
+# ===== Web of Science Plain Text Export =====
+# Download: WoS > Export > Plain Text > Full Record + Cited References
+M_wos <- convert2df(
+  file = "wos_export.txt",    # path to your WoS file
+  dbsource = "wos",
+  format = "plaintext"
+)
+
+# ===== Scopus CSV Export =====
+# Download: Scopus > Export > CSV > All fields
+M_scopus <- convert2df(
+  file = "scopus_export.csv",
+  dbsource = "scopus",
+  format = "csv"
+)
+
+# ===== OpenAlex via API (requires openalexR) =====
+# install.packages("openalexR")
+library(openalexR)
+
+works <- oa_fetch(
+  entity = "works",
+  title.search = "bibliometrics",
+  publication_year = ">2015",
+  count_only = FALSE,
+  verbose = TRUE
+)
+
+# Analyse the dataset
+results <- biblioAnalysis(M_wos, sep = ";")
+summary(results, k = 10, pause = FALSE)
+
+# Most productive authors
+cat("\nTop 10 authors:\n")
+print(head(results$Authors, 10))
+
+# Publication trend over time
+cat("\nAnnual production:\n")
+print(results$AnnualProduction)</code></pre>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <h3>🎯 Module 5 Quiz</h3>
+    <div class="quiz-question" id="q4-0">
+      <div class="quiz-q"><span>1</span>Which database provides citation data AND is freely available with an open API?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q4-0','A')"><div class="option-radio"></div>Web of Science</div>
+        <div class="option" onclick="selectOption(this,'q4-0','B')"><div class="option-radio"></div>Scopus</div>
+        <div class="option" onclick="selectOption(this,'q4-0','C')"><div class="option-radio"></div>OpenAlex</div>
+        <div class="option" onclick="selectOption(this,'q4-0','D')"><div class="option-radio"></div>PubMed</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q4-0"></div>
+    </div>
+    <div class="quiz-question" id="q4-1">
+      <div class="quiz-q"><span>2</span>CiteScore (Scopus) differs from the Impact Factor by using a window of:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q4-1','A')"><div class="option-radio"></div>1 year</div>
+        <div class="option" onclick="selectOption(this,'q4-1','B')"><div class="option-radio"></div>2 years</div>
+        <div class="option" onclick="selectOption(this,'q4-1','C')"><div class="option-radio"></div>4 years</div>
+        <div class="option" onclick="selectOption(this,'q4-1','D')"><div class="option-radio"></div>5 years</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q4-1"></div>
+    </div>
+    <div class="quiz-question" id="q4-2">
+      <div class="quiz-q"><span>3</span>PubMed's controlled vocabulary system is called:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q4-2','A')"><div class="option-radio"></div>PACS</div>
+        <div class="option" onclick="selectOption(this,'q4-2','B')"><div class="option-radio"></div>MeSH</div>
+        <div class="option" onclick="selectOption(this,'q4-2','C')"><div class="option-radio"></div>THESOC</div>
+        <div class="option" onclick="selectOption(this,'q4-2','D')"><div class="option-radio"></div>JELS</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q4-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q4',['C','C','B'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q4"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(3)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(5)">Next: Science Mapping →</button>
+  </div>
+  <button class="complete-btn" id="complete-4" onclick="completeModule(4)">✓ Mark Module 5 Complete</button>
+</div>
+<!-- ======================== MODULE 5: SCIENCE MAPPING ======================== -->
+<div class="module" id="module-5">
+  <div class="module-hero">
+    <div class="module-tag">🗺️ Module 6</div>
+    <h2>Mapping Science</h2>
+    <p>Science mapping creates visual representations of scientific knowledge — revealing research clusters, emerging topics, and the intellectual structure of fields using VOSviewer-style visualizations.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~30 min</strong></span>
+      <span>📚 <strong>3 sections</strong></span>
+      <span>🎯 <strong>Advanced</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🗺️</span>Types of Science Maps</h3>
+    <div class="grid-2">
+      <div>
+        <h4>Keyword Co-occurrence Maps</h4>
+        <p>Nodes = keywords; edges = co-occurrence in same paper. Clusters reveal <strong>research themes</strong>. Node size = frequency; edge thickness = co-occurrence strength. Used to track emerging topics over time.</p>
+        <h4>Author Co-citation Maps</h4>
+        <p>Clusters of frequently co-cited authors reveal <strong>intellectual communities</strong> or "invisible colleges." Pioneered by White &amp; Griffith (1981) to map the structure of information science.</p>
+      </div>
+      <div>
+        <h4>Journal Co-citation Maps</h4>
+        <p>Maps interdisciplinary connections between fields. Journals that are frequently cited together in papers are placed close together. Reveals <strong>discipline boundaries and bridges</strong>.</p>
+        <h4>Thematic Evolution Maps</h4>
+        <p>Track how research themes emerge, grow, decline, or merge over time using <strong>temporal slices</strong>. Motor themes (high centrality + density) vs. niche themes vs. emerging themes.</p>
+      </div>
+    </div>
+    <div class="info-box teal">
+      <strong>📌 Key Tools</strong>
+      <p><strong>VOSviewer</strong> (free, Java) — industry standard for keyword/author/journal maps. <strong>CiteSpace</strong> — temporal mapping, burst detection. <strong>bibliometrix (R)</strong> — thematic maps, factorial analysis. <strong>Gephi</strong> — general-purpose network visualization.</p>
+    </div>
+  </div>
+
+  <!-- KEYWORD MAP VISUALIZATION -->
+  <div class="card">
+    <h3><span class="icon">🔵</span>Interactive Keyword Co-occurrence Map</h3>
+    <p>A VOSviewer-style keyword co-occurrence map for a sample bibliometrics corpus. Node size = keyword frequency; edge = co-occurrence; color = research cluster. Drag to rearrange.</p>
+    <div id="keyword-graph" style="width:100%;height:440px;background:#0d1117;border-radius:12px;overflow:hidden;border:1px solid #21262d"></div>
+    <div class="network-legend" style="margin-top:12px">
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Cluster 1: Metrics &amp; Evaluation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Cluster 2: Network Analysis</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Cluster 3: Databases &amp; Methods</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Cluster 4: Science Policy</div>
+    </div>
+  </div>
+
+  <!-- THEMATIC MAP -->
+  <div class="card">
+    <h3><span class="icon">📊</span>Thematic Map (Strategic Diagram)</h3>
+    <p>A <strong>thematic map</strong> (Callon et al., 1991) plots research themes in a 2D space: <strong>centrality</strong> (x-axis = external links) vs <strong>density</strong> (y-axis = internal cohesion). The four quadrants reveal the strategic position of each theme.</p>
+    <div class="chart-container">
+      <div class="chart-wrapper" style="height:340px"><canvas id="thematicChart"></canvas></div>
+    </div>
+    <div class="grid-2" style="margin-top:12px">
+      <div class="info-box blue"><strong>🚀 Motor Themes (top-right)</strong><p>High density + high centrality. Well-developed, important for the field. Core research areas.</p></div>
+      <div class="info-box amber"><strong>🌱 Emerging Themes (top-left)</strong><p>High density + low centrality. Well-developed but peripheral. Niche or specialized topics.</p></div>
+      <div class="info-box green"><strong>📡 Basic Themes (bottom-right)</strong><p>Low density + high centrality. Transversal and general themes. Cross-cutting foundations.</p></div>
+      <div class="info-box red"><strong>⚠️ Declining/Marginal (bottom-left)</strong><p>Low density + low centrality. Either emerging or declining. Needs attention to classify.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Science Mapping in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Keyword co-occurrence matrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import pandas as pd
+import numpy as np
+from collections import Counter
+from itertools import combinations
+import json
+
+# Sample publication keywords
+publications_kw = [
+    ['bibliometrics', 'scientometrics', 'h-index', 'citation analysis'],
+    ['bibliometrics', 'web of science', 'scopus', 'impact factor'],
+    ['co-authorship', 'network analysis', 'collaboration', 'bibliometrics'],
+    ['h-index', 'citation analysis', 'research evaluation', 'impact factor'],
+    ['scientometrics', 'knowledge mapping', 'VOSviewer', 'network analysis'],
+    ['altmetrics', 'social media', 'research impact', 'bibliometrics'],
+    ['lotka law', 'bradford law', 'zipf law', 'scientometrics'],
+    ['network analysis', 'co-citation', 'knowledge mapping', 'clustering'],
+]
+
+# Build co-occurrence matrix
+all_kw = sorted(set(kw for pub in publications_kw for kw in pub))
+n = len(all_kw)
+kw_idx = {kw: i for i, kw in enumerate(all_kw)}
+cooc = np.zeros((n, n), dtype=int)
+
+for pub in publications_kw:
+    for kw1, kw2 in combinations(pub, 2):
+        i, j = kw_idx[kw1], kw_idx[kw2]
+        cooc[i, j] += 1
+        cooc[j, i] += 1
+
+# Frequency count
+freq = Counter(kw for pub in publications_kw for kw in pub)
+print("=== Keyword Co-occurrence Analysis ===")
+print(f"\nTotal unique keywords: {n}")
+print(f"\nTop keywords by frequency:")
+for kw, cnt in freq.most_common(8):
+    print(f"  {kw:<30} {cnt}")
+
+# Co-occurrence matrix as DataFrame
+df_cooc = pd.DataFrame(cooc, index=all_kw, columns=all_kw)
+print(f"\nTop keyword pairs by co-occurrence:")
+pairs = []
+for i in range(n):
+    for j in range(i+1, n):
+        if cooc[i, j] > 0:
+            pairs.append((all_kw[i], all_kw[j], cooc[i, j]))
+pairs.sort(key=lambda x: -x[2])
+for kw1, kw2, cnt in pairs[:5]:
+    print(f"  {kw1} + {kw2}: {cnt}")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="5">▶ Run</button>
+      </div>
+      <textarea id="pycode-5">from collections import Counter
+from itertools import combinations
+
+publications_kw = [
+    ['bibliometrics', 'h-index', 'citation analysis'],
+    ['bibliometrics', 'scopus', 'impact factor'],
+    ['co-authorship', 'network analysis', 'bibliometrics'],
+    ['h-index', 'citation analysis', 'impact factor'],
+    ['scientometrics', 'VOSviewer', 'network analysis'],
+    ['altmetrics', 'research impact', 'bibliometrics'],
+]
+
+freq = Counter(kw for pub in publications_kw for kw in pub)
+cooc = Counter()
+for pub in publications_kw:
+    for p in combinations(sorted(pub), 2):
+        cooc[p] += 1
+
+print("Top keywords:")
+for kw, n in freq.most_common(8):
+    print(f"  {kw:<25} freq={n}")
+
+print("\nTop co-occurring pairs:")
+for (a, b), n in cooc.most_common(5):
+    print(f"  {a} & {b}: {n} co-occurrences")</textarea>
+      <div class="pyodide-status" id="pystatus-5"></div>
+      <div class="pyodide-output" id="pyout-5"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Thematic maps with bibliometrix</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+
+# Load and convert data
+# M <- convert2df("wos_export.txt", dbsource="wos", format="plaintext")
+
+# Keyword co-occurrence network
+# NetMatrix <- biblioNetwork(M, analysis = "co-occurrences",
+#                             network = "keywords", sep = ";")
+
+# Science map (VOSviewer-style)
+# net <- networkPlot(NetMatrix, normalize = "association",
+#                    weighted = TRUE, n = 30,
+#                    Title = "Keyword Co-occurrence",
+#                    type = "fruchterman",
+#                    cluster = "louvain",
+#                    labelsize = 1.5)
+
+# Thematic Map (Strategic Diagram)
+# res <- thematicMap(M, field = "ID", n = 250,
+#                    minfreq = 5, stemming = FALSE,
+#                    size = 0.5, n.labels = 1,
+#                    repel = TRUE)
+# plot(res$map)
+
+# Thematic evolution over time periods
+# nexus <- thematicEvolution(M, field = "ID",
+#                             years = c(2000, 2010, 2015, 2020, 2023),
+#                             n = 100, minFreq = 2)
+# plotThematicEvolution(nexus$Nodes, nexus$Edges)
+
+# Conceptual structure (MCA/CA)
+# CS <- conceptualStructure(M, field = "ID", method = "MCA",
+#                            minDegree = 2, clust = "auto",
+#                            k.max = 8, stemming = FALSE)
+cat("bibliometrix science mapping functions demonstrated.\n")
+cat("Load your own WoS/Scopus export to generate real maps.")</code></pre>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <h3>🎯 Module 6 Quiz</h3>
+    <div class="quiz-question" id="q5-0">
+      <div class="quiz-q"><span>1</span>In a thematic map, a topic with high centrality AND high density is called a:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q5-0','A')"><div class="option-radio"></div>Niche theme</div>
+        <div class="option" onclick="selectOption(this,'q5-0','B')"><div class="option-radio"></div>Motor theme</div>
+        <div class="option" onclick="selectOption(this,'q5-0','C')"><div class="option-radio"></div>Basic theme</div>
+        <div class="option" onclick="selectOption(this,'q5-0','D')"><div class="option-radio"></div>Emerging theme</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q5-0"></div>
+    </div>
+    <div class="quiz-question" id="q5-1">
+      <div class="quiz-q"><span>2</span>In a keyword co-occurrence map, what does node SIZE typically represent?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q5-1','A')"><div class="option-radio"></div>Number of co-occurrences with other keywords</div>
+        <div class="option" onclick="selectOption(this,'q5-1','B')"><div class="option-radio"></div>Keyword frequency (how often it appears)</div>
+        <div class="option" onclick="selectOption(this,'q5-1','C')"><div class="option-radio"></div>The publication year</div>
+        <div class="option" onclick="selectOption(this,'q5-1','D')"><div class="option-radio"></div>Number of clusters</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q5-1"></div>
+    </div>
+    <div class="quiz-question" id="q5-2">
+      <div class="quiz-q"><span>3</span>VOSviewer is primarily used for:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q5-2','A')"><div class="option-radio"></div>Statistical regression on citation data</div>
+        <div class="option" onclick="selectOption(this,'q5-2','B')"><div class="option-radio"></div>Creating visual bibliometric maps of research networks</div>
+        <div class="option" onclick="selectOption(this,'q5-2','C')"><div class="option-radio"></div>Managing reference collections</div>
+        <div class="option" onclick="selectOption(this,'q5-2','D')"><div class="option-radio"></div>Writing systematic review protocols</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q5-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q5',['B','B','B'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q5"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(4)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(6)">Next: Evaluation →</button>
+  </div>
+  <button class="complete-btn" id="complete-5" onclick="completeModule(5)">✓ Mark Module 6 Complete</button>
+</div>
+<!-- ======================== MODULE 6: EVALUATION ======================== -->
+<div class="module" id="module-6">
+  <div class="module-hero">
+    <div class="module-tag">🏛️ Module 7</div>
+    <h2>Research Evaluation Frameworks</h2>
+    <p>Understand how national and institutional research evaluation systems — REF, ERA, CWTS Leiden Ranking — use bibliometrics alongside expert review to assess scientific performance.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~25 min</strong></span>
+      <span>📚 <strong>3 sections</strong></span>
+      <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🌍</span>Major National Evaluation Systems</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>System</th><th>Country</th><th>Frequency</th><th>Metric Role</th><th>Key Features</th></tr>
+        <tr>
+          <td><strong>REF</strong> (Research Excellence Framework)</td>
+          <td>🇬🇧 UK</td>
+          <td>~6 years</td>
+          <td>Informing peer review</td>
+          <td>Outputs, impact case studies, environment. Expert panels. Bibliometrics inform but don't decide STEM panels.</td>
+        </tr>
+        <tr>
+          <td><strong>ERA</strong> (Excellence in Research for Australia)</td>
+          <td>🇦🇺 Australia</td>
+          <td>Periodic</td>
+          <td>Journal ranking, citation analysis</td>
+          <td>Field of Research codes; ABDC journal list; citation benchmarks against world average.</td>
+        </tr>
+        <tr>
+          <td><strong>VQR</strong> (Valutazione della Qualità della Ricerca)</td>
+          <td>🇮🇹 Italy</td>
+          <td>Every 3–5 years</td>
+          <td>High (bibliometrics for STEM)</td>
+          <td>Peer review + bibliometrics. Journal ranking (ANVUR). STEM uses citation-based scoring.</td>
+        </tr>
+        <tr>
+          <td><strong>SEP</strong> (Standard Evaluation Protocol)</td>
+          <td>🇳🇱 Netherlands</td>
+          <td>Every 6 years</td>
+          <td>Low (qualitative focus)</td>
+          <td>Self-evaluation, site visit, qualitative narrative. Deliberately metric-light since 2015 reform.</td>
+        </tr>
+        <tr>
+          <td><strong>PRFS</strong> (Performance-based Research Funding Systems)</td>
+          <td>Multiple</td>
+          <td>Annual/periodic</td>
+          <td>High to very high</td>
+          <td>Norway, Finland, Belgium, Denmark use output-counting models with journal/publisher rankings.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">📊</span>Key Ranking Systems</h3>
+    <div class="grid-2">
+      <div class="info-box blue">
+        <strong>CWTS Leiden Ranking</strong>
+        <p>Focuses on citation impact and collaboration. Uses <strong>field-normalized indicators</strong> (PP top 10%, MNCS). Provides confidence intervals — explicitly warns against single-number rankings. Available at leidenranking.com.</p>
+      </div>
+      <div class="info-box teal">
+        <strong>QS World University Rankings</strong>
+        <p>40% academic reputation survey, 20% employer reputation, 20% citations per faculty (Scopus), 10% international faculty/student ratio. Heavily survey-based — criticized for self-reinforcing prestige bias.</p>
+      </div>
+      <div class="info-box green">
+        <strong>Times Higher Education (THE)</strong>
+        <p>30% teaching reputation, 30% research (reputation + productivity), 27.5% citations (field-normalized), 7.5% industry income, 5% internationalization. Uses Elsevier/Scopus data.</td>
+      </div>
+      <div class="info-box amber">
+        <strong>Shanghai Ranking (ARWU)</strong>
+        <p>Heavy weighting on Nobel prizes/Fields Medals (30%), highly cited researchers (20%), Nature/Science papers (20%), publications in SCIE/SSCI (20%). Favors science-heavy research universities.</p>
+      </div>
+    </div>
+
+    <h4>Field Normalization</h4>
+    <p>Raw citation counts are unfair across fields — life sciences publish and cite far more than mathematics. <strong>Field-normalized indicators</strong> divide an item's citation count by the average for papers of the same type, field, and year.</p>
+    <div class="formula">MNCS = <span>citations / expected citations for field-year-type</span> &nbsp; (>1 = above world average)</div>
+    <p>The <strong>Leiden Ranking</strong> and <strong>InCites (WoS)</strong> implement field normalization. The PP(top 10%) indicator measures what proportion of a researcher's or institution's papers are in the top 10% most-cited worldwide in their field.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">📋</span>Responsible Metrics Frameworks</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">📜</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2012</div>
+          <div class="timeline-title">San Francisco Declaration on Research Assessment (DORA)</div>
+          <div class="timeline-desc">Urges funders and institutions to eliminate journal-based metrics (especially IF) from hiring and funding decisions. Now signed by 20,000+ organizations. Core message: evaluate the paper, not the journal.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">📊</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2015</div>
+          <div class="timeline-title">The Leiden Manifesto</div>
+          <div class="timeline-desc">Ten principles for responsible metric use (Hicks, Wouters, Waltman, de Rijcke, Rafols). Published in Nature. Key: metrics should support, not supplant, expert judgment.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🌍</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2016</div>
+          <div class="timeline-title">Metric Tide Report (UK)</div>
+          <div class="timeline-desc">Independent review by HEFCE on use of metrics in UK research assessment. Introduced the FAST principles: Fit for purpose, Appropriateness, Sensitivity, Transparency.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🔄</div>
+        <div class="timeline-content">
+          <div class="timeline-year">2022</div>
+          <div class="timeline-title">Coalition for Advancing Research Assessment (CoARA)</div>
+          <div class="timeline-desc">European initiative committed to reforming research assessment. Emphasizes qualitative assessment, recognition of diverse research outputs, and moving beyond publication counts and impact factors.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Field-Normalized Metrics in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Field normalization &amp; MNCS calculation</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import pandas as pd
+import numpy as np
+
+# Simulated publication dataset with field averages
+papers = pd.DataFrame({
+    'title': ['Paper A', 'Paper B', 'Paper C', 'Paper D', 'Paper E', 'Paper F'],
+    'field': ['Biology', 'Biology', 'Physics', 'Physics', 'Math', 'Math'],
+    'year': [2020, 2021, 2020, 2021, 2020, 2021],
+    'citations': [45, 12, 8, 22, 3, 1],
+})
+
+# Field-year average citations (from database benchmarks)
+field_averages = {
+    ('Biology', 2020): 18.5,
+    ('Biology', 2021): 7.2,
+    ('Physics', 2020): 9.1,
+    ('Physics', 2021): 11.3,
+    ('Math', 2020): 2.8,
+    ('Math', 2021): 1.9,
+}
+
+def get_expected(row):
+    return field_averages.get((row['field'], row['year']), 1)
+
+papers['expected'] = papers.apply(get_expected, axis=1)
+papers['FWCI'] = papers['citations'] / papers['expected']  # Field-Weighted Citation Impact
+
+print("=== Field-Normalized Citation Analysis ===")
+print(papers[['title', 'field', 'year', 'citations', 'expected', 'FWCI']].to_string(index=False))
+
+print(f"\nMean FWCI (MNCS): {papers['FWCI'].mean():.2f}")
+print(f"Papers above world average (FWCI > 1): {(papers['FWCI'] > 1).sum()}/{len(papers)}")
+print(f"PP(top 10%): {(papers['FWCI'] >= 10).sum()/len(papers)*100:.1f}%")
+
+# By field
+print("\nMean FWCI by field:")
+print(papers.groupby('field')['FWCI'].mean().round(2).to_string())</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="6">▶ Run</button>
+      </div>
+      <textarea id="pycode-6">papers = [
+    {'title': 'Paper A', 'field': 'Biology', 'year': 2020, 'citations': 45},
+    {'title': 'Paper B', 'field': 'Biology', 'year': 2021, 'citations': 12},
+    {'title': 'Paper C', 'field': 'Physics', 'year': 2020, 'citations': 8},
+    {'title': 'Paper D', 'field': 'Physics', 'year': 2021, 'citations': 22},
+    {'title': 'Paper E', 'field': 'Math',    'year': 2020, 'citations': 3},
+    {'title': 'Paper F', 'field': 'Math',    'year': 2021, 'citations': 1},
+]
+
+field_avg = {('Biology',2020):18.5,('Biology',2021):7.2,
+             ('Physics',2020):9.1,('Physics',2021):11.3,
+             ('Math',2020):2.8,('Math',2021):1.9}
+
+print(f"{'Title':<10} {'Field':<10} {'Cites':>6} {'Expected':>9} {'FWCI':>6}")
+print("-"*45)
+fwcis = []
+for p in papers:
+    exp = field_avg.get((p['field'], p['year']), 1)
+    fwci = p['citations'] / exp
+    fwcis.append(fwci)
+    flag = " ★" if fwci > 1 else ""
+    print(f"{p['title']:<10} {p['field']:<10} {p['citations']:>6} {exp:>9.1f} {fwci:>6.2f}{flag}")
+
+print(f"\nMean FWCI: {sum(fwcis)/len(fwcis):.2f}")
+print(f"Above world avg (FWCI>1): {sum(1 for f in fwcis if f>1)}/{len(fwcis)}")</textarea>
+      <div class="pyodide-status" id="pystatus-6"></div>
+      <div class="pyodide-output" id="pyout-6"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Institutional bibliometric report</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+library(dplyr)
+
+# === Institutional Analysis ===
+# Assume M is a loaded WoS/Scopus dataset
+
+# Country collaboration analysis
+# NetMatrix <- biblioNetwork(M, analysis = "collaboration",
+#                             network = "countries", sep = ";")
+
+# Field-normalized metrics (manual approach)
+compute_fwci <- function(df, citations_col, field_col, year_col, expected_col) {
+  df %>%
+    mutate(FWCI = !!sym(citations_col) / !!sym(expected_col)) %>%
+    group_by(!!sym(field_col)) %>%
+    summarise(
+      mean_FWCI = mean(FWCI, na.rm = TRUE),
+      papers = n(),
+      pp_top10 = mean(FWCI >= 10, na.rm = TRUE) * 100
+    )
+}
+
+# Bibliometric indicators for REF-style assessment
+ref_indicators <- function(results) {
+  cat("=== REF-Style Bibliometric Profile ===\n")
+  cat(sprintf("Total publications: %d\n", nrow(results$Documents)))
+  cat(sprintf("H-index: %d\n", results$H))
+
+  # Output profile
+  doc_types <- table(results$Documents$DT)
+  cat("\nDocument types:\n")
+  print(sort(doc_types, decreasing=TRUE))
+
+  # International collaboration rate
+  intl <- mean(grepl(";", results$Documents$C1), na.rm = TRUE)
+  cat(sprintf("\nInternational collaboration rate: %.1f%%\n", intl * 100))
+}
+
+# Output profile visualization
+# barplot(sort(table(M$DT), decreasing=TRUE),
+#         main = "Document Type Distribution",
+#         las = 2, col = "#2563eb")
+cat("Research evaluation framework examples ready.\n")
+cat("Replace commented sections with your loaded dataset.")</code></pre>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <h3>🎯 Module 7 Quiz</h3>
+    <div class="quiz-question" id="q6-0">
+      <div class="quiz-q"><span>1</span>DORA (San Francisco Declaration on Research Assessment) primarily argues against:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q6-0','A')"><div class="option-radio"></div>Using citation counts in any context</div>
+        <div class="option" onclick="selectOption(this,'q6-0','B')"><div class="option-radio"></div>Using journal Impact Factor to evaluate individual researchers</div>
+        <div class="option" onclick="selectOption(this,'q6-0','C')"><div class="option-radio"></div>Open access publishing</div>
+        <div class="option" onclick="selectOption(this,'q6-0','D')"><div class="option-radio"></div>International research collaboration</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q6-0"></div>
+    </div>
+    <div class="quiz-question" id="q6-1">
+      <div class="quiz-q"><span>2</span>A Field-Weighted Citation Impact (FWCI) of 2.5 means a paper received:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q6-1','A')"><div class="option-radio"></div>2.5 times the world average citations for its field/year/type</div>
+        <div class="option" onclick="selectOption(this,'q6-1','B')"><div class="option-radio"></div>25% more citations than average</div>
+        <div class="option" onclick="selectOption(this,'q6-1','C')"><div class="option-radio"></div>2.5 citations total</div>
+        <div class="option" onclick="selectOption(this,'q6-1','D')"><div class="option-radio"></div>Top 2.5% of all papers</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q6-1"></div>
+    </div>
+    <div class="quiz-question" id="q6-2">
+      <div class="quiz-q"><span>3</span>The Leiden Manifesto was published in:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q6-2','A')"><div class="option-radio"></div>Science</div>
+        <div class="option" onclick="selectOption(this,'q6-2','B')"><div class="option-radio"></div>Scientometrics</div>
+        <div class="option" onclick="selectOption(this,'q6-2','C')"><div class="option-radio"></div>Nature</div>
+        <div class="option" onclick="selectOption(this,'q6-2','D')"><div class="option-radio"></div>PLOS ONE</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q6-2"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q6',['B','A','C'],3)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q6"></div>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(5)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(7)">Next: Limitations →</button>
+  </div>
+  <button class="complete-btn" id="complete-6" onclick="completeModule(6)">✓ Mark Module 7 Complete</button>
+</div>
+<!-- ======================== MODULE 7: LIMITATIONS ======================== -->
+<div class="module" id="module-7">
+  <div class="module-hero">
+    <div class="module-tag">⚠️ Module 8</div>
+    <h2>Limitations &amp; Critiques of Bibliometrics</h2>
+    <p>A critical examination of the pitfalls, biases, and gaming strategies that undermine bibliometric indicators — and how responsible researchers and institutions can navigate these challenges.</p>
+    <div class="module-meta">
+      <span>⏱ <strong>~25 min</strong></span>
+      <span>📚 <strong>4 sections</strong></span>
+      <span>🎯 <strong>Advanced</strong></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">⚠️</span>Core Limitations of Citation-Based Metrics</h3>
+    <div class="grid-2">
+      <div>
+        <h4>1. Field Dependency</h4>
+        <p>Citation rates vary enormously across disciplines. A biology paper may accumulate 500+ citations; an excellent mathematics paper may have 20. Raw citation counts and h-indices are <strong>not comparable across fields</strong>.</p>
+        <div class="info-box red">
+          <strong>Example</strong>
+          <p>An h-index of 30 is unremarkable in molecular biology but exceptional in pure mathematics or philosophy.</p>
+        </div>
+
+        <h4>2. Document Type Bias</h4>
+        <p><strong>Review articles</strong> accumulate citations far faster than original research articles. Single-authored papers are disadvantaged vs. large consortium papers. Editorials and letters are rarely cited despite high visibility.</p>
+
+        <h4>3. Language &amp; Geographic Bias</h4>
+        <p>English-language journals dominate international databases. Research in Spanish, Chinese, Portuguese, Arabic, or French is systematically undercounted. WoS historically covered fewer Asian and Latin American journals.</p>
+      </div>
+      <div>
+        <h4>4. Time Dependency</h4>
+        <p>Early career researchers have lower h-indices simply due to fewer years of publication. The 2-year IF window penalizes fields with long citation half-lives (e.g., mathematics, history, geology).</p>
+
+        <h4>5. Self-citation &amp; Citation Cartels</h4>
+        <p>Excessive <strong>self-citation</strong> (author citing own papers) inflates h-indices. <strong>Citation cartels</strong> — groups of journals that excessively cite each other — have been detected and removed from JCR.</p>
+        <div class="info-box amber">
+          <strong>Example</strong>
+          <p>Clarivate removed 40+ journals in 2023 from JCR due to citation stacking — journals inflating each other's IF through coordinated citaton practices.</p>
+        </div>
+
+        <h4>6. The Matthew Effect</h4>
+        <p>Named after the biblical passage, Robert Merton's <strong>Matthew Effect</strong> (1968) describes how already-famous researchers and journals accumulate more citations, while equally good work from lesser-known authors is overlooked — "rich get richer."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🎮</span>Gaming Bibliometric Metrics</h3>
+    <p>Goodhart's Law: <em>"When a measure becomes a target, it ceases to be a good measure."</em> As metrics become high-stakes, strategic behavior emerges to optimize them rather than improve actual research quality.</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Gaming Strategy</th><th>Metric Gamed</th><th>How it Works</th><th>Detection</th></tr>
+        <tr>
+          <td>Excessive self-citation</td>
+          <td>h-index, citations</td>
+          <td>Authors cite their own older papers unnecessarily</td>
+          <td>Self-citation ratio > 25% is a red flag</td>
+        </tr>
+        <tr>
+          <td>Coercive citation</td>
+          <td>Journal IF</td>
+          <td>Editors pressure authors to add citations to the journal</td>
+          <td>Scopus/WoS pattern analysis; author reports</td>
+        </tr>
+        <tr>
+          <td>Salami slicing</td>
+          <td>Publication count</td>
+          <td>One study split into multiple "minimum publishable units"</td>
+          <td>Overlapping data, methods, or author lists</td>
+        </tr>
+        <tr>
+          <td>Honorary/gift authorship</td>
+          <td>Collaboration metrics</td>
+          <td>Adding names of non-contributors (e.g., department heads)</td>
+          <td>CRediT taxonomy; author contribution statements</td>
+        </tr>
+        <tr>
+          <td>Citation farms / predatory publishing</td>
+          <td>All metrics</td>
+          >Pay-to-publish in low-quality journals with guaranteed acceptance and fake peer review</td>
+          <td>Beall's list, DOAJ, journal reputation checks</td>
+        </tr>
+        <tr>
+          <td>Simultaneous submission</td>
+          <td>Speed-to-publication</td>
+          <td>Submitting identical manuscripts to multiple journals simultaneously</td>
+          <td>CrossCheck, iThenticate, journal ethics policies</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">🔬</span>Negative Citation &amp; Non-citation</h3>
+    <p>Citations are not always endorsements. Studies estimate that <strong>10–20% of citations are negative</strong> (disputing results) or perfunctory (ritual citations of foundational works). Citation analysis treats all citations equally regardless of purpose.</p>
+    <p>More problematically: <strong>influential work that is widely known is sometimes less cited</strong> because researchers assume it is known. Foundational textbook knowledge may rarely be cited in the literature it underpins.</p>
+    <div class="info-box blue">
+      <strong>📌 Citation Intent Classification</strong>
+      <p>Semantic Scholar and scite.ai classify citations by intent: background, methodology, result comparison, or contrast. <strong>scite.ai</strong> distinguishes "supporting," "mentioning," and "contrasting" citations — a major advance over raw citation counts.</p>
+    </div>
+
+    <h4>Open Citation Data</h4>
+    <p>The <strong>Initiative for Open Citations (I4OC)</strong> has convinced most major publishers to release reference lists openly. <strong>OpenCitations</strong> provides a free, open dataset of over 2 billion citation links — enabling independent bibliometric research without Clarivate or Elsevier subscriptions.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">✅</span>Responsible Use: Best Practices</h3>
+    <div class="grid-2">
+      <div>
+        <div class="info-box green">
+          <strong>DO ✓</strong>
+          <p>Use <strong>multiple metrics</strong>, not a single number. Normalize for field, time, and document type. Present confidence intervals. Use metrics to support — not replace — expert judgment. Consider a narrative alongside numbers.</p>
+        </div>
+        <div class="info-box green">
+          <strong>DO ✓</strong>
+          <p>Use open, reproducible tools (bibliometrix, OpenAlex). Disclose which database was used. Report coverage limitations. Consider altmetrics for interdisciplinary and applied research.</p>
+        </div>
+      </div>
+      <div>
+        <div class="info-box red">
+          <strong>DON'T ✗</strong>
+          <p>Don't use <strong>journal IF to evaluate individual papers or researchers</strong>. Don't compare h-indices across disciplines. Don't use citation counts as the sole criterion for hiring/promotion/funding.</p>
+        </div>
+        <div class="info-box red">
+          <strong>DON'T ✗</strong>
+          <p>Don't ignore publication bias (positive results over-represented). Don't treat all citations equally (negative/perfunctory). Don't dismiss non-English, non-journal, or non-peer-reviewed contributions without justification.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="icon">💻</span>Detecting Gaming in Python &amp; R</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge python">Python</span> Self-citation analysis</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-python">import pandas as pd
+
+# Publication dataset with self-citation information
+papers = pd.DataFrame({
+    'paper_id': ['P1', 'P2', 'P3', 'P4', 'P5'],
+    'author': ['Smith J'] * 5,
+    'year': [2018, 2019, 2020, 2021, 2022],
+    'total_citations': [45, 32, 28, 15, 8],
+    'self_citations': [3, 8, 12, 9, 5],  # citations from own papers
+    'citations_from_cartel': [0, 2, 1, 0, 1],
+})
+
+papers['self_cit_rate'] = papers['self_citations'] / papers['total_citations']
+papers['net_citations'] = papers['total_citations'] - papers['self_citations']
+
+print("=== Self-citation Analysis ===")
+print(papers[['paper_id','year','total_citations','self_citations','self_cit_rate']].to_string(index=False))
+
+overall_self_rate = papers['self_citations'].sum() / papers['total_citations'].sum()
+print(f"\nOverall self-citation rate: {overall_self_rate:.1%}")
+if overall_self_rate > 0.25:
+    print("⚠️  WARNING: Self-citation rate exceeds 25% — warrants scrutiny")
+else:
+    print("✓ Self-citation rate within acceptable range")
+
+# Compare h-index with/without self-citations
+def h_index(cits):
+    s = sorted(cits, reverse=True)
+    h = 0
+    for i, c in enumerate(s, 1):
+        if c >= i: h = i
+        else: break
+    return h
+
+h_all = h_index(papers['total_citations'].tolist())
+h_net = h_index(papers['net_citations'].tolist())
+print(f"\nh-index (all citations): {h_all}")
+print(f"h-index (excluding self): {h_net}")
+print(f"Inflation due to self-citation: {h_all - h_net} points")</code></pre>
+    </div>
+    <div class="pyodide-runner">
+      <div class="pyodide-header">
+        <span>🐍 Run Python in Browser</span>
+        <button class="run-btn" onclick="runPyodide(this)" data-code="7">▶ Run</button>
+      </div>
+      <textarea id="pycode-7">papers = [
+    {'id':'P1','year':2018,'total':45,'self':3},
+    {'id':'P2','year':2019,'total':32,'self':8},
+    {'id':'P3','year':2020,'total':28,'self':12},
+    {'id':'P4','year':2021,'total':15,'self':9},
+    {'id':'P5','year':2022,'total':8,'self':5},
+]
+
+def h_index(cits):
+    s = sorted(cits, reverse=True)
+    h = 0
+    for i, c in enumerate(s, 1):
+        if c >= i: h = i
+        else: break
+    return h
+
+total_cits = sum(p['total'] for p in papers)
+total_self = sum(p['self'] for p in papers)
+self_rate = total_self / total_cits
+
+print(f"{'ID':<4} {'Year':<6} {'Total':>6} {'Self':>5} {'Rate':>6}  {'Flag'}")
+print("-"*38)
+for p in papers:
+    r = p['self']/p['total']
+    flag = " ⚠️" if r > 0.3 else ""
+    print(f"{p['id']:<4} {p['year']:<6} {p['total']:>6} {p['self']:>5} {r:>5.1%}  {flag}")
+
+h_all = h_index([p['total'] for p in papers])
+h_net = h_index([p['total']-p['self'] for p in papers])
+print(f"\nOverall self-citation rate: {self_rate:.1%}")
+print(f"h-index (all): {h_all}  |  h-index (excl. self): {h_net}")
+print("⚠️ WARNING: high self-citation detected" if self_rate > 0.25 else "✓ Acceptable self-citation rate")</textarea>
+      <div class="pyodide-status" id="pystatus-7"></div>
+      <div class="pyodide-output" id="pyout-7"></div>
+    </div>
+    <div class="code-block" style="margin-top:20px">
+      <div class="code-header">
+        <div class="code-lang"><span class="lang-badge r">R</span> Bias analysis and responsible reporting</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code class="language-r">library(bibliometrix)
+library(dplyr)
+library(ggplot2)
+
+# ===== Self-citation analysis =====
+papers <- data.frame(
+  id = paste0("P", 1:5),
+  year = 2018:2022,
+  total_cites = c(45, 32, 28, 15, 8),
+  self_cites = c(3, 8, 12, 9, 5)
+)
+
+papers <- papers %>%
+  mutate(
+    self_rate = self_cites / total_cites,
+    net_cites = total_cites - self_cites,
+    flag = ifelse(self_rate > 0.30, "⚠️ HIGH", "OK")
+  )
+
+cat("Self-citation analysis:\n")
+print(papers)
+
+overall_rate <- sum(papers$self_cites) / sum(papers$total_cites)
+cat(sprintf("\nOverall self-citation rate: %.1f%%\n", overall_rate * 100))
+
+# ===== Language bias check =====
+# Count publications by language in your dataset:
+# lang_dist <- table(M$LA)
+# cat("\nLanguage distribution:\n")
+# print(sort(lang_dist, decreasing = TRUE))
+
+# ===== Matthew Effect visualization =====
+# Papers already having many citations tend to get more over time
+citation_growth <- data.frame(
+  year = 2015:2022,
+  highly_cited = c(120, 180, 260, 370, 490, 620, 780, 950),
+  average_paper = c(8, 11, 14, 17, 19, 21, 22, 23)
+)
+
+cat("\nMatthew Effect — citation growth over time:\n")
+cat("Year | Highly Cited | Average Paper | Ratio\n")
+for (i in seq_len(nrow(citation_growth))) {
+  r <- citation_growth$highly_cited[i] / citation_growth$average_paper[i]
+  cat(sprintf("%d  | %12d | %13d | %.1fx\n",
+    citation_growth$year[i],
+    citation_growth$highly_cited[i],
+    citation_growth$average_paper[i], r))
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- FINAL QUIZ -->
+  <div class="quiz-section">
+    <h3>🎯 Module 8 Final Quiz</h3>
+    <div class="quiz-question" id="q7-0">
+      <div class="quiz-q"><span>1</span>"When a measure becomes a target, it ceases to be a good measure" is known as:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q7-0','A')"><div class="option-radio"></div>The Matthew Effect</div>
+        <div class="option" onclick="selectOption(this,'q7-0','B')"><div class="option-radio"></div>Bradford's Law</div>
+        <div class="option" onclick="selectOption(this,'q7-0','C')"><div class="option-radio"></div>Goodhart's Law</div>
+        <div class="option" onclick="selectOption(this,'q7-0','D')"><div class="option-radio"></div>Lotka's Principle</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q7-0"></div>
+    </div>
+    <div class="quiz-question" id="q7-1">
+      <div class="quiz-q"><span>2</span>The "Matthew Effect" in bibliometrics refers to:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q7-1','A')"><div class="option-radio"></div>High self-citation rates among prolific authors</div>
+        <div class="option" onclick="selectOption(this,'q7-1','B')"><div class="option-radio"></div>The tendency for highly cited work to accumulate even more citations</div>
+        <div class="option" onclick="selectOption(this,'q7-1','C')"><div class="option-radio"></div>Geographic bias toward English-language publications</div>
+        <div class="option" onclick="selectOption(this,'q7-1','D')"><div class="option-radio"></div>Review articles being over-represented in citation counts</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q7-1"></div>
+    </div>
+    <div class="quiz-question" id="q7-2">
+      <div class="quiz-q"><span>3</span>Which practice involves splitting one study into multiple papers to maximize publication count?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q7-2','A')"><div class="option-radio"></div>Coercive citation</div>
+        <div class="option" onclick="selectOption(this,'q7-2','B')"><div class="option-radio"></div>Honorary authorship</div>
+        <div class="option" onclick="selectOption(this,'q7-2','C')"><div class="option-radio"></div>Salami slicing</div>
+        <div class="option" onclick="selectOption(this,'q7-2','D')"><div class="option-radio"></div>Citation cartel</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q7-2"></div>
+    </div>
+    <div class="quiz-question" id="q7-3">
+      <div class="quiz-q"><span>4</span>scite.ai distinguishes citations as:</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q7-3','A')"><div class="option-radio"></div>Important, Minor, Trivial</div>
+        <div class="option" onclick="selectOption(this,'q7-3','B')"><div class="option-radio"></div>Supporting, Mentioning, Contrasting</div>
+        <div class="option" onclick="selectOption(this,'q7-3','C')"><div class="option-radio"></div>Direct, Indirect, Negative</div>
+        <div class="option" onclick="selectOption(this,'q7-3','D')"><div class="option-radio"></div>Primary, Secondary, Tertiary</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q7-3"></div>
+    </div>
+    <div class="quiz-submit">
+      <button class="tool-btn" onclick="submitQuiz('q7',['C','B','C','B'],4)">Submit Answers</button>
+    </div>
+    <div class="quiz-score" id="score-q7"></div>
+  </div>
+
+  <!-- COURSE COMPLETION -->
+  <div style="background:linear-gradient(135deg,#1a2e4a,#1e4080,#0891b2);border-radius:16px;padding:40px;text-align:center;margin:32px 0;color:#fff">
+    <div style="font-size:48px;margin-bottom:16px">🎓</div>
+    <h2 style="font-size:24px;font-weight:800;margin-bottom:12px">Course Complete!</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:16px;max-width:500px;margin:0 auto 24px">You've covered bibliometrics from foundational concepts to advanced network analysis, science mapping, evaluation frameworks, and critical limitations.</p>
+    <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:24px">
+      <div><div style="font-size:28px;font-weight:800;color:#06b6d4" id="finalScore">0/8</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Modules Completed</div></div>
+      <div><div style="font-size:28px;font-weight:800;color:#34d399">8</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Topics Covered</div></div>
+      <div><div style="font-size:28px;font-weight:800;color:#f59e0b">16+</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Code Examples</div></div>
+    </div>
+    <p style="font-size:13px;color:rgba(255,255,255,.5)">Continue exploring: VOSviewer · bibliometrix documentation · Leiden Manifesto · DORA · OpenAlex API</p>
+  </div>
+
+  <div class="module-nav">
+    <button class="nav-btn prev" onclick="showModule(6)">← Previous</button>
+    <button class="nav-btn next" onclick="showModule(0)" style="background:var(--green);border-color:var(--green)">↺ Restart Course</button>
+  </div>
+  <button class="complete-btn" id="complete-7" onclick="completeModule(7)">✓ Mark Module 8 Complete</button>
+</div>
+
+  </div><!-- end .content -->
+</div><!-- end #main -->
+<script>
+// ===================== NAVIGATION =====================
+let currentModule = 0;
+const totalModules = 8;
+const completed = new Set();
+const moduleNames = [
+  'Introduction to Bibliometrics',
+  'Core Bibliometric Metrics',
+  'Bibliometric Laws',
+  'Network Analysis',
+  'Database Sources',
+  'Science Mapping',
+  'Research Evaluation',
+  'Limitations & Critiques'
+];
+
+function showModule(idx) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('module-' + idx).classList.add('active');
+  document.getElementById('nav-' + idx).classList.add('active');
+  currentModule = idx;
+  document.getElementById('topBarTitle').textContent = 'Module ' + (idx+1) + ' — ' + moduleNames[idx];
+  document.getElementById('topBadge').textContent = 'Module ' + (idx+1) + '/' + totalModules;
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (idx === 3 && !window.networkRendered) { setTimeout(renderCoauthorNetwork, 200); window.networkRendered = true; }
+  if (idx === 5 && !window.keywordRendered) { setTimeout(renderKeywordNetwork, 200); window.keywordRendered = true; }
+}
+
+function completeModule(idx) {
+  completed.add(idx);
+  const btn = document.getElementById('complete-' + idx);
+  btn.textContent = '✓ Module ' + (idx+1) + ' Completed!';
+  btn.classList.add('done');
+  const nav = document.getElementById('nav-' + idx);
+  nav.classList.add('completed');
+  updateProgress();
+  document.getElementById('finalScore').textContent = completed.size + '/' + totalModules;
+}
+
+function updateProgress() {
+  const pct = (completed.size / totalModules) * 100;
+  document.getElementById('sidebarFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = completed.size + ' of ' + totalModules + ' modules completed';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ===================== QUIZ SYSTEM =====================
+const quizAnswers = {};
+
+function selectOption(el, questionId, value) {
+  const opts = el.closest('.quiz-question').querySelectorAll('.option');
+  opts.forEach(o => { o.classList.remove('selected','correct','wrong'); });
+  el.classList.add('selected');
+  quizAnswers[questionId] = value;
+}
+
+function submitQuiz(qPrefix, correctAnswers, total) {
+  let score = 0;
+  const letters = ['A','B','C','D'];
+  for (let i = 0; i < total; i++) {
+    const qId = qPrefix + '-' + i;
+    const question = document.getElementById(qId);
+    if (!question) continue;
+    const opts = question.querySelectorAll('.option');
+    const selected = quizAnswers[qId];
+    const correct = correctAnswers[i];
+    const fb = document.getElementById('fb-' + qId);
+
+    opts.forEach((opt, oi) => {
+      const letter = letters[oi];
+      opt.classList.remove('selected','correct','wrong');
+      if (letter === correct) { opt.classList.add('correct'); }
+      else if (letter === selected && letter !== correct) { opt.classList.add('wrong'); }
+    });
+
+    if (selected === correct) {
+      score++;
+      fb.className = 'quiz-feedback show correct';
+      fb.innerHTML = '✓ Correct!';
+    } else {
+      fb.className = 'quiz-feedback show wrong';
+      fb.innerHTML = '✗ Incorrect. The answer is <strong>' + correct + '</strong>.';
+    }
+  }
+
+  const scoreEl = document.getElementById('score-' + qPrefix);
+  scoreEl.classList.add('show');
+  const pct = Math.round((score/total)*100);
+  const emoji = pct === 100 ? '🏆' : pct >= 70 ? '👍' : '📚';
+  scoreEl.innerHTML = '<div class="score-num">' + emoji + ' ' + score + '/' + total + '</div><div class="score-label">' + pct + '% — ' + (pct===100?'Perfect!':pct>=70?'Well done!':'Keep studying!') + '</div>';
+}
+
+// ===================== H-INDEX CALCULATOR =====================
+function calcHIndex() {
+  const raw = document.getElementById('citInput').value;
+  const citations = raw.split(/[\s,;]+/).map(Number).filter(n => !isNaN(n) && n >= 0).sort((a,b) => b-a);
+  if (!citations.length) return;
+
+  let h = 0;
+  for (let i = 0; i < citations.length; i++) {
+    if (citations[i] >= i+1) h = i+1; else break;
+  }
+
+  let cumSum = 0, g = 0;
+  for (let i = 0; i < citations.length; i++) {
+    cumSum += citations[i];
+    if (cumSum >= (i+1)*(i+1)) g = i+1;
+  }
+  const i10 = citations.filter(c => c >= 10).length;
+
+  document.getElementById('hVal').textContent = h;
+  document.getElementById('gVal').textContent = g;
+  document.getElementById('i10Val').textContent = i10;
+
+  // Draw bars
+  const container = document.getElementById('citBars');
+  container.innerHTML = '';
+  const maxC = Math.max(...citations, 1);
+  citations.slice(0, 20).forEach((c, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'cit-bar' + (i < h ? ' highlighted' : '');
+    bar.style.height = Math.max((c/maxC)*100, 4) + '%';
+    bar.title = 'Paper ' + (i+1) + ': ' + c + ' citations';
+    const lbl = document.createElement('span');
+    lbl.textContent = c;
+    bar.appendChild(lbl);
+    container.appendChild(bar);
+  });
+
+  document.getElementById('hindexExplanation').innerHTML =
+    '<strong>Interpretation:</strong> h-index = <strong>' + h + '</strong> — ' + h + ' papers each have at least ' + h + ' citations. ' +
+    'g-index = <strong>' + g + '</strong> — top ' + g + ' papers together received ≥ ' + g*g + ' citations. ' +
+    'i10-index = <strong>' + i10 + '</strong> — ' + i10 + ' paper(s) with ≥ 10 citations.';
+}
+
+// ===================== IMPACT FACTOR CALCULATOR =====================
+function calcIF() {
+  const cy1 = parseFloat(document.getElementById('citeY1').value) || 0;
+  const cy2 = parseFloat(document.getElementById('citeY2').value) || 0;
+  const ay1 = parseFloat(document.getElementById('artY1').value) || 1;
+  const ay2 = parseFloat(document.getElementById('artY2').value) || 1;
+  const IF = (cy1 + cy2) / (ay1 + ay2);
+  document.getElementById('ifVal').textContent = IF.toFixed(3);
+  const tier = IF >= 10 ? 'Exceptional (top ~5% of all journals)' :
+               IF >= 5  ? 'High impact (top ~15%)' :
+               IF >= 2  ? 'Moderate impact (average range)' : 'Low impact or niche journal';
+  document.getElementById('ifExplain').innerHTML =
+    '<strong>Calculation:</strong> (' + cy1 + ' + ' + cy2 + ') ÷ (' + ay1 + ' + ' + ay2 + ') = <strong>' + IF.toFixed(3) + '</strong><br>' +
+    '<strong>Context:</strong> ' + tier + '. Median JIF across all WoS journals ≈ 1.5–2.0.';
+}
+
+// ===================== CHART.JS VISUALIZATIONS =====================
+let lotkaChartInst, bradfordChartInst, zipfChartInst, thematicChartInst;
+
+function updateLotkaChart() {
+  const alpha = parseFloat(document.getElementById('lotkaAlpha').value);
+  const C = parseFloat(document.getElementById('lotkaC').value);
+  document.getElementById('lotkaAlphaVal').textContent = alpha.toFixed(1);
+  document.getElementById('lotkaCVal').textContent = C.toFixed(2);
+  const ns = Array.from({length:12}, (_,i) => i+1);
+  const vals = ns.map(n => C / Math.pow(n, alpha));
+  if (lotkaChartInst) lotkaChartInst.destroy();
+  const ctx = document.getElementById('lotkaChart').getContext('2d');
+  lotkaChartInst = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ns.map(n => n + ' paper' + (n>1?'s':'')),
+      datasets: [{
+        label: 'Proportion of authors',
+        data: vals,
+        backgroundColor: ns.map((_,i) => i===0 ? '#2563eb' : '#93c5fd'),
+        borderColor: '#1e40af', borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => (c.parsed.y*100).toFixed(2) + '% of authors' } } },
+      scales: { y: { beginAtZero: true, title: { display: true, text: 'Proportion of authors (f)' }, ticks: { callback: v => (v*100).toFixed(0)+'%' } }, x: { title: { display: true, text: 'Number of publications (n)' } } }
+    }
+  });
+}
+
+function updateBradfordChart() {
+  const n1 = parseInt(document.getElementById('bradCoreN').value);
+  const k = parseFloat(document.getElementById('bradK').value);
+  document.getElementById('bradCoreVal').textContent = n1;
+  document.getElementById('bradKVal').textContent = k.toFixed(1);
+  const zones = [n1, Math.round(n1*k), Math.round(n1*k*k)];
+  const cumulative = zones.map((v,i) => zones.slice(0,i+1).reduce((a,b)=>a+b,0));
+  const pct = Math.round(100/3);
+  if (bradfordChartInst) bradfordChartInst.destroy();
+  const ctx = document.getElementById('bradfordChart').getContext('2d');
+  bradfordChartInst = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Zone 1 (Core, ' + zones[0] + ' journals)', 'Zone 2 (' + zones[1] + ' journals)', 'Zone 3 (' + zones[2] + ' journals)'],
+      datasets: [
+        { label: 'Journals in zone', data: zones, backgroundColor: ['#0891b2','#0ea5e9','#7dd3fc'], borderColor: '#0369a1', borderWidth: 1 },
+        { label: 'Cumulative journals', data: cumulative, type: 'line', borderColor: '#dc2626', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 5, pointBackgroundColor: '#dc2626', yAxisID: 'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: { mode: 'index' }, legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } } },
+      scales: {
+        y: { title: { display: true, text: 'Journals in Zone' } },
+        y2: { type: 'linear', position: 'right', title: { display: true, text: 'Cumulative Journals' }, grid: { drawOnChartArea: false } },
+        x: { title: { display: true, text: `Each zone yields ~${pct}% of relevant literature` } }
+      }
+    }
+  });
+}
+
+function updateZipfChart() {
+  const s = parseFloat(document.getElementById('zipfS').value);
+  const N = parseInt(document.getElementById('zipfN').value);
+  const scale = document.getElementById('zipfScale').value;
+  document.getElementById('zipfSVal').textContent = s.toFixed(1);
+  document.getElementById('zipfNVal').textContent = N;
+  const ranks = Array.from({length:N}, (_,i) => i+1);
+  const theoretical = ranks.map(r => 1000 / Math.pow(r, s));
+  const observed = theoretical.map(f => Math.max(1, f + (Math.random()-0.5)*f*0.15));
+  const isLog = scale === 'log';
+  if (zipfChartInst) zipfChartInst.destroy();
+  const ctx = document.getElementById('zipfChart').getContext('2d');
+  zipfChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ranks.map(r => isLog ? Math.log10(r).toFixed(2) : 'rank '+r),
+      datasets: [
+        { label: 'Theoretical f(r) = 1000/r^'+s.toFixed(1), data: isLog ? theoretical.map(Math.log10) : theoretical, borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.1)', fill:true, tension:0.3, pointRadius:0, borderWidth:2 },
+        { label: 'Observed (with noise)', data: isLog ? observed.map(Math.log10) : observed, borderColor:'#f59e0b', backgroundColor:'transparent', tension:0.1, pointRadius:3, borderWidth:1.5, borderDash:[4,3] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'top', labels:{ boxWidth:12, font:{ size:12 } } } },
+      scales: {
+        x: { title:{ display:true, text: isLog ? 'log₁₀(rank)' : 'Rank' }, ticks:{ maxTicksLimit:10 } },
+        y: { title:{ display:true, text: isLog ? 'log₁₀(frequency)' : 'Frequency' } }
+      }
+    }
+  });
+}
+
+function renderThematicChart() {
+  const ctx = document.getElementById('thematicChart').getContext('2d');
+  const themes = [
+    { label:'h-index', x:0.72, y:0.68, cluster:'motor' },
+    { label:'Impact Factor', x:0.80, y:0.75, cluster:'motor' },
+    { label:'Citation Analysis', x:0.65, y:0.60, cluster:'motor' },
+    { label:'Co-authorship Networks', x:0.20, y:0.70, cluster:'niche' },
+    { label:'Altmetrics', x:0.18, y:0.65, cluster:'niche' },
+    { label:'VOSviewer', x:0.25, y:0.55, cluster:'niche' },
+    { label:'Bibliometrics (general)', x:0.75, y:0.30, cluster:'basic' },
+    { label:'Research Evaluation', x:0.82, y:0.25, cluster:'basic' },
+    { label:'Science Mapping', x:0.55, y:0.15, cluster:'marginal' },
+    { label:'Predatory Journals', x:0.15, y:0.20, cluster:'marginal' },
+  ];
+  const colors = { motor:'#2563eb', niche:'#d97706', basic:'#059669', marginal:'#dc2626' };
+  thematicChartInst = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label:'Motor Themes', data:themes.filter(t=>t.cluster==='motor'), backgroundColor:'rgba(37,99,235,0.8)', pointRadius:12 },
+        { label:'Niche Themes', data:themes.filter(t=>t.cluster==='niche'), backgroundColor:'rgba(217,119,6,0.8)', pointRadius:12 },
+        { label:'Basic/Transversal', data:themes.filter(t=>t.cluster==='basic'), backgroundColor:'rgba(5,150,105,0.8)', pointRadius:12 },
+        { label:'Marginal/Declining', data:themes.filter(t=>t.cluster==='marginal'), backgroundColor:'rgba(220,38,38,0.8)', pointRadius:12 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{ position:'right', labels:{ boxWidth:12, font:{ size:12 } } },
+        tooltip:{ callbacks:{ label: ctx => {
+          const t = themes.find(t => Math.abs(t.x - ctx.parsed.x) < 0.01);
+          return t ? t.label : '';
+        }}}
+      },
+      scales: {
+        x:{ min:0, max:1, title:{ display:true, text:'Centrality →' }, ticks:{ callback:v=>v===0.5?'0.5':v } },
+        y:{ min:0, max:1, title:{ display:true, text:'Density ↑' } }
+      }
+    },
+    plugins: [{
+      afterDraw: chart => {
+        const ctx2 = chart.ctx;
+        const {x:{left,right},y:{top,bottom}} = chart.chartArea;
+        const midX=(left+right)/2, midY=(top+bottom)/2;
+        ctx2.save();
+        ctx2.strokeStyle='rgba(0,0,0,0.15)';
+        ctx2.setLineDash([6,4]);
+        ctx2.lineWidth=1.5;
+        ctx2.beginPath(); ctx2.moveTo(midX,top); ctx2.lineTo(midX,bottom); ctx2.stroke();
+        ctx2.beginPath(); ctx2.moveTo(left,midY); ctx2.lineTo(right,midY); ctx2.stroke();
+        ctx2.restore();
+
+        const fontSize=11;
+        ctx2.font=`${fontSize}px Inter`;
+        ctx2.fillStyle='rgba(0,0,0,0.35)';
+        ctx2.fillText('Niche/Emerging', left+8, top+14);
+        ctx2.fillText('Motor Themes', right-100, top+14);
+        ctx2.fillText('Marginal', left+8, bottom-6);
+        ctx2.fillText('Basic/General', right-100, bottom-6);
+
+        // Draw labels for points
+        themes.forEach(t => {
+          const xPos = chart.scales.x.getPixelForValue(t.x);
+          const yPos = chart.scales.y.getPixelForValue(t.y);
+          ctx2.font='bold 10px Inter';
+          ctx2.fillStyle='#1e293b';
+          ctx2.textAlign='center';
+          ctx2.fillText(t.label, xPos, yPos - 14);
+        });
+        ctx2.textAlign='left';
+      }
+    }]
+  });
+}
+
+// ===================== D3 NETWORKS =====================
+function renderCoauthorNetwork() {
+  const width = document.getElementById('network-graph').clientWidth || 700;
+  const height = 420;
+  const nodes = [
+    {id:'Smith J',group:0,pubs:8},{id:'Jones A',group:0,pubs:6},{id:'Brown K',group:1,pubs:5},
+    {id:'Davis M',group:1,pubs:4},{id:'Williams L',group:2,pubs:7},{id:'Taylor R',group:2,pubs:3},
+    {id:'Moore S',group:1,pubs:4},{id:'Chen W',group:0,pubs:6},{id:'Kumar P',group:3,pubs:5},
+    {id:'Garcia R',group:3,pubs:3},{id:'Patel A',group:2,pubs:4},{id:'Liu Y',group:0,pubs:5}
+  ];
+  const links = [
+    {source:'Smith J',target:'Jones A',weight:3},{source:'Smith J',target:'Williams L',weight:2},
+    {source:'Smith J',target:'Chen W',weight:4},{source:'Jones A',target:'Brown K',weight:2},
+    {source:'Jones A',target:'Moore S',weight:1},{source:'Brown K',target:'Davis M',weight:3},
+    {source:'Brown K',target:'Moore S',weight:2},{source:'Williams L',target:'Taylor R',weight:2},
+    {source:'Williams L',target:'Patel A',weight:3},{source:'Taylor R',target:'Davis M',weight:1},
+    {source:'Kumar P',target:'Garcia R',weight:2},{source:'Kumar P',target:'Patel A',weight:2},
+    {source:'Chen W',target:'Liu Y',weight:3},{source:'Smith J',target:'Kumar P',weight:1},
+    {source:'Garcia R',target:'Jones A',weight:1},{source:'Liu Y',target:'Patel A',weight:1}
+  ];
+  const colors = ['#60a5fa','#34d399','#f59e0b','#f87171'];
+  const svg = d3.select('#network-graph').append('svg').attr('width',width).attr('height',height);
+  svg.append('rect').attr('width',width).attr('height',height).attr('fill','#0d1117');
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(d=>90/d.weight*2))
+    .force('charge', d3.forceManyBody().strength(-180))
+    .force('center', d3.forceCenter(width/2, height/2))
+    .force('collision', d3.forceCollide().radius(d=>d.pubs*3+12));
+  const link = svg.append('g').selectAll('line').data(links).enter().append('line')
+    .attr('stroke','rgba(255,255,255,0.15)')
+    .attr('stroke-width', d => d.weight);
+  const node = svg.append('g').selectAll('circle').data(nodes).enter().append('circle')
+    .attr('r', d => d.pubs*2.2+6)
+    .attr('fill', d => colors[d.group])
+    .attr('stroke','rgba(255,255,255,0.3)').attr('stroke-width',1.5)
+    .call(d3.drag().on('start', (event,d) => { if(!event.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (event,d) => { d.fx=event.x; d.fy=event.y; })
+      .on('end', (event,d) => { if(!event.active) sim.alphaTarget(0); d.fx=null; d.fy=null; }))
+    .on('mouseover', (event,d) => {
+      const t = document.getElementById('nodeTooltip');
+      t.innerHTML = '<strong>' + d.id + '</strong><br>Publications: ' + d.pubs + '<br>Cluster: ' + ['ML/AI','Bioinformatics','NLP','Interdisciplinary'][d.group];
+      t.style.display = 'block';
+      t.style.left = (event.pageX+10)+'px';
+      t.style.top = (event.pageY-30)+'px';
+    })
+    .on('mouseout', () => { document.getElementById('nodeTooltip').style.display='none'; });
+  const label = svg.append('g').selectAll('text').data(nodes).enter().append('text')
+    .text(d => d.id).attr('font-size','10px').attr('fill','rgba(255,255,255,0.85)')
+    .attr('text-anchor','middle').attr('dy','0.35em').attr('pointer-events','none')
+    .style('font-family','Inter,sans-serif').style('font-weight','600');
+  sim.on('tick', () => {
+    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    node.attr('cx',d=>Math.max(20,Math.min(width-20,d.x))).attr('cy',d=>Math.max(20,Math.min(height-20,d.y)));
+    label.attr('x',d=>Math.max(20,Math.min(width-20,d.x))).attr('y',d=>Math.max(20,Math.min(height-20,d.y)));
+  });
+}
+
+function renderKeywordNetwork() {
+  const width = document.getElementById('keyword-graph').clientWidth || 700;
+  const height = 440;
+  const kwNodes = [
+    {id:'bibliometrics',group:0,freq:12},{id:'h-index',group:0,freq:9},{id:'impact factor',group:0,freq:8},
+    {id:'citation analysis',group:0,freq:10},{id:'research evaluation',group:0,freq:7},
+    {id:'co-authorship',group:1,freq:8},{id:'network analysis',group:1,freq:9},{id:'collaboration',group:1,freq:6},
+    {id:'co-citation',group:1,freq:7},{id:'clustering',group:1,freq:5},
+    {id:'web of science',group:2,freq:7},{id:'scopus',group:2,freq:6},{id:'VOSviewer',group:2,freq:5},
+    {id:'scientometrics',group:2,freq:8},{id:'knowledge mapping',group:2,freq:6},
+    {id:'altmetrics',group:3,freq:5},{id:'science policy',group:3,freq:4},{id:'research impact',group:3,freq:6},
+    {id:'open access',group:3,freq:4},{id:'lotka law',group:3,freq:3}
+  ];
+  const kwLinks = [
+    {s:'bibliometrics',t:'h-index',w:5},{s:'bibliometrics',t:'citation analysis',w:6},
+    {s:'bibliometrics',t:'scientometrics',w:5},{s:'bibliometrics',t:'research evaluation',w:4},
+    {s:'h-index',t:'citation analysis',w:7},{s:'impact factor',t:'citation analysis',w:5},
+    {s:'impact factor',t:'web of science',w:4},{s:'co-authorship',t:'network analysis',w:8},
+    {s:'co-authorship',t:'collaboration',w:6},{s:'network analysis',t:'co-citation',w:5},
+    {s:'network analysis',t:'clustering',w:4},{s:'web of science',t:'scopus',w:5},
+    {s:'web of science',t:'bibliometrics',w:4},{s:'VOSviewer',t:'knowledge mapping',w:6},
+    {s:'VOSviewer',t:'network analysis',w:5},{s:'altmetrics',t:'research impact',w:5},
+    {s:'altmetrics',t:'bibliometrics',w:3},{s:'science policy',t:'research evaluation',w:4},
+    {s:'open access',t:'altmetrics',w:3},{s:'lotka law',t:'scientometrics',w:4}
+  ].map(l => ({source:l.s, target:l.t, weight:l.w}));
+  const colors = ['#f59e0b','#60a5fa','#34d399','#f87171'];
+  const svg2 = d3.select('#keyword-graph').append('svg').attr('width',width).attr('height',height);
+  svg2.append('rect').attr('width',width).attr('height',height).attr('fill','#0d1117');
+  const sim2 = d3.forceSimulation(kwNodes)
+    .force('link', d3.forceLink(kwLinks).id(d=>d.id).distance(d => 100/d.weight*15))
+    .force('charge', d3.forceManyBody().strength(-150))
+    .force('center', d3.forceCenter(width/2, height/2))
+    .force('collision', d3.forceCollide().radius(d => d.freq*2.5+10));
+  const klink = svg2.append('g').selectAll('line').data(kwLinks).enter().append('line')
+    .attr('stroke','rgba(255,255,255,0.12)')
+    .attr('stroke-width', d => Math.sqrt(d.weight));
+  const knode = svg2.append('g').selectAll('circle').data(kwNodes).enter().append('circle')
+    .attr('r', d => d.freq*1.8+5)
+    .attr('fill', d => colors[d.group]+'cc')
+    .attr('stroke', d => colors[d.group]).attr('stroke-width',1.5)
+    .call(d3.drag().on('start', (event,d) => { if(!event.active) sim2.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (event,d) => { d.fx=event.x; d.fy=event.y; })
+      .on('end', (event,d) => { if(!event.active) sim2.alphaTarget(0); d.fx=null; d.fy=null; }))
+    .on('mouseover', (event,d) => {
+      const t = document.getElementById('nodeTooltip');
+      t.innerHTML = '<strong>"' + d.id + '"</strong><br>Frequency: ' + d.freq + '<br>Cluster: ' + ['Metrics','Networks','Methods','Policy'][d.group];
+      t.style.display='block'; t.style.left=(event.pageX+10)+'px'; t.style.top=(event.pageY-30)+'px';
+    })
+    .on('mouseout', () => { document.getElementById('nodeTooltip').style.display='none'; });
+  const klabel = svg2.append('g').selectAll('text').data(kwNodes).enter().append('text')
+    .text(d => d.id).attr('font-size', d => Math.min(11, d.freq+3)+'px')
+    .attr('fill','rgba(255,255,255,0.9)').attr('text-anchor','middle').attr('dy','0.35em')
+    .attr('pointer-events','none').style('font-family','Inter,sans-serif').style('font-weight','500');
+  sim2.on('tick', () => {
+    klink.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    knode.attr('cx',d=>Math.max(25,Math.min(width-25,d.x))).attr('cy',d=>Math.max(25,Math.min(height-25,d.y)));
+    klabel.attr('x',d=>Math.max(25,Math.min(width-25,d.x))).attr('y',d=>Math.max(25,Math.min(height-25,d.y)));
+  });
+}
+
+// ===================== PYODIDE RUNNER =====================
+let pyodideReady = false;
+let pyodideLoading = false;
+let pyodide = null;
+
+async function loadPyodideIfNeeded(statusEl) {
+  if (pyodideReady) return true;
+  if (pyodideLoading) {
+    statusEl.textContent = 'Pyodide is loading, please wait...';
+    statusEl.classList.add('visible');
+    while (!pyodideReady) await new Promise(r => setTimeout(r, 300));
+    return true;
+  }
+  pyodideLoading = true;
+  statusEl.textContent = '⏳ Loading Pyodide runtime (~10MB first time)...';
+  statusEl.classList.add('visible');
+  try {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+    document.head.appendChild(script);
+    await new Promise((res, rej) => { script.onload = res; script.onerror = rej; });
+    statusEl.textContent = '⏳ Loading Pyodide runtime...';
+    pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/' });
+    statusEl.textContent = '⏳ Loading numpy & pandas...';
+    await pyodide.loadPackage(['numpy', 'pandas', 'micropip']);
+    await pyodide.runPythonAsync(`import micropip, numpy, pandas`);
+    pyodideReady = true;
+    statusEl.textContent = '✓ Pyodide ready (numpy + pandas loaded)';
+    setTimeout(() => statusEl.classList.remove('visible'), 2000);
+    return true;
+  } catch(e) {
+    statusEl.textContent = '✗ Failed to load Pyodide: ' + e.message;
+    pyodideLoading = false;
+    return false;
+  }
+}
+
+async function runPyodide(btn) {
+  const codeIdx = btn.dataset.code;
+  const code = document.getElementById('pycode-' + codeIdx).value;
+  const outEl = document.getElementById('pyout-' + codeIdx);
+  const statusEl = document.getElementById('pystatus-' + codeIdx);
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Running...';
+  const ok = await loadPyodideIfNeeded(statusEl);
+  if (!ok) { btn.disabled=false; btn.innerHTML='▶ Run'; return; }
+  outEl.classList.add('visible');
+  outEl.classList.remove('error');
+  outEl.textContent = '';
+  try {
+    pyodide.setStdout({ batched: s => { outEl.textContent += s + '\n'; } });
+    pyodide.setStderr({ batched: s => { outEl.textContent += '⚠️ ' + s + '\n'; } });
+    const result = await pyodide.runPythonAsync(code);
+    if (result !== undefined && result !== null) outEl.textContent += '\n→ ' + String(result);
+  } catch(e) {
+    outEl.classList.add('error');
+    outEl.textContent = '✗ Error:\n' + e.message;
+  }
+  btn.disabled = false;
+  btn.innerHTML = '▶ Run';
+}
+
+// ===================== COPY BUTTONS =====================
+function copyCode(btn) {
+  const code = btn.closest('.code-block').querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = code; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ===================== INIT =====================
+window.addEventListener('DOMContentLoaded', () => {
+  hljs.highlightAll();
+  calcHIndex();
+  calcIF();
+  updateLotkaChart();
+  updateBradfordChart();
+  updateZipfChart();
+  renderThematicChart();
+  renderCoauthorNetwork();
+  window.networkRendered = true;
+});
+</script>
+</body>
+</html>
