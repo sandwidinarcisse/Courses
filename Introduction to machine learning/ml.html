@@ -152,7 +152,62 @@
     #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
     #overlay.open { display: block; }
   }
+
+  /* ── SVG Diagrams ── */
+  .viz-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 16px; margin: 14px 0 20px; overflow: hidden; }
+  .viz-diagram svg text { font-family: system-ui,-apple-system,sans-serif; }
+
+  /* ── Interactive Code Editor ── */
+  .code-editor-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 14px 0 20px; }
+  .ced-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; background: #0f172a; border-bottom: 1px solid #334155; }
+  .ced-label { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; letter-spacing: .3px; }
+  .ced-actions { display: flex; gap: 6px; }
+  .run-btn { background: #10b981; border: none; color: #fff; padding: 4px 12px; border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s; }
+  .run-btn:hover { background: #059669; }
+  .run-btn:disabled { opacity: .5; cursor: default; }
+  .reset-btn { background: none; border: 1px solid #334155; color: #94a3b8; padding: 4px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; transition: all .15s; }
+  .reset-btn:hover { border-color: #64748b; color: #e2e8f0; }
+  .CodeMirror { height: auto; font-size: 13px; font-family: 'SF Mono','Fira Code',Consolas,monospace; line-height: 1.55; }
+  .CodeMirror-scroll { overflow-x: hidden !important; }
+  .kbd-hint { font-size: 10px; color: #475569; padding: 4px 12px; background: #0f172a; text-align: right; border-top: 1px solid #1e293b; }
+  .output-area { display: none; border-top: 1px solid var(--border); padding: 14px 16px; font-family: 'SF Mono','Fira Code',Consolas,monospace; font-size: 12.5px; line-height: 1.55; background: var(--bg); white-space: pre-wrap; color: var(--text); }
+  .output-area.oa-visible { display: block; }
+  .output-area.oa-error { color: #f87171; background: #1c0a0a; }
+  .output-plot { max-width: 100%; margin-top: 10px; border-radius: 6px; display: block; }
+
+  /* ── Interactive Viz Tab ── */
+  .viz-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+  .viz-header { padding: 13px 18px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--bg); border-bottom: 1px solid var(--border); }
+  .viz-body { padding: 18px; }
+  .viz-ctrls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .viz-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 4px 13px; font-size: 12px; cursor: pointer; color: var(--text); transition: all .15s; }
+  .viz-btn:hover, .viz-btn.vz-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .viz-label { font-size: 11px; color: var(--text-muted); }
+  .viz-slider { accent-color: var(--accent); cursor: pointer; }
+  .viz-plot { width: 100%; min-height: 300px; }
+  #tab-interactive .content-body { padding: 0 28px 28px; }
+  .no-viz-msg { text-align: center; color: var(--text-muted); padding: 60px 20px; font-size: 14px; }
+
+  /* ── Python Status Badge ── */
+  #pyodide-status { position: fixed; bottom: 18px; right: 18px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px 14px; font-size: 12px; color: #94a3b8; z-index: 9999; display: flex; align-items: center; gap: 7px; transition: opacity .4s; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+  #pyodide-status.py-ready { border-color: #10b981; color: #10b981; }
+  #pyodide-status.py-hidden { opacity: 0; pointer-events: none; }
+  .py-spinner { width: 12px; height: 12px; border: 2px solid #334155; border-top-color: #818cf8; border-radius: 50%; animation: spin .8s linear infinite; }
+  .py-ready .py-spinner { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Topbar home/contact ── */
+  .topbar-btn.home-btn { color: var(--accent); border-color: var(--accent-light); }
+  .topbar-btn.home-btn:hover { background: var(--accent-light); }
 </style>
+
+<!-- ── Interactive enhancement libraries ── -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 </head>
 <body>
 <div id="overlay" onclick="closeSidebar()"></div>
@@ -179,6 +234,8 @@
   <header id="topbar">
     <button id="menu-toggle" class="topbar-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
     <span class="topbar-title" id="topbar-title">Introduction to Machine Learning – Learning Guide</span>
+    <a href="https://narcissesandwidi.com/" target="_blank" class="topbar-btn home-btn" title="Portfolio">🏠 Home</a>
+    <a href="mailto:sand02@yahoo.com" class="topbar-btn" title="Get in touch">✉ Contact</a>
     <button class="topbar-btn" onclick="toggleTheme()">🌙 Theme</button>
     <button class="topbar-btn primary" onclick="downloadReadme()">⬇ Setup</button>
   </header>
@@ -206,12 +263,14 @@
         <button class="tab-btn" onclick="switchTab('exercises',this)">✏️ Exercises</button>
         <button class="tab-btn" onclick="switchTab('solutions',this)">💡 Solutions</button>
         <button class="tab-btn" onclick="switchTab('code',this)">🐍 Python Code</button>
+        <button class="tab-btn" onclick="switchTab('interactive',this)">📊 Interactive</button>
       </div>
     </div>
     <div class="tab-content active" id="tab-overview"><div class="content-body" id="content-overview"></div></div>
     <div class="tab-content" id="tab-exercises"><div class="content-body" id="content-exercises"></div></div>
     <div class="tab-content" id="tab-solutions"><div class="content-body" id="content-solutions"></div></div>
     <div class="tab-content" id="tab-code"><div class="content-body" id="content-code"></div></div>
+    <div class="tab-content" id="tab-interactive"><div class="content-body" id="content-interactive" style="padding:28px"></div></div>
     <div class="ch-nav-footer">
       <button class="ch-nav-btn" id="btn-prev" onclick="navigateChapter(-1)">← Previous</button>
       <button class="mark-done-btn ch-nav-btn" id="btn-done" onclick="markDone()">✓ Mark Complete</button>
@@ -219,6 +278,13 @@
     </div>
   </div>
 </div>
+
+<!-- Pyodide runtime status -->
+<div id="pyodide-status" class="py-hidden">
+  <div class="py-spinner"></div>
+  <span id="py-status-text">Loading Python…</span>
+</div>
+
 <script>
 const CHAPTERS = [
   {
@@ -340,22 +406,38 @@ const CHAPTERS = [
 <hr />
 <h2>4. The Machine Learning Workflow</h2>
 <p>Building a machine learning solution is not just one step — it is a cycle:</p>
-<pre><code class="language-python">1. Define the Problem
-        |
-2. Collect Data
-        |
-3. Explore and Clean the Data
-        |
-4. Choose a Model and Train It
-        |
-5. Evaluate Performance
-        |
-6. Improve / Tune
-        |
-7. Deploy and Monitor
-        |
-   (loop back if performance drifts)
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 360 480" width="100%" style="max-width:380px;display:block;margin:0 auto">
+<defs>
+<marker id="wf-d" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--border)"/></marker>
+<marker id="wf-loop" markerWidth="7" markerHeight="6" refX="1" refY="3" orient="auto"><polygon points="7 0,0 3,7 6" fill="var(--accent)"/></marker>
+</defs>
+<g font-size="12.5" text-anchor="middle" dominant-baseline="middle">
+<rect x="75" y="20" width="200" height="42" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="175" y="41" fill="var(--accent)" font-weight="600">1. Define the Problem</text>
+<line x1="175" y1="62" x2="175" y2="77" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="85" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="106" fill="var(--text)">2. Collect Data</text>
+<line x1="175" y1="127" x2="175" y2="142" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="150" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="171" fill="var(--text)">3. Explore &amp; Clean Data</text>
+<line x1="175" y1="192" x2="175" y2="207" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="215" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="236" fill="var(--text)">4. Choose Model &amp; Train</text>
+<line x1="175" y1="257" x2="175" y2="272" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="280" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="301" fill="var(--text)">5. Evaluate Performance</text>
+<line x1="175" y1="322" x2="175" y2="337" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="345" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="366" fill="var(--text)">6. Improve / Tune</text>
+<line x1="175" y1="387" x2="175" y2="402" stroke="var(--border)" stroke-width="1.5" marker-end="url(#wf-d)"/>
+<rect x="75" y="410" width="200" height="42" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="175" y="431" fill="var(--text)">7. Deploy &amp; Monitor</text>
+<path d="M275,431 L320,431 L320,171 L275,171" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#wf-loop)"/>
+<text x="336" y="310" fill="var(--text-muted)" font-size="10" text-anchor="middle" transform="rotate(90,336,310)">loop back if drift</text>
+</g>
+</svg>
+</div>
 <h3>Step 1: Define the Problem</h3>
 <p>What question are you answering? What type of ML is it — classification, regression, clustering? Who will use the result, and what does "good enough" look like?</p>
 <h3>Step 2: Collect Data</h3>
@@ -691,7 +773,26 @@ print(f"d) Price difference 1k to 2k sq ft: \${diff:.1f}k")
 
 pred_10000 = model.predict([[10000]])
 print(f"e) Predicted price for 10,000 sq ft: \${pred_10000[0]:.1f}k")
-print("   Extrapolation — treat with caution!")<button class="copy-btn">Copy</button></code></pre>`
+print("   Extrapolation — treat with caution!")
+
+# ── Visualisation: data points + regression line ──────────────────
+import matplotlib.pyplot as plt
+
+x_plot = np.linspace(800, 2700, 100).reshape(-1, 1)
+y_plot = model.predict(x_plot)
+
+plt.figure(figsize=(7, 4))
+plt.scatter(sizes.ravel(), prices, color='#6366f1', s=100, zorder=5, label='Training data')
+plt.plot(x_plot.ravel(), y_plot, color='#f59e0b', linewidth=2.5, label='Regression line')
+pred_2k = model.predict([[2000]])[0]
+plt.scatter([2000], [pred_2k], color='#10b981', s=160, marker='*', zorder=6,
+            label=f'Pred @ 2,000 sq ft = {pred_2k:.1f}k')
+plt.xlabel('House size (sq ft)')
+plt.ylabel('Price (thousands)')
+plt.title('House Price vs Size — Linear Regression')
+plt.legend(fontsize=9)
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 2,
@@ -790,19 +891,30 @@ print("   Extrapolation — treat with caution!")<button class="copy-btn">Copy</
 <p>Key observation: as model complexity increases:
 - Training error always decreases
 - Test error first decreases, then <em>increases</em> (overfitting begins)</p>
-<pre><code class="language-python">         Error
-           |
-           |  Training error ─────────────────────
-           |                           ↗ (overfitting)
-           |               Test error /
-           |              ___________/
-           |             /
-           |____________/
-           |
-           +────────────────────────────── Complexity
-                    ↑
-              Sweet spot
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 500 290" width="100%">
+<defs>
+<marker id="ec-ax" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--text-muted)"/></marker>
+</defs>
+<g font-size="11.5">
+<line x1="55" y1="255" x2="465" y2="255" stroke="var(--border)" stroke-width="1.5" marker-end="url(#ec-ax)"/>
+<line x1="55" y1="255" x2="55" y2="25" stroke="var(--border)" stroke-width="1.5" marker-end="url(#ec-ax)"/>
+<text x="460" y="272" fill="var(--text-muted)" text-anchor="end" font-size="11">Model Complexity →</text>
+<text x="20" y="140" fill="var(--text-muted)" text-anchor="middle" transform="rotate(-90,20,140)">Error</text>
+<path d="M65,230 C140,185 230,130 450,62" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M65,235 C130,175 210,105 275,90 C330,90 390,130 450,205" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="275" y1="255" x2="275" y2="90" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5,3"/>
+<circle cx="275" cy="90" r="5" fill="var(--accent)"/>
+<text x="275" y="272" fill="var(--accent)" text-anchor="middle" font-size="11" font-weight="600">Sweet Spot</text>
+<text x="445" y="78" fill="#f59e0b" text-anchor="end" font-size="11">Training Error</text>
+<text x="445" y="197" fill="var(--accent)" text-anchor="end" font-size="11">Test Error</text>
+<rect x="66" y="28" width="80" height="16" rx="3" fill="var(--bg)" opacity="0.7"/>
+<text x="106" y="40" fill="var(--text-muted)" text-anchor="middle" font-size="10">← Underfitting</text>
+<rect x="360" y="28" width="82" height="16" rx="3" fill="var(--bg)" opacity="0.7"/>
+<text x="400" y="40" fill="var(--text-muted)" text-anchor="middle" font-size="10">Overfitting →</text>
+</g>
+</svg>
+</div>
 <p>The optimal model sits at the bottom of the test error curve.</p>
 <h3>Why do we need a separate test set?</h3>
 <p>If we evaluated the model on training data, complex models would look perfect even when they have memorised noise. A <strong>test set</strong> (held out during training) gives us an honest estimate of how the model would perform on data it has never seen — which is what deployment actually looks like.</p>
@@ -881,6 +993,19 @@ print(linear.predict(x_range[:5]))
 
 print(&quot;\\nPolynomial model predictions (degree 7):&quot;)
 print(poly.predict(x_range[:5]))
+
+# Visualise: data vs linear vs polynomial fit
+plt.figure(figsize=(7, 4))
+plt.scatter(hours.ravel(), scores, color='#6366f1', s=80, zorder=5, label='Data points')
+plt.plot(x_range.ravel(), linear.predict(x_range), color='#10b981', linewidth=2.5, label='Linear (degree 1)')
+plt.plot(x_range.ravel(), poly.predict(x_range),   color='#ef4444', linewidth=2.5,
+         linestyle='--', label='Polynomial (degree 7 — overfit)')
+plt.xlabel('Study hours')
+plt.ylabel('Exam score')
+plt.title('Fitting a Model: Underfitting vs Overfitting')
+plt.legend()
+plt.tight_layout()
+plt.show()
 </code></pre>
 <p>The linear model draws a straight line that smoothly captures the trend. The degree-7 polynomial threads through every data point perfectly — but it would give bizarre predictions for 9 or 10 hours of study. The simpler model generalises better.</p>
 <hr />
@@ -1092,7 +1217,31 @@ for degree in [1, 2, 5, 15]:
     tr = mean_squared_error(y_train, model.predict(X_train))
     te = mean_squared_error(y_test,  model.predict(X_test))
     note = "underfitting" if degree==1 else "sweet spot" if degree==2 else "slight overfit" if degree==5 else "severe overfit"
-    print(f"{degree:&gt;8} | {tr:&gt;12.2f} | {te:&gt;12.2f} | {note}")<button class="copy-btn">Copy</button></code></pre>`
+    print(f"{degree:&gt;8} | {tr:&gt;12.2f} | {te:&gt;12.2f} | {note}")
+
+# ── Visualisation: train vs test MSE by polynomial degree ────────
+import matplotlib.pyplot as plt
+
+degrees = [1, 2, 5, 15]
+train_mses, test_mses = [], []
+for deg in degrees:
+    m = make_pipeline(PolynomialFeatures(deg), LinearRegression())
+    m.fit(X_train, y_train)
+    train_mses.append(mean_squared_error(y_train, m.predict(X_train)))
+    test_mses.append(mean_squared_error(y_test,  m.predict(X_test)))
+
+x_pos = range(len(degrees))
+width = 0.35
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.bar([p - width/2 for p in x_pos], train_mses, width, label='Train MSE', color='#6366f1', alpha=0.85)
+ax.bar([p + width/2 for p in x_pos], test_mses,  width, label='Test MSE',  color='#f59e0b', alpha=0.85)
+ax.set_xticks(list(x_pos))
+ax.set_xticklabels([f'deg={d}' for d in degrees])
+ax.set_ylabel('Mean Squared Error')
+ax.set_title('Bias-Variance: Train vs Test MSE by Polynomial Degree')
+ax.legend()
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 3,
@@ -1471,7 +1620,30 @@ df_city = pd.DataFrame({
 })
 dummies = pd.get_dummies(df_city["city"], drop_first=True)
 df_encoded = pd.concat([df_city.drop("city",axis=1), dummies], axis=1)
-print(df_encoded)<button class="copy-btn">Copy</button></code></pre>`
+print(df_encoded)
+
+# ── Visualisation: actual vs predicted exam scores ────────────────
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6, 5))
+plt.scatter(y_test.values, y_pred, color='#6366f1', s=80, zorder=5)
+lims = [min(y_test.min(), y_pred.min()) - 2, max(y_test.max(), y_pred.max()) + 2]
+plt.plot(lims, lims, '--', color='#f59e0b', linewidth=1.5, label='Perfect prediction')
+plt.xlabel('Actual exam score')
+plt.ylabel('Predicted exam score')
+plt.title('Regression: Actual vs Predicted Scores')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# ── Visualisation: feature coefficients ──────────────────────────
+fig, ax = plt.subplots(figsize=(5, 3))
+ax.barh(['hours_studied', 'sleep_hours'], model.coef_, color=['#6366f1', '#10b981'])
+ax.set_xlabel('Coefficient value')
+ax.set_title('Feature Coefficients — Multiple Regression')
+ax.axvline(0, color='#94a3b8', linewidth=0.8)
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 4,
@@ -1558,10 +1730,30 @@ where z = β₀ + β₁x₁ + β₂x₂ + ...
 <h2>4. The Confusion Matrix</h2>
 <p>A <strong>confusion matrix</strong> counts how your classifier's predictions compare to the true labels.</p>
 <p>For a binary classifier:</p>
-<pre><code class="language-python">                    Predicted: Negative  |  Predicted: Positive
-Actual: Negative  |  True Negative (TN)  |  False Positive (FP)
-Actual: Positive  |  False Negative (FN) |  True Positive (TP)
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 210" width="100%">
+<g font-size="12" text-anchor="middle" dominant-baseline="middle">
+<text x="300" y="22" fill="var(--text)" font-weight="600" font-size="13">Predicted</text>
+<text x="195" y="55" fill="var(--text-muted)" font-size="11.5">Negative</text>
+<text x="370" y="55" fill="var(--text-muted)" font-size="11.5">Positive</text>
+<text x="60" y="115" fill="var(--text)" font-weight="600" font-size="13" transform="rotate(-90,60,115)">Actual</text>
+<text x="115" y="105" fill="var(--text-muted)" font-size="11.5">Negative</text>
+<text x="115" y="155" fill="var(--text-muted)" font-size="11.5">Positive</text>
+<rect x="150" y="68" width="165" height="60" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<text x="232" y="94" fill="#065f46" font-weight="600" font-size="12">True Negative</text>
+<text x="232" y="112" fill="#065f46" font-size="11">(TN) ✓</text>
+<rect x="325" y="68" width="140" height="60" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="395" y="94" fill="#991b1b" font-weight="600" font-size="12">False Positive</text>
+<text x="395" y="112" fill="#991b1b" font-size="11">(FP) Type I ✗</text>
+<rect x="150" y="138" width="165" height="60" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="232" y="164" fill="#991b1b" font-weight="600" font-size="12">False Negative</text>
+<text x="232" y="182" fill="#991b1b" font-size="11">(FN) Type II ✗</text>
+<rect x="325" y="138" width="140" height="60" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<text x="395" y="164" fill="#065f46" font-weight="600" font-size="12">True Positive</text>
+<text x="395" y="182" fill="#065f46" font-size="11">(TP) ✓</text>
+</g>
+</svg>
+</div>
 <ul>
 <li><strong>True Positive (TP):</strong> Predicted spam, actually spam ✅</li>
 <li><strong>True Negative (TN):</strong> Predicted not spam, actually not spam ✅</li>
@@ -1600,17 +1792,37 @@ Actual: Positive  |  False Negative (FN) |  True Positive (TP)
 3. The predicted class is the majority class among those K neighbours</p>
 <p><strong>Analogy:</strong> You move to a new city and want to know if a neighbourhood is expensive. You look at the 5 nearest houses that were recently sold and take the majority vote: 4 were expensive, 1 was cheap → predict "expensive."</p>
 <h3>KNN in action</h3>
-<pre><code class="language-python">Training data (dots):     ● = Class A,  ★ = Class B
-
-      ●  ●
-    ●       ●
-       [?]
-    ★     ★
-      ★  ★
-
-K=3: The 3 nearest neighbours of [?] are: ★ ★ ●
-Majority vote: 2 Stars → Predict Class B
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 420 280" width="100%">
+<defs>
+<marker id="knn-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--accent)"/></marker>
+</defs>
+<g font-size="12" text-anchor="middle" dominant-baseline="middle">
+<text x="120" y="20" fill="var(--accent)" font-weight="600" font-size="11">● = Class A (Blue)</text>
+<text x="290" y="20" fill="#f59e0b" font-weight="600" font-size="11">★ = Class B (Amber)</text>
+<circle cx="157" cy="80" r="8" fill="var(--accent)" opacity="0.85"/><text x="157" y="80" fill="#fff" font-size="10">●</text>
+<circle cx="195" cy="72" r="8" fill="var(--accent)" opacity="0.85"/><text x="195" y="72" fill="#fff" font-size="10">●</text>
+<circle cx="122" cy="100" r="8" fill="var(--accent)" opacity="0.85"/><text x="122" y="100" fill="#fff" font-size="10">●</text>
+<circle cx="228" cy="100" r="8" fill="var(--accent)" opacity="0.85"/><text x="228" y="100" fill="#fff" font-size="10">●</text>
+<circle cx="138" cy="180" r="8" fill="#f59e0b" opacity="0.9"/><text x="138" y="180" fill="#fff" font-size="9">★</text>
+<circle cx="210" cy="175" r="8" fill="#f59e0b" opacity="0.9"/><text x="210" y="175" fill="#fff" font-size="9">★</text>
+<circle cx="155" cy="200" r="8" fill="#f59e0b" opacity="0.9"/><text x="155" y="200" fill="#fff" font-size="9">★</text>
+<circle cx="193" cy="202" r="8" fill="#f59e0b" opacity="0.9"/><text x="193" y="202" fill="#fff" font-size="9">★</text>
+<circle cx="174" cy="138" r="60" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.6"/>
+<rect x="160" y="126" width="28" height="24" rx="5" fill="var(--bg)" stroke="var(--text-muted)" stroke-width="1.5"/>
+<text x="174" y="138" fill="var(--text)" font-weight="700" font-size="11">[?]</text>
+<text x="310" y="80" fill="var(--text)" font-size="11.5" text-anchor="start">K = 3</text>
+<text x="310" y="100" fill="var(--text-muted)" font-size="10.5" text-anchor="start">Nearest neighbours:</text>
+<circle cx="316" cy="118" r="7" fill="#f59e0b"/><text x="316" y="118" fill="#fff" font-size="9">★</text>
+<circle cx="332" cy="118" r="7" fill="#f59e0b"/><text x="332" y="118" fill="#fff" font-size="9">★</text>
+<circle cx="348" cy="118" r="7" fill="var(--accent)"/><text x="348" y="118" fill="#fff" font-size="9">●</text>
+<text x="355" y="140" fill="var(--text-muted)" font-size="10" text-anchor="end">2 vs 1</text>
+<rect x="295" y="150" width="120" height="30" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="355" y="165" fill="#92400e" font-weight="600" font-size="11">→ Predict Class B</text>
+<text x="174" y="255" fill="var(--text-muted)" font-size="10">Dashed circle = K=3 search radius</text>
+</g>
+</svg>
+</div>
 <h3>Choosing K</h3>
 <ul>
 <li><strong>Small K</strong> (K=1): very flexible, captures fine detail, but overfits noise</li>
@@ -1841,12 +2053,20 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 <div class="solution-block">
 <button class="solution-toggle" onclick="toggleSolution(this)"><span class="solution-icon">▶</span> Exercise 4 – Logistic Regression on Iris</button>
 <div class="solution-body"><div class="content-body">
-<pre><code class="language-python">model = LogisticRegression(max_iter=200)
+<pre><code class="language-python">import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.datasets import load_iris
+iris = load_iris()
+X, y = iris.data, iris.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0, stratify=y)
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred):.3f}")
 print(confusion_matrix(y_test, y_pred))
-print(classification_report(y_test, y_pred, target_names=iris.target_names))
+print(classification_report(y_test, y_pred, target_names=iris.target_names, labels=np.arange(len(iris.target_names))))
 
 new_flower = [[5.1, 3.5, 1.4, 0.2]]
 print(iris.target_names[model.predict(new_flower)[0]])
@@ -1874,13 +2094,13 @@ import numpy as np
 print("=== Exercise 4: Logistic Regression – Iris ===")
 iris = load_iris()
 X, y = iris.data, iris.target
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-model = LogisticRegression(max_iter=200)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0, stratify=y)
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred):.3f}")
 print(confusion_matrix(y_test, y_pred))
-print(classification_report(y_test, y_pred, target_names=iris.target_names))
+print(classification_report(y_test, y_pred, target_names=iris.target_names, labels=np.arange(len(iris.target_names))))
 
 print("\\n=== Exercise 5: KNN – Breast Cancer ===")
 data = load_breast_cancer()
@@ -1897,7 +2117,47 @@ print("\\n=== Exercise 6: Class Imbalance ===")
 y_true = np.array([0]*9800 + [1]*200)
 y_dummy = np.zeros(10000, dtype=int)
 print(f"Always-negative accuracy: {accuracy_score(y_true, y_dummy):.3f}")
-print("But recall for fraud class = 0.0 — completely useless!")<button class="copy-btn">Copy</button></code></pre>`
+print("But recall for fraud class = 0.0 — completely useless!")
+
+# ── Visualisation: KNN accuracy vs K ─────────────────────────────
+import matplotlib.pyplot as plt
+
+ks = [1, 3, 5, 10, 25, 50, 100]
+train_accs, test_accs = [], []
+for k in ks:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train_bc, y_train_bc)
+    train_accs.append(accuracy_score(y_train_bc, knn.predict(X_train_bc)))
+    test_accs.append(accuracy_score(y_test_bc,  knn.predict(X_test_bc)))
+
+plt.figure(figsize=(7, 4))
+plt.plot(ks, train_accs, 'o-', color='#6366f1', linewidth=2, label='Train accuracy')
+plt.plot(ks, test_accs,  's-', color='#f59e0b', linewidth=2, label='Test accuracy')
+plt.xscale('log')
+plt.xlabel('K (number of neighbours, log scale)')
+plt.ylabel('Accuracy')
+plt.title('KNN — Train vs Test Accuracy by K (Breast Cancer)')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# ── Visualisation: confusion matrix ──────────────────────────────
+import numpy as np
+
+cm = confusion_matrix(y_test, model.predict(X_test))
+fig, ax = plt.subplots(figsize=(5, 4))
+im = ax.imshow(cm, cmap='Blues')
+ax.set_xticks([0, 1, 2]); ax.set_yticks([0, 1, 2])
+ax.set_xticklabels(iris.target_names, fontsize=9)
+ax.set_yticklabels(iris.target_names, fontsize=9)
+for i in range(3):
+    for j in range(3):
+        ax.text(j, i, cm[i, j], ha='center', va='center',
+                color='white' if cm[i, j] &gt; cm.max()/2 else 'black', fontsize=12)
+ax.set_xlabel('Predicted'); ax.set_ylabel('Actual')
+ax.set_title('Confusion Matrix — Logistic Regression on Iris')
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 5,
@@ -1925,11 +2185,34 @@ print("But recall for fraud class = 0.0 — completely useless!")<button class="
 <h2>2. The Validation Set Approach</h2>
 <p>The simplest approach: randomly split data into two halves — training and validation.</p>
 <p><strong>Problem:</strong> The estimate of test error can vary widely depending on the random split.</p>
-<pre><code class="language-python">All Data: [████████████████████]
-Split 1:  [Training ████████] [Validation ████]   → Error: 8.2%
-Split 2:  [Training ████████] [Validation ████]   → Error: 11.5%
-Split 3:  [Training ████████] [Validation ████]   → Error: 7.8%
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 200" width="100%">
+<g font-size="11.5" dominant-baseline="middle">
+<text x="10" y="28" fill="var(--text)" font-weight="600">All Data</text>
+<rect x="110" y="16" width="340" height="24" rx="4" fill="var(--accent)" opacity="0.25" stroke="var(--accent)" stroke-width="1"/>
+<text x="280" y="28" fill="var(--text)" text-anchor="middle" font-size="11">n observations</text>
+<text x="10" y="76" fill="var(--text-muted)">Split 1</text>
+<rect x="110" y="64" width="255" height="24" rx="4" fill="var(--accent)" opacity="0.6"/>
+<text x="236" y="76" fill="#fff" text-anchor="middle" font-size="11">Training (75%)</text>
+<rect x="367" y="64" width="83" height="24" rx="4" fill="#f59e0b" opacity="0.8"/>
+<text x="408" y="76" fill="#fff" text-anchor="middle" font-size="11">Val</text>
+<text x="460" y="76" fill="var(--accent)" font-weight="600">8.2%</text>
+<text x="10" y="116" fill="var(--text-muted)">Split 2</text>
+<rect x="110" y="104" width="255" height="24" rx="4" fill="var(--accent)" opacity="0.6"/>
+<text x="236" y="116" fill="#fff" text-anchor="middle" font-size="11">Training (75%)</text>
+<rect x="367" y="104" width="83" height="24" rx="4" fill="#f59e0b" opacity="0.8"/>
+<text x="408" y="116" fill="#fff" text-anchor="middle" font-size="11">Val</text>
+<text x="460" y="116" fill="var(--accent)" font-weight="600">11.5%</text>
+<text x="10" y="156" fill="var(--text-muted)">Split 3</text>
+<rect x="110" y="144" width="255" height="24" rx="4" fill="var(--accent)" opacity="0.6"/>
+<text x="236" y="156" fill="#fff" text-anchor="middle" font-size="11">Training (75%)</text>
+<rect x="367" y="144" width="83" height="24" rx="4" fill="#f59e0b" opacity="0.8"/>
+<text x="408" y="156" fill="#fff" text-anchor="middle" font-size="11">Val</text>
+<text x="460" y="156" fill="var(--accent)" font-weight="600">7.8%</text>
+<text x="280" y="190" fill="var(--text-muted)" text-anchor="middle" font-size="10.5">⚠ Large variance between splits — which estimate is reliable?</text>
+</g>
+</svg>
+</div>
 <p>The three splits give very different estimates. Which one is the "true" error? We don't know.</p>
 <hr />
 <h2>3. Leave-One-Out Cross-Validation (LOOCV)</h2>
@@ -1946,16 +2229,49 @@ Split 3:  [Training ████████] [Validation ████]   → Er
 <li>Continue until every fold has been the validation set once.</li>
 <li>Average the K error estimates.</li>
 </ol>
-<pre><code class="language-python">K=5 example with 100 observations:
-
-Fold 1: [TEST ][Train ][Train ][Train ][Train ] → Error₁
-Fold 2: [Train][TEST  ][Train ][Train ][Train ] → Error₂
-Fold 3: [Train][Train ][TEST  ][Train ][Train ] → Error₃
-Fold 4: [Train][Train ][Train ][TEST  ][Train ] → Error₄
-Fold 5: [Train][Train ][Train ][Train ][TEST  ] → Error₅
-
-CV Error = (Error₁ + Error₂ + Error₃ + Error₄ + Error₅) / 5
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 500 230" width="100%">
+<g font-size="11" dominant-baseline="middle">
+<text x="250" y="18" fill="var(--text)" font-weight="600" font-size="12" text-anchor="middle">5-Fold Cross-Validation (100 observations)</text>
+<text x="5" y="50" fill="var(--text-muted)">Fold 1</text>
+<rect x="65" y="38" width="62" height="24" rx="4" fill="#f59e0b" opacity="0.85"/><text x="96" y="50" fill="#fff" text-anchor="middle">TEST</text>
+<rect x="129" y="38" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="160" y="50" fill="#fff" text-anchor="middle">Train</text>
+<rect x="193" y="38" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="224" y="50" fill="#fff" text-anchor="middle">Train</text>
+<rect x="257" y="38" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="288" y="50" fill="#fff" text-anchor="middle">Train</text>
+<rect x="321" y="38" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="352" y="50" fill="#fff" text-anchor="middle">Train</text>
+<text x="394" y="50" fill="var(--text-muted)">→ Error₁</text>
+<text x="5" y="85" fill="var(--text-muted)">Fold 2</text>
+<rect x="65" y="73" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="96" y="85" fill="#fff" text-anchor="middle">Train</text>
+<rect x="129" y="73" width="62" height="24" rx="4" fill="#f59e0b" opacity="0.85"/><text x="160" y="85" fill="#fff" text-anchor="middle">TEST</text>
+<rect x="193" y="73" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="224" y="85" fill="#fff" text-anchor="middle">Train</text>
+<rect x="257" y="73" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="288" y="85" fill="#fff" text-anchor="middle">Train</text>
+<rect x="321" y="73" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="352" y="85" fill="#fff" text-anchor="middle">Train</text>
+<text x="394" y="85" fill="var(--text-muted)">→ Error₂</text>
+<text x="5" y="120" fill="var(--text-muted)">Fold 3</text>
+<rect x="65" y="108" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="96" y="120" fill="#fff" text-anchor="middle">Train</text>
+<rect x="129" y="108" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="160" y="120" fill="#fff" text-anchor="middle">Train</text>
+<rect x="193" y="108" width="62" height="24" rx="4" fill="#f59e0b" opacity="0.85"/><text x="224" y="120" fill="#fff" text-anchor="middle">TEST</text>
+<rect x="257" y="108" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="288" y="120" fill="#fff" text-anchor="middle">Train</text>
+<rect x="321" y="108" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="352" y="120" fill="#fff" text-anchor="middle">Train</text>
+<text x="394" y="120" fill="var(--text-muted)">→ Error₃</text>
+<text x="5" y="155" fill="var(--text-muted)">Fold 4</text>
+<rect x="65" y="143" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="96" y="155" fill="#fff" text-anchor="middle">Train</text>
+<rect x="129" y="143" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="160" y="155" fill="#fff" text-anchor="middle">Train</text>
+<rect x="193" y="143" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="224" y="155" fill="#fff" text-anchor="middle">Train</text>
+<rect x="257" y="143" width="62" height="24" rx="4" fill="#f59e0b" opacity="0.85"/><text x="288" y="155" fill="#fff" text-anchor="middle">TEST</text>
+<rect x="321" y="143" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="352" y="155" fill="#fff" text-anchor="middle">Train</text>
+<text x="394" y="155" fill="var(--text-muted)">→ Error₄</text>
+<text x="5" y="190" fill="var(--text-muted)">Fold 5</text>
+<rect x="65" y="178" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="96" y="190" fill="#fff" text-anchor="middle">Train</text>
+<rect x="129" y="178" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="160" y="190" fill="#fff" text-anchor="middle">Train</text>
+<rect x="193" y="178" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="224" y="190" fill="#fff" text-anchor="middle">Train</text>
+<rect x="257" y="178" width="62" height="24" rx="4" fill="var(--accent)" opacity="0.55"/><text x="288" y="190" fill="#fff" text-anchor="middle">Train</text>
+<rect x="321" y="178" width="62" height="24" rx="4" fill="#f59e0b" opacity="0.85"/><text x="352" y="190" fill="#fff" text-anchor="middle">TEST</text>
+<text x="394" y="190" fill="var(--text-muted)">→ Error₅</text>
+<text x="250" y="218" fill="var(--accent)" font-weight="600" font-size="11.5" text-anchor="middle">CV Error = avg(Error₁ … Error₅)</text>
+</g>
+</svg>
+</div>
 <p><strong>Common choices:</strong>
 - <strong>K=5 or K=10</strong> are standard — good balance of computation vs. reliability
 - LOOCV is K-fold with K=n (every observation is its own fold)</p>
@@ -2244,7 +2560,32 @@ for _ in range(B):
     boot_means.append(np.mean(sample))
 print(f"95% CI for mean:   [{np.percentile(boot_means,2.5):.1f}, {np.percentile(boot_means,97.5):.1f}]")
 print(f"95% CI for median: [{np.percentile(boot_medians,2.5):.1f}, {np.percentile(boot_medians,97.5):.1f}]")
-print(f"OOB fraction: ~{(1-1/len(prices))**len(prices):.3f}")<button class="copy-btn">Copy</button></code></pre>`
+print(f"OOB fraction: ~{(1-1/len(prices))**len(prices):.3f}")
+
+# ── Visualisation: CV accuracy vs K (Wine dataset) ────────────────
+import matplotlib.pyplot as plt
+
+ks_plot = [1, 3, 5, 7, 10, 15, 20, 25, 30]
+cv_means, cv_stds = [], []
+for k in ks_plot:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    scores = cross_val_score(knn, X_train, y_train, cv=10, scoring='accuracy')
+    cv_means.append(scores.mean())
+    cv_stds.append(scores.std())
+
+plt.figure(figsize=(7, 4))
+plt.plot(ks_plot, cv_means, 'o-', color='#6366f1', linewidth=2, label='CV mean accuracy')
+plt.fill_between(ks_plot,
+                 [m - s for m, s in zip(cv_means, cv_stds)],
+                 [m + s for m, s in zip(cv_means, cv_stds)],
+                 alpha=0.2, color='#6366f1', label='±1 std')
+plt.axvline(best_k, color='#10b981', linestyle='--', linewidth=1.5, label=f'Best K={best_k}')
+plt.xlabel('K (number of neighbours)')
+plt.ylabel('10-fold CV Accuracy')
+plt.title('Cross-Validation: Choosing K for KNN (Wine)')
+plt.legend()
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 6,
@@ -2590,7 +2931,31 @@ ridge_cv.fit(X_train_s, y_train)
 lasso_cv = LassoCV(alphas=alphas, cv=10, max_iter=10000)
 lasso_cv.fit(X_train_s, y_train)
 print(f"Ridge best alpha: {ridge_cv.alpha_:.4f}, Test R²: {r2_score(y_test, ridge_cv.predict(X_test_s)):.3f}")
-print(f"Lasso best alpha: {lasso_cv.alpha_:.4f}, Non-zero: {(lasso_cv.coef_!=0).sum()}")<button class="copy-btn">Copy</button></code></pre>`
+print(f"Lasso best alpha: {lasso_cv.alpha_:.4f}, Non-zero: {(lasso_cv.coef_!=0).sum()}")
+
+# ── Visualisation: coefficients for OLS, Ridge, Lasso ────────────
+import matplotlib.pyplot as plt
+
+models_vis = [("OLS", LinearRegression()), ("Ridge", Ridge(alpha=10)), ("Lasso", Lasso(alpha=0.5, max_iter=10000))]
+coef_dict = {}
+for name, m in models_vis:
+    m.fit(X_train_s, y_train)
+    coef_dict[name] = m.coef_
+
+feature_idx = range(p)
+fig, ax = plt.subplots(figsize=(9, 4))
+offset = 0.25
+colors = ['#6366f1', '#10b981', '#f59e0b']
+for i, (name, coefs) in enumerate(coef_dict.items()):
+    ax.bar([x + (i - 1) * offset for x in feature_idx], coefs,
+           width=offset, label=name, color=colors[i], alpha=0.85)
+ax.axhline(0, color='#94a3b8', linewidth=0.8)
+ax.set_xlabel('Feature index')
+ax.set_ylabel('Coefficient value')
+ax.set_title('Regularization: OLS vs Ridge vs Lasso Coefficients')
+ax.legend()
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 7,
@@ -2614,12 +2979,33 @@ print(f"Lasso best alpha: {lasso_cv.alpha_:.4f}, Non-zero: {(lasso_cv.coef_!=0).
 <h2>1. Decision Trees: The Intuition</h2>
 <p>A decision tree mimics how humans make decisions: by asking a series of yes/no questions.</p>
 <p><strong>Example: Should I carry an umbrella today?</strong></p>
-<pre><code class="language-python">Is it raining?
-    ├── Yes → Carry umbrella ☔
-    └── No → Is rain forecast?
-                ├── Yes → Carry umbrella ☔
-                └── No → Leave umbrella home 🌤️
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 230" width="100%">
+<defs>
+<marker id="dt-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--border)"/></marker>
+</defs>
+<g font-size="12" text-anchor="middle" dominant-baseline="middle">
+<rect x="160" y="15" width="160" height="38" rx="8" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="240" y="34" fill="var(--accent)" font-weight="600">Is it raining?</text>
+<line x1="200" y1="53" x2="120" y2="95" stroke="var(--border)" stroke-width="1.5" marker-end="url(#dt-a)"/>
+<text x="148" y="72" fill="#10b981" font-size="11" font-weight="600">Yes</text>
+<line x1="280" y1="53" x2="360" y2="95" stroke="var(--border)" stroke-width="1.5" marker-end="url(#dt-a)"/>
+<text x="334" y="72" fill="#ef4444" font-size="11" font-weight="600">No</text>
+<rect x="50" y="97" width="140" height="38" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<text x="120" y="112" fill="#065f46" font-weight="600">☔ Carry umbrella</text>
+<rect x="290" y="97" width="170" height="38" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+<text x="375" y="116" fill="var(--text)" font-weight="600">Is rain forecast?</text>
+<line x1="335" y1="135" x2="270" y2="175" stroke="var(--border)" stroke-width="1.5" marker-end="url(#dt-a)"/>
+<text x="290" y="158" fill="#10b981" font-size="11" font-weight="600">Yes</text>
+<line x1="415" y1="135" x2="430" y2="175" stroke="var(--border)" stroke-width="1.5" marker-end="url(#dt-a)"/>
+<text x="435" y="158" fill="#ef4444" font-size="11" font-weight="600">No</text>
+<rect x="190" y="177" width="140" height="38" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+<text x="260" y="192" fill="#065f46" font-weight="600">☔ Carry umbrella</text>
+<rect x="340" y="177" width="130" height="38" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="405" y="192" fill="#92400e" font-weight="600">🌤 Leave home</text>
+</g>
+</svg>
+</div>
 <p>In machine learning, the computer automatically learns <em>which questions to ask</em> and <em>where to split</em> based on the training data.</p>
 <hr />
 <h2>2. How a Decision Tree is Built</h2>
@@ -2679,6 +3065,12 @@ If individual predictions have high variance but are uncorrelated, their average
 <p>This forces each tree to be different, reducing correlation between trees, which further reduces the ensemble's variance.</p>
 <p><strong>Result:</strong> Random Forests almost always outperform a single decision tree and are competitive with the best methods in practice.</p>
 <pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+
+data = load_breast_cancer()
+X_train, X_test, y_train, y_test = train_test_split(data.data, data.target, test_size=0.25, random_state=42)
+feature_names = data.feature_names
 
 rf = RandomForestClassifier(
     n_estimators=100,    # number of trees
@@ -2686,6 +3078,7 @@ rf = RandomForestClassifier(
     random_state=42
 )
 rf.fit(X_train, y_train)
+print(f"Test accuracy: {rf.score(X_test, y_test):.3f}")
 </code></pre>
 <hr />
 <h2>7. Feature Importance</h2>
@@ -2713,6 +3106,11 @@ print(importances.sort_values(ascending=False))
 - <strong>learning_rate:</strong> How much each tree contributes (smaller = better generalisation, but needs more trees)
 - <strong>max_depth:</strong> Tree depth (shallow trees — 1-3 levels — work best for boosting)</p>
 <pre><code class="language-python">from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+
+data = load_breast_cancer()
+X_train, X_test, y_train, y_test = train_test_split(data.data, data.target, test_size=0.25, random_state=42)
 
 gb = GradientBoostingClassifier(
     n_estimators=200,
@@ -2721,6 +3119,7 @@ gb = GradientBoostingClassifier(
     random_state=42
 )
 gb.fit(X_train, y_train)
+print(f"Test accuracy: {gb.score(X_test, y_test):.3f}")
 </code></pre>
 <hr />
 <h2>9. Comparison of Tree Methods</h2>
@@ -2959,10 +3358,33 @@ print("\\n=== Exercise 5: Ensemble Comparison – Digits ===")
 digits = load_digits()
 X_d, y_d = digits.data, digits.target
 X_tr, X_te, y_tr, y_te = train_test_split(X_d, y_d, test_size=0.25, random_state=0)
-for name, m in [("Random Forest", RandomForestClassifier(100, random_state=0)),
-                ("Grad. Boosting", GradientBoostingClassifier(100, learning_rate=0.1, max_depth=3, random_state=0))]:
+for name, m in [("Random Forest", RandomForestClassifier(n_estimators=100, random_state=0)),
+                ("Grad. Boosting", GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=0))]:
     m.fit(X_tr, y_tr)
-    print(f"{name}: Train={accuracy_score(y_tr,m.predict(X_tr)):.3f}, Test={accuracy_score(y_te,m.predict(X_te)):.3f}")<button class="copy-btn">Copy</button></code></pre>`
+    print(f"{name}: Train={accuracy_score(y_tr,m.predict(X_tr)):.3f}, Test={accuracy_score(y_te,m.predict(X_te)):.3f}")
+
+# ── Visualisation: Random Forest feature importances ──────────────
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = load_breast_cancer()
+X_bc, y_bc = data.data, data.target
+X_tr_bc, X_te_bc, y_tr_bc, y_te_bc = train_test_split(X_bc, y_bc, test_size=0.25, random_state=42)
+rf_vis = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_vis.fit(X_tr_bc, y_tr_bc)
+
+importances = rf_vis.feature_importances_
+top_n = 10
+idx = np.argsort(importances)[::-1][:top_n]
+top_names  = [data.feature_names[i] for i in idx]
+top_values = importances[idx]
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.barh(top_names[::-1], top_values[::-1], color='#6366f1', alpha=0.85)
+ax.set_xlabel('Feature importance (mean decrease in impurity)')
+ax.set_title('Random Forest — Top 10 Feature Importances (Breast Cancer)')
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 8,
@@ -2998,14 +3420,43 @@ for name, m in [("Random Forest", RandomForestClassifier(100, random_state=0)),
 <h2>3. Support Vectors and the Margin</h2>
 <p>The <strong>margin</strong> is the distance between the hyperplane and the nearest data points on each side.</p>
 <p><strong>Support vectors</strong> are the training points that lie exactly on the margin boundaries — the ones closest to the dividing line. They "support" (define) the position of the hyperplane.</p>
-<pre><code class="language-python">Class A (●): ●       ●  ● ● ● ●
-                  |M|M|
-Class B (★): ★ ★ ★ ★  ★       ★
-
-           ──────────────
-          margin   margin
-             ↑  SVM  ↑
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 230" width="100%">
+<g font-size="12" dominant-baseline="middle">
+<line x1="180" y1="20" x2="180" y2="210" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,3"/>
+<line x1="230" y1="20" x2="230" y2="210" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,3"/>
+<line x1="280" y1="20" x2="280" y2="210" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,3"/>
+<line x1="230" y1="20" x2="230" y2="210" stroke="var(--border)" stroke-width="2"/>
+<text x="230" y="14" fill="var(--text)" font-size="10" text-anchor="middle" font-weight="600">Hyperplane</text>
+<text x="155" y="218" fill="var(--accent)" font-size="10" text-anchor="middle">← margin →</text>
+<text x="305" y="218" fill="var(--accent)" font-size="10" text-anchor="middle">← margin →</text>
+<circle cx="80" cy="60" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="50" cy="95" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="100" cy="110" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="65" cy="145" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="110" cy="165" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="75" cy="185" r="8" fill="var(--accent)" opacity="0.85"/>
+<circle cx="145" cy="80" r="9" fill="var(--accent)" stroke="#fff" stroke-width="2" opacity="1"/>
+<circle cx="155" cy="150" r="9" fill="var(--accent)" stroke="#fff" stroke-width="2" opacity="1"/>
+<text x="80" y="34" fill="var(--accent)" font-weight="600" text-anchor="middle" font-size="11">Class A (●)</text>
+<circle cx="360" cy="55" r="8" fill="#f59e0b" opacity="0.85"/>
+<circle cx="400" cy="90" r="8" fill="#f59e0b" opacity="0.85"/>
+<circle cx="350" cy="120" r="8" fill="#f59e0b" opacity="0.85"/>
+<circle cx="420" cy="150" r="8" fill="#f59e0b" opacity="0.85"/>
+<circle cx="380" cy="175" r="8" fill="#f59e0b" opacity="0.85"/>
+<circle cx="310" cy="105" r="9" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="1"/>
+<circle cx="305" cy="160" r="9" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="1"/>
+<text x="390" y="34" fill="#92400e" font-weight="600" text-anchor="middle" font-size="11">Class B (★)</text>
+<text x="230" y="115" fill="var(--text-muted)" font-size="10" text-anchor="middle">Max</text>
+<text x="230" y="128" fill="var(--text-muted)" font-size="10" text-anchor="middle">Margin</text>
+<rect x="165" y="195" width="20" height="14" rx="3" fill="var(--accent)" opacity="0.2"/>
+<text x="175" y="202" fill="var(--accent)" text-anchor="middle" font-size="9">SV</text>
+<rect x="290" y="195" width="20" height="14" rx="3" fill="#f59e0b" opacity="0.2"/>
+<text x="300" y="202" fill="#92400e" text-anchor="middle" font-size="9">SV</text>
+<text x="240" y="202" fill="var(--text-muted)" font-size="9">← Support Vectors (white border)</text>
+</g>
+</svg>
+</div>
 <p>Key insight: <strong>only the support vectors matter</strong>. If you removed all other training points and kept only the support vectors, the hyperplane would not change. This makes SVMs efficient and robust to outliers (as long as outliers are not near the boundary).</p>
 <hr />
 <h2>4. Soft Margin: Allowing Some Errors</h2>
@@ -3083,8 +3534,16 @@ Class B (★): ★ ★ ★ ★  ★       ★
 </tbody>
 </table>
 <p>A common practice: search a grid of (C, γ) values.</p>
-<pre><code class="language-python">from sklearn.model_selection import GridSearchCV
+<pre><code class="language-python">from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_breast_cancer
+
+data = load_breast_cancer()
+X_train, X_test, y_train, y_test = train_test_split(data.data, data.target, test_size=0.25, random_state=42)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled  = scaler.transform(X_test)
 
 param_grid = {
     'C': [0.1, 1, 10, 100],
@@ -3093,6 +3552,8 @@ param_grid = {
 grid_search = GridSearchCV(SVC(kernel='rbf'), param_grid, cv=5)
 grid_search.fit(X_train_scaled, y_train)
 print(f&quot;Best params: {grid_search.best_params_}&quot;)
+print(f&quot;Best CV score: {grid_search.best_score_:.3f}&quot;)
+print(f&quot;Test accuracy: {grid_search.score(X_test_scaled, y_test):.3f}&quot;)
 </code></pre>
 <hr />
 <h2>7. SVMs for Multiple Classes</h2>
@@ -3333,7 +3794,36 @@ X_tr_s = sc2.fit_transform(X_tr); X_te_s = sc2.transform(X_te)
 param_grid = {'C':[0.01,0.1,1,10,100], 'gamma':['scale',0.001,0.01,0.1,1]}
 grid = GridSearchCV(SVC(kernel='rbf'), param_grid, cv=5, n_jobs=-1)
 grid.fit(X_tr_s, y_tr)
-print(f"Best: {grid.best_params_}, CV={grid.best_score_:.3f}, Test={grid.score(X_te_s,y_te):.3f}")<button class="copy-btn">Copy</button></code></pre>`
+print(f"Best: {grid.best_params_}, CV={grid.best_score_:.3f}, Test={grid.score(X_te_s,y_te):.3f}")
+
+# ── Visualisation: kernel/C comparison on Wine ───────────────────
+import matplotlib.pyplot as plt
+import numpy as np
+
+kernels = ['linear', 'rbf']
+Cs = [0.1, 1, 10]
+results = {}
+for kernel in kernels:
+    accs = []
+    for C in Cs:
+        svm = SVC(kernel=kernel, C=C, random_state=0)
+        svm.fit(X_tr_s, y_tr)
+        accs.append(accuracy_score(y_te, svm.predict(X_te_s)))
+    results[kernel] = accs
+
+x = np.arange(len(Cs))
+width = 0.35
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.bar(x - width/2, results['linear'], width, label='Linear kernel', color='#6366f1', alpha=0.85)
+ax.bar(x + width/2, results['rbf'],    width, label='RBF kernel',    color='#f59e0b', alpha=0.85)
+ax.set_xticks(x)
+ax.set_xticklabels([f'C={c}' for c in Cs])
+ax.set_ylabel('Test Accuracy')
+ax.set_title('SVM — Test Accuracy by Kernel and C (Wine)')
+ax.set_ylim(0.7, 1.0)
+ax.legend()
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 9,
@@ -3401,11 +3891,35 @@ print(f"Best: {grid.best_params_}, CV={grid.best_score_:.3f}, Test={grid.score(X
 <hr />
 <h2>3. Network Architecture: Layers</h2>
 <p>A <strong>feedforward neural network</strong> passes data in one direction: input → hidden layers → output.</p>
-<pre><code class="language-python">Input Layer    Hidden Layer 1    Hidden Layer 2    Output Layer
-   [x₁]           [h₁]               [h₄]
-   [x₂]  ────►   [h₂]  ────►        [h₅]  ────►  [ŷ]
-   [x₃]           [h₃]               [h₆]
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 220" width="100%">
+<g font-size="11" text-anchor="middle" dominant-baseline="middle">
+<text x="65" y="18" fill="var(--text-muted)" font-size="10.5">Input Layer</text>
+<text x="190" y="18" fill="var(--text-muted)" font-size="10.5">Hidden Layer 1</text>
+<text x="320" y="18" fill="var(--text-muted)" font-size="10.5">Hidden Layer 2</text>
+<text x="430" y="18" fill="var(--text-muted)" font-size="10.5">Output</text>
+<circle cx="65" cy="80" r="22" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="65" y="80" fill="var(--accent)" font-weight="600">x₁</text>
+<circle cx="65" cy="130" r="22" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="65" y="130" fill="var(--accent)" font-weight="600">x₂</text>
+<circle cx="65" cy="180" r="22" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="65" y="180" fill="var(--accent)" font-weight="600">x₃</text>
+<circle cx="190" cy="65" r="22" fill="var(--accent)" opacity="0.7"/><text x="190" y="65" fill="#fff" font-weight="600">h₁</text>
+<circle cx="190" cy="130" r="22" fill="var(--accent)" opacity="0.7"/><text x="190" y="130" fill="#fff" font-weight="600">h₂</text>
+<circle cx="190" cy="195" r="22" fill="var(--accent)" opacity="0.7"/><text x="190" y="195" fill="#fff" font-weight="600">h₃</text>
+<circle cx="320" cy="80" r="22" fill="var(--accent)" opacity="0.85"/><text x="320" y="80" fill="#fff" font-weight="600">h₄</text>
+<circle cx="320" cy="130" r="22" fill="var(--accent)" opacity="0.85"/><text x="320" y="130" fill="#fff" font-weight="600">h₅</text>
+<circle cx="320" cy="180" r="22" fill="var(--accent)" opacity="0.85"/><text x="320" y="180" fill="#fff" font-weight="600">h₆</text>
+<circle cx="430" cy="130" r="24" fill="var(--accent-dark,#4f46e5)"/><text x="430" y="130" fill="#fff" font-weight="700">ŷ</text>
+<g stroke="var(--border)" stroke-width="0.8" opacity="0.6">
+<line x1="87" y1="80" x2="168" y2="65"/><line x1="87" y1="80" x2="168" y2="130"/><line x1="87" y1="80" x2="168" y2="195"/>
+<line x1="87" y1="130" x2="168" y2="65"/><line x1="87" y1="130" x2="168" y2="130"/><line x1="87" y1="130" x2="168" y2="195"/>
+<line x1="87" y1="180" x2="168" y2="65"/><line x1="87" y1="180" x2="168" y2="130"/><line x1="87" y1="180" x2="168" y2="195"/>
+<line x1="212" y1="65" x2="298" y2="80"/><line x1="212" y1="65" x2="298" y2="130"/><line x1="212" y1="65" x2="298" y2="180"/>
+<line x1="212" y1="130" x2="298" y2="80"/><line x1="212" y1="130" x2="298" y2="130"/><line x1="212" y1="130" x2="298" y2="180"/>
+<line x1="212" y1="195" x2="298" y2="80"/><line x1="212" y1="195" x2="298" y2="130"/><line x1="212" y1="195" x2="298" y2="180"/>
+<line x1="342" y1="80" x2="406" y2="130"/><line x1="342" y1="130" x2="406" y2="130"/><line x1="342" y1="180" x2="406" y2="130"/>
+</g>
+</g>
+</svg>
+</div>
 <ul>
 <li><strong>Input layer:</strong> One node per feature. No computation — just passes data forward.</li>
 <li><strong>Hidden layers:</strong> Where the model learns complex representations. More layers = deeper network = more capacity.</li>
@@ -3425,8 +3939,24 @@ print(f"Best: {grid.best_params_}, CV={grid.best_score_:.3f}, Test={grid.score(X
 <li>Repeat for many batches and epochs.</li>
 </ol>
 <p><strong>Gradient descent update:</strong></p>
-<pre><code class="language-python">w ← w - learning_rate × gradient
-</code></pre>
+<div class="viz-diagram" style="text-align:center;padding:18px 20px">
+<svg viewBox="0 0 440 60" width="100%" style="max-width:460px;display:block;margin:0 auto">
+<g font-size="16" text-anchor="middle" dominant-baseline="middle">
+<text x="36" y="30" fill="var(--accent)" font-weight="700">w</text>
+<text x="72" y="30" fill="var(--text-muted)">←</text>
+<text x="106" y="30" fill="var(--accent)" font-weight="700">w</text>
+<text x="130" y="30" fill="var(--text)">−</text>
+<rect x="150" y="12" width="116" height="36" rx="6" fill="var(--accent-light)" stroke="var(--accent)" stroke-width="1"/>
+<text x="208" y="30" fill="var(--accent)" font-weight="600">learning_rate</text>
+<text x="278" y="30" fill="var(--text)">×</text>
+<rect x="294" y="12" width="96" height="36" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+<text x="342" y="30" fill="#92400e" font-weight="600">gradient</text>
+<text x="402" y="18" fill="var(--text-muted)" font-size="10">step size</text>
+<text x="402" y="42" fill="var(--text-muted)" font-size="10">direction</text>
+</g>
+</svg>
+<p style="font-size:11px;color:var(--text-muted);margin:8px 0 0">Move each weight a small step opposite to the gradient (downhill)</p>
+</div>
 <p><strong>Learning rate:</strong> How large a step to take. Too large → overshoot; too small → too slow.</p>
 <p><strong>Epoch:</strong> One full pass through all training data.</p>
 <p><strong>Mini-batch:</strong> Training is typically done on small batches (32–256 samples) rather than one sample at a time (too slow) or all at once (uses too much memory).</p>
@@ -3435,9 +3965,32 @@ print(f"Best: {grid.best_params_}, CV={grid.best_score_:.3f}, Test={grid.score(X
 <p>Deep networks have enormous numbers of parameters and easily overfit.</p>
 <h3>Dropout</h3>
 <p>During training, randomly "switch off" some neurons (set to zero) in each forward pass. This prevents neurons from relying too heavily on specific inputs and forces the network to learn more redundant, robust representations.</p>
-<pre><code class="language-python"># In Keras:
-from keras.layers import Dropout
-model.add(Dropout(0.5))  # randomly zero 50% of neurons during training
+<pre><code class="language-python"># Demonstrating overfitting prevention with sklearn's MLP
+# (Keras/TensorFlow require a separate install; core concepts shown here)
+from sklearn.neural_network import MLPClassifier
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+X, y = load_digits(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# No regularization — prone to overfitting
+no_reg = MLPClassifier(hidden_layer_sizes=(256, 128), max_iter=300, random_state=0)
+no_reg.fit(X_train_s, y_train)
+print(f"No regularization  — Train: {accuracy_score(y_train, no_reg.predict(X_train_s)):.3f}  Test: {accuracy_score(y_test, no_reg.predict(X_test_s)):.3f}")
+
+# L2 regularization (alpha) + early stopping — analogy for dropout/weight decay
+reg = MLPClassifier(hidden_layer_sizes=(256, 128), alpha=0.01,
+                    early_stopping=True, validation_fraction=0.1,
+                    max_iter=300, random_state=0)
+reg.fit(X_train_s, y_train)
+print(f"L2 + early stopping — Train: {accuracy_score(y_train, reg.predict(X_train_s)):.3f}  Test: {accuracy_score(y_test, reg.predict(X_test_s)):.3f}")
+print(f"(Stopped at iteration {reg.n_iter_} of 300 — early stopping prevented overfitting)")
 </code></pre>
 <h3>L2 Regularization (Weight Decay)</h3>
 <p>Add a penalty for large weights, just like Ridge regression for linear models.</p>
@@ -3459,12 +4012,37 @@ model.add(Dropout(0.5))  # randomly zero 50% of neurons during training
 <h2>7. Recurrent Neural Networks (RNNs) for Sequences</h2>
 <p>Standard networks assume inputs are independent. But in text, speech, or time series, <strong>order matters</strong> — "the dog bit the man" is very different from "the man bit the dog."</p>
 <p><strong>RNNs</strong> maintain a "memory" of previous inputs by feeding the output of each step back as input to the next step.</p>
-<pre><code class="language-python">Input:  [word1] → [word2] → [word3] → [word4]
-           ↓         ↓         ↓         ↓
-Hidden: [h₁]  →  [h₂]  →  [h₃]  →  [h₄]  → output
-         ↑
-       (memory carries forward)
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 490 210" width="100%">
+<defs>
+<marker id="rnn-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--border)"/></marker>
+<marker id="rnn-b" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--accent)"/></marker>
+</defs>
+<g font-size="11.5" text-anchor="middle" dominant-baseline="middle">
+<text x="10" y="68" fill="var(--text-muted)" text-anchor="start" font-size="10.5">Input:</text>
+<rect x="55" y="52" width="68" height="32" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="89" y="68" fill="var(--text)">word₁</text>
+<rect x="165" y="52" width="68" height="32" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="199" y="68" fill="var(--text)">word₂</text>
+<rect x="275" y="52" width="68" height="32" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="309" y="68" fill="var(--text)">word₃</text>
+<rect x="385" y="52" width="68" height="32" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/><text x="419" y="68" fill="var(--text)">word₄</text>
+<line x1="89" y1="84" x2="89" y2="118" stroke="var(--border)" stroke-width="1.5" marker-end="url(#rnn-a)"/>
+<line x1="199" y1="84" x2="199" y2="118" stroke="var(--border)" stroke-width="1.5" marker-end="url(#rnn-a)"/>
+<line x1="309" y1="84" x2="309" y2="118" stroke="var(--border)" stroke-width="1.5" marker-end="url(#rnn-a)"/>
+<line x1="419" y1="84" x2="419" y2="118" stroke="var(--border)" stroke-width="1.5" marker-end="url(#rnn-a)"/>
+<text x="10" y="138" fill="var(--text-muted)" text-anchor="start" font-size="10.5">Hidden:</text>
+<rect x="55" y="122" width="68" height="32" rx="6" fill="var(--accent)" opacity="0.7"/><text x="89" y="138" fill="#fff" font-weight="600">h₁</text>
+<line x1="123" y1="138" x2="157" y2="138" stroke="var(--accent)" stroke-width="2" marker-end="url(#rnn-b)"/>
+<rect x="165" y="122" width="68" height="32" rx="6" fill="var(--accent)" opacity="0.7"/><text x="199" y="138" fill="#fff" font-weight="600">h₂</text>
+<line x1="233" y1="138" x2="267" y2="138" stroke="var(--accent)" stroke-width="2" marker-end="url(#rnn-b)"/>
+<rect x="275" y="122" width="68" height="32" rx="6" fill="var(--accent)" opacity="0.7"/><text x="309" y="138" fill="#fff" font-weight="600">h₃</text>
+<line x1="343" y1="138" x2="377" y2="138" stroke="var(--accent)" stroke-width="2" marker-end="url(#rnn-b)"/>
+<rect x="385" y="122" width="68" height="32" rx="6" fill="var(--accent)" opacity="0.7"/><text x="419" y="138" fill="#fff" font-weight="600">h₄</text>
+<line x1="453" y1="138" x2="472" y2="138" stroke="var(--accent)" stroke-width="2" marker-end="url(#rnn-b)"/>
+<rect x="460" y="122" width="24" height="32" rx="6" fill="var(--accent-dark,#4f46e5)"/><text x="472" y="138" fill="#fff" font-weight="700" font-size="10">ŷ</text>
+<path d="M89,154 Q89,185 199,185 Q309,185 419,185 L419,154" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.6"/>
+<text x="254" y="200" fill="var(--text-muted)" font-size="10">memory carries forward (hidden state)</text>
+</g>
+</svg>
+</div>
 <p><strong>LSTM (Long Short-Term Memory)</strong> is an improved RNN that can remember patterns from many steps back — fixing the "vanishing gradient" problem that makes basic RNNs forget early inputs.</p>
 <p>Applications: text generation, sentiment analysis, speech recognition, stock price forecasting.</p>
 <hr />
@@ -3711,8 +4289,8 @@ sc2 = StandardScaler()
 X_tr_s = sc2.fit_transform(X_tr); X_te_s = sc2.transform(X_te)
 methods = [
     ("Logistic Reg  ", LogisticRegression(max_iter=1000), True),
-    ("Random Forest ", RandomForestClassifier(100, random_state=0), False),
-    ("Grad. Boosting", GradientBoostingClassifier(100, random_state=0), False),
+    ("Random Forest ", RandomForestClassifier(n_estimators=100, random_state=0), False),
+    ("Grad. Boosting", GradientBoostingClassifier(n_estimators=100, random_state=0), False),
     ("SVM (RBF)     ", SVC(kernel='rbf', C=10), True),
     ("Neural Network", MLPClassifier((100,50), max_iter=500, random_state=0), True),
 ]
@@ -3723,7 +4301,64 @@ for name, model, needs_scale in methods:
     model.fit(Xtr, y_tr)
     cv = cross_val_score(model, Xtr, y_tr, cv=5).mean()
     te = model.score(Xte, y_te)
-    print(f"{name:22} | {cv:&gt;6.3f} | {te:&gt;6.3f}")<button class="copy-btn">Copy</button></code></pre>`
+    print(f"{name:22} | {cv:&gt;6.3f} | {te:&gt;6.3f}")
+
+# ── Visualisation: MLP learning curve on Digits ──────────────────
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.datasets import load_digits as _load_digits
+from sklearn.preprocessing import StandardScaler as _SS
+from sklearn.model_selection import train_test_split as _tts
+
+_digs = _load_digits()
+_Xd, _yd = _digs.data, _digs.target
+_Xtr, _Xte, _ytr, _yte = _tts(_Xd, _yd, test_size=0.25, random_state=42)
+_sc = _SS(); _Xtr_s = _sc.fit_transform(_Xtr); _Xte_s = _sc.transform(_Xte)
+
+mlp_plot = MLPClassifier(hidden_layer_sizes=(100, 50), activation='relu',
+                         alpha=0.0001, max_iter=1, warm_start=True, random_state=42)
+train_scores, val_scores = [], []
+epochs = list(range(1, 61))
+for _ in epochs:
+    mlp_plot.fit(_Xtr_s, _ytr)
+    train_scores.append(mlp_plot.score(_Xtr_s, _ytr))
+    val_scores.append(mlp_plot.score(_Xte_s, _yte))
+
+plt.figure(figsize=(7, 4))
+plt.plot(epochs, train_scores, color='#6366f1', linewidth=2, label='Train accuracy')
+plt.plot(epochs, val_scores,   color='#f59e0b', linewidth=2, label='Test accuracy')
+plt.xlabel('Training epoch')
+plt.ylabel('Accuracy')
+plt.title('Neural Network Learning Curve — MLP on Digits (100,50)')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# ── Visualisation: method comparison bar chart (Wine) ────────────
+method_names  = ['Logistic Reg', 'Random Forest', 'Grad. Boost', 'SVM (RBF)', 'Neural Net']
+method_cv     = []
+method_test   = []
+for name, model, needs_scale in methods:
+    Xtr = X_tr_s if needs_scale else X_tr
+    Xte = X_te_s if needs_scale else X_te
+    cv_s = cross_val_score(model, Xtr, y_tr, cv=5).mean()
+    te_s = model.score(Xte, y_te)
+    method_cv.append(cv_s)
+    method_test.append(te_s)
+
+x = np.arange(len(method_names))
+width = 0.35
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.bar(x - width/2, method_cv,   width, label='CV accuracy',   color='#6366f1', alpha=0.85)
+ax.bar(x + width/2, method_test, width, label='Test accuracy', color='#10b981', alpha=0.85)
+ax.set_xticks(x)
+ax.set_xticklabels(method_names, rotation=15, ha='right', fontsize=9)
+ax.set_ylabel('Accuracy')
+ax.set_title('Method Comparison — CV vs Test Accuracy (Wine)')
+ax.set_ylim(0.7, 1.05)
+ax.legend()
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   },
   {
     id: 10,
@@ -3765,24 +4400,63 @@ for name, model, needs_scale in methods:
 <li><strong>Update</strong> each centroid to the mean of all assigned points</li>
 <li>Repeat steps 3–4 until centroids stop moving (convergence)</li>
 </ol>
-<pre><code class="language-python">Initial:  * *  ★  *         After convergence:
-           ■  ■              Cluster 1 (●):  ● ● ●
-                             Cluster 2 (★):  ★ ★ ★
-                             Cluster 3 (■):  ■ ■ ■
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 200" width="100%">
+<g font-size="11" text-anchor="middle" dominant-baseline="middle">
+<text x="120" y="20" fill="var(--text)" font-weight="600" font-size="12">Before</text>
+<text x="360" y="20" fill="var(--text)" font-weight="600" font-size="12">After Convergence</text>
+<line x1="240" y1="15" x2="240" y2="195" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,3"/>
+<circle cx="60" cy="60" r="8" fill="#94a3b8"/><circle cx="90" cy="75" r="8" fill="#94a3b8"/>
+<circle cx="75" cy="100" r="8" fill="#94a3b8"/><circle cx="130" cy="55" r="8" fill="#94a3b8"/>
+<circle cx="155" cy="90" r="8" fill="#94a3b8"/><circle cx="100" cy="130" r="8" fill="#94a3b8"/>
+<circle cx="140" cy="145" r="8" fill="#94a3b8"/><circle cx="70" cy="155" r="8" fill="#94a3b8"/>
+<text x="110" y="178" fill="var(--text-muted)" font-size="10">Unassigned — random init</text>
+<circle cx="300" cy="60" r="8" fill="var(--accent)"/><circle cx="330" cy="75" r="8" fill="var(--accent)"/><circle cx="315" cy="100" r="8" fill="var(--accent)"/>
+<circle cx="370" cy="55" r="8" fill="#f59e0b"/><circle cx="395" cy="80" r="8" fill="#f59e0b"/><circle cx="415" cy="58" r="8" fill="#f59e0b"/>
+<circle cx="340" cy="145" r="8" fill="#10b981"/><circle cx="370" cy="158" r="8" fill="#10b981"/><circle cx="410" cy="140" r="8" fill="#10b981"/>
+<circle cx="315" cy="78" r="5" fill="#fff" stroke="var(--accent)" stroke-width="2"/>
+<circle cx="393" cy="64" r="5" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+<circle cx="373" cy="148" r="5" fill="#fff" stroke="#10b981" stroke-width="2"/>
+<text x="315" y="120" fill="var(--accent)" font-size="10">Cluster 1</text>
+<text x="393" y="120" fill="#f59e0b" font-size="10">Cluster 2</text>
+<text x="373" y="178" fill="#10b981" font-size="10">Cluster 3</text>
+<text x="355" y="192" fill="var(--text-muted)" font-size="9.5">◯ = centroid</text>
+</g>
+</svg>
+</div>
 <h3>Choosing K</h3>
 <p>K is a hyperparameter you choose before running the algorithm. Common strategies:</p>
 <p><strong>The Elbow Method:</strong> Run K-Means for K=1, 2, 3, ... and plot <strong>within-cluster sum of squares (WCSS)</strong> — the total squared distance from each point to its cluster centre. WCSS always decreases as K increases. The "elbow" — where the decrease sharply slows — suggests the best K.</p>
-<pre><code class="language-python">WCSS
- |
- |*
- |  *
- |     *
- |       *──────  ← Elbow at K=3
- |                *─────
- +──────────────────── K
-    1  2  3  4  5  6
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 380 240" width="100%" style="max-width:420px;display:block;margin:0 auto">
+<defs>
+<marker id="elb-ax" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--text-muted)"/></marker>
+</defs>
+<g font-size="11.5" text-anchor="middle" dominant-baseline="middle">
+<line x1="55" y1="210" x2="355" y2="210" stroke="var(--border)" stroke-width="1.5" marker-end="url(#elb-ax)"/>
+<line x1="55" y1="210" x2="55" y2="25" stroke="var(--border)" stroke-width="1.5" marker-end="url(#elb-ax)"/>
+<text x="200" y="228" fill="var(--text-muted)">Number of Clusters K</text>
+<text x="18" y="120" fill="var(--text-muted)" transform="rotate(-90,18,120)">WCSS</text>
+<polyline points="80,50 130,105 180,150 230,168 280,178 330,183" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="80" cy="50" r="5" fill="var(--accent)"/>
+<circle cx="130" cy="105" r="5" fill="var(--accent)"/>
+<circle cx="180" cy="150" r="5" fill="var(--accent)"/>
+<circle cx="230" cy="168" r="5" fill="var(--accent)"/>
+<circle cx="280" cy="178" r="5" fill="var(--accent)"/>
+<circle cx="330" cy="183" r="5" fill="var(--accent)"/>
+<circle cx="180" cy="150" r="9" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+<line x1="180" y1="141" x2="180" y2="210" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="80" y="222" fill="var(--text-muted)">1</text>
+<text x="130" y="222" fill="var(--text-muted)">2</text>
+<text x="180" y="222" fill="#f59e0b" font-weight="700">3</text>
+<text x="230" y="222" fill="var(--text-muted)">4</text>
+<text x="280" y="222" fill="var(--text-muted)">5</text>
+<text x="330" y="222" fill="var(--text-muted)">6</text>
+<rect x="190" y="130" width="105" height="28" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+<text x="242" y="144" fill="#92400e" font-weight="600" font-size="11">Elbow at K=3 ↙</text>
+</g>
+</svg>
+</div>
 <h3>Limitations of K-Means</h3>
 <ul>
 <li>Assumes clusters are roughly <strong>spherical</strong> (equal-sized, round)</li>
@@ -3801,13 +4475,56 @@ for name, model, needs_scale in methods:
 3. Repeat until all points are in a single cluster</p>
 <p><strong>Divisive (top-down):</strong> Start with one cluster, repeatedly split — less common.</p>
 <h3>Reading a Dendrogram</h3>
-<pre><code class="language-python">        ┌──────────────┐
-        │              │
-     ┌──┴──┐        ┌──┴───┐
-     │     │        │      │
-  ┌──┴─┐ ┌─┴─┐   ┌──┴─┐  ┌─┴─┐
-  A    B  C   D   E    F  G   H
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 480 200" width="100%">
+<g font-size="12" text-anchor="middle" dominant-baseline="middle" stroke-linecap="round">
+<g fill="none" stroke="var(--accent)" stroke-width="2">
+<line x1="240" y1="30" x2="240" y2="50"/>
+<line x1="130" y1="50" x2="350" y2="50"/>
+<line x1="130" y1="50" x2="130" y2="80"/>
+<line x1="350" y1="50" x2="350" y2="80"/>
+<line x1="80" y1="80" x2="180" y2="80"/>
+<line x1="80" y1="80" x2="80" y2="115"/>
+<line x1="180" y1="80" x2="180" y2="115"/>
+<line x1="280" y1="80" x2="420" y2="80"/>
+<line x1="280" y1="80" x2="280" y2="115"/>
+<line x1="420" y1="80" x2="420" y2="115"/>
+<line x1="55" y1="115" x2="105" y2="115"/>
+<line x1="55" y1="115" x2="55" y2="150"/>
+<line x1="105" y1="115" x2="105" y2="150"/>
+<line x1="155" y1="115" x2="205" y2="115"/>
+<line x1="155" y1="115" x2="155" y2="150"/>
+<line x1="205" y1="115" x2="205" y2="150"/>
+<line x1="255" y1="115" x2="305" y2="115"/>
+<line x1="255" y1="115" x2="255" y2="150"/>
+<line x1="305" y1="115" x2="305" y2="150"/>
+<line x1="395" y1="115" x2="445" y2="115"/>
+<line x1="395" y1="115" x2="395" y2="150"/>
+<line x1="445" y1="115" x2="445" y2="150"/>
+</g>
+<g fill="var(--accent)" stroke="none">
+<circle cx="55" cy="150" r="4"/><circle cx="105" cy="150" r="4"/>
+<circle cx="155" cy="150" r="4"/><circle cx="205" cy="150" r="4"/>
+<circle cx="255" cy="150" r="4"/><circle cx="305" cy="150" r="4"/>
+<circle cx="395" cy="150" r="4"/><circle cx="445" cy="150" r="4"/>
+</g>
+<g fill="var(--text)">
+<text x="55" y="175">A</text><text x="105" y="175">B</text>
+<text x="155" y="175">C</text><text x="205" y="175">D</text>
+<text x="255" y="175">E</text><text x="305" y="175">F</text>
+<text x="395" y="175">G</text><text x="445" y="175">H</text>
+</g>
+<line x1="30" y1="28" x2="30" y2="155" stroke="var(--border)" stroke-width="1"/>
+<text x="16" y="50" fill="var(--text-muted)" font-size="9" text-anchor="middle">High</text>
+<text x="16" y="90" fill="var(--text-muted)" font-size="9" text-anchor="middle">↕</text>
+<text x="16" y="130" fill="var(--text-muted)" font-size="9" text-anchor="middle">Dist</text>
+<text x="16" y="155" fill="var(--text-muted)" font-size="9" text-anchor="middle">Low</text>
+<text x="240" y="195" fill="var(--text-muted)" font-size="10">Cut here to get 2 clusters → {A,B,C,D} and {E,F,G,H}</text>
+<line x1="35" y1="80" x2="470" y2="80" stroke="#f59e0b" stroke-width="1" stroke-dasharray="5,3" opacity="0.7"/>
+<text x="470" y="75" fill="#f59e0b" font-size="9" text-anchor="end">cut → 2 clusters</text>
+</g>
+</svg>
+</div>
 <ul>
 <li>Points that merge early (at the bottom) are very similar</li>
 <li>Points that merge late (at the top) are dissimilar</li>
@@ -3853,8 +4570,19 @@ for name, model, needs_scale in methods:
 <p><strong>Within-cluster sum of squares (WCSS):</strong> Lower is better — tighter clusters.</p>
 <p><strong>Silhouette score:</strong> For each point, compares its average distance to its own cluster vs. the nearest other cluster. Ranges from -1 to 1; higher is better.</p>
 <pre><code class="language-python">from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+from sklearn.preprocessing import StandardScaler
+
+X, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.8, random_state=42)
+X = StandardScaler().fit_transform(X)
+
+km = KMeans(n_clusters=4, random_state=42, n_init=10)
+labels = km.fit_predict(X)
+
 score = silhouette_score(X, labels)
 print(f&quot;Silhouette: {score:.3f}&quot;)  # 0.7 is good, &lt;0.5 is poor
+print(f&quot;WCSS (inertia): {km.inertia_:.1f}&quot;)
 </code></pre>
 <p><strong>Domain knowledge:</strong> Always validate clusters against what you know. If customer segments don't correspond to any recognisable groups, the clustering may not be useful.</p>
 <hr />
@@ -3871,17 +4599,44 @@ print(f&quot;Silhouette: {score:.3f}&quot;)  # 0.7 is good, &lt;0.5 is poor
 <p><strong>Analogy:</strong> Imagine a cloud of points in 3D space that happens to be shaped like a flat pancake. PCA finds the two directions (PC1 and PC2) that span the pancake. You can project the 3D data onto this 2D pancake and lose very little information.</p>
 <h3>Proportion of Variance Explained</h3>
 <p>Each principal component explains a fraction of the total variance. The <strong>scree plot</strong> shows how much each PC contributes:</p>
-<pre><code class="language-python">Variance explained
-  |
-40%|█
-   |█
-25%|  █
-   |  █
-15%|    █
-10%|      █ █ █
-   +──────────── PC
-     1  2  3  4  5  6
-</code></pre>
+<div class="viz-diagram">
+<svg viewBox="0 0 380 240" width="100%" style="max-width:420px;display:block;margin:0 auto">
+<defs>
+<marker id="sc-ax" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="var(--text-muted)"/></marker>
+</defs>
+<g font-size="11" text-anchor="middle" dominant-baseline="middle">
+<line x1="55" y1="205" x2="355" y2="205" stroke="var(--border)" stroke-width="1.5" marker-end="url(#sc-ax)"/>
+<line x1="55" y1="205" x2="55" y2="25" stroke="var(--border)" stroke-width="1.5" marker-end="url(#sc-ax)"/>
+<text x="200" y="224" fill="var(--text-muted)">Principal Component</text>
+<text x="18" y="115" fill="var(--text-muted)" transform="rotate(-90,18,115)">Variance Explained</text>
+<text x="40" y="53" fill="var(--text-muted)" text-anchor="end" font-size="10">40%</text>
+<text x="40" y="93" fill="var(--text-muted)" text-anchor="end" font-size="10">25%</text>
+<text x="40" y="133" fill="var(--text-muted)" text-anchor="end" font-size="10">15%</text>
+<text x="40" y="165" fill="var(--text-muted)" text-anchor="end" font-size="10">10%</text>
+<rect x="65" y="50" width="38" height="155" rx="4" fill="var(--accent)" opacity="0.8"/>
+<rect x="115" y="90" width="38" height="115" rx="4" fill="var(--accent)" opacity="0.7"/>
+<rect x="165" y="130" width="38" height="75" rx="4" fill="var(--accent)" opacity="0.6"/>
+<rect x="215" y="162" width="38" height="43" rx="4" fill="var(--accent)" opacity="0.5"/>
+<rect x="265" y="175" width="38" height="30" rx="4" fill="var(--accent)" opacity="0.4"/>
+<rect x="315" y="183" width="38" height="22" rx="4" fill="var(--accent)" opacity="0.3"/>
+<text x="84" y="42" fill="var(--accent)" font-weight="600" font-size="10">40%</text>
+<text x="134" y="82" fill="var(--accent)" font-weight="600" font-size="10">25%</text>
+<text x="184" y="122" fill="var(--accent)" font-weight="600" font-size="10">15%</text>
+<text x="234" y="154" fill="var(--accent)" font-size="10">10%</text>
+<text x="284" y="167" fill="var(--text-muted)" font-size="10">6%</text>
+<text x="334" y="175" fill="var(--text-muted)" font-size="10">4%</text>
+<text x="84" y="216" fill="var(--text-muted)">PC1</text>
+<text x="134" y="216" fill="var(--text-muted)">PC2</text>
+<text x="184" y="216" fill="var(--text-muted)">PC3</text>
+<text x="234" y="216" fill="var(--text-muted)">PC4</text>
+<text x="284" y="216" fill="var(--text-muted)">PC5</text>
+<text x="334" y="216" fill="var(--text-muted)">PC6</text>
+<rect x="62" y="42" width="240" height="2" fill="#f59e0b" opacity="0.5"/>
+<line x1="62" y1="43" x2="302" y2="43" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+<text x="315" y="42" fill="#f59e0b" font-size="9.5" text-anchor="start">PC1+PC2 = 65%</text>
+</g>
+</svg>
+</div>
 <p>Choosing how many PCs to keep: pick enough components to explain ~80–95% of total variance.</p>
 <hr />
 <h2>6. What Is PCA Used For?</h2>
@@ -4147,7 +4902,51 @@ for n_comp in [5, 10, 20, 40, 64]:
     cv = cross_val_score(pipe, X_train_d, y_train_d, cv=5).mean()
     pipe.fit(X_train_d, y_train_d)
     te = pipe.score(X_test_d, y_test_d)
-    print(f"{n_comp:&gt;14} | {cv:&gt;8.3f} | {te:&gt;9.3f}")<button class="copy-btn">Copy</button></code></pre>`
+    print(f"{n_comp:&gt;14} | {cv:&gt;8.3f} | {te:&gt;9.3f}")
+
+# ── Visualisation 1: PCA explained variance (cumulative) ─────────
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(range(1, len(cumvar) + 1), cumvar, color='#6366f1', linewidth=2)
+ax.axhline(0.95, color='#f59e0b', linestyle='--', linewidth=1.5, label='95% variance')
+ax.axvline(n_95, color='#10b981', linestyle='--', linewidth=1.5, label=f'{n_95} components')
+ax.set_xlabel('Number of principal components')
+ax.set_ylabel('Cumulative explained variance')
+ax.set_title('PCA — Cumulative Explained Variance (Digits)')
+ax.set_xlim(1, 64)
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+# ── Visualisation 2: K-Means clusters in PCA 2D space (Wine) ────
+from sklearn.decomposition import PCA as PCA2
+from sklearn.cluster import KMeans as KM2
+
+pca2 = PCA2(n_components=2)
+X_2d = pca2.fit_transform(X_ws)
+labels_km = KM2(n_clusters=3, random_state=42, n_init=10).fit_predict(X_ws)
+
+colors_map = ['#6366f1', '#f59e0b', '#10b981']
+markers_map = ['o', 's', '^']
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+for ax_i, (lbl, title) in enumerate([(labels_km, 'K-Means Clusters'), (wine.target, 'True Wine Classes')]):
+    for cls in range(3):
+        mask = lbl == cls
+        axes[ax_i].scatter(X_2d[mask, 0], X_2d[mask, 1],
+                           c=colors_map[cls], marker=markers_map[cls],
+                           s=50, alpha=0.75,
+                           label=f'Group {cls}' if ax_i == 0 else wine.target_names[cls])
+    axes[ax_i].set_xlabel('PC 1')
+    axes[ax_i].set_ylabel('PC 2')
+    axes[ax_i].set_title(title)
+    axes[ax_i].legend(fontsize=8)
+
+plt.suptitle('Wine Dataset — K-Means vs True Labels in PCA Space', fontsize=11)
+plt.tight_layout()
+plt.show()<button class="copy-btn">Copy</button></code></pre>`
   }
 ];
 
@@ -4220,10 +5019,16 @@ function openChapter(id) {
   document.getElementById("content-exercises").innerHTML = currentChapter.exercises_content || "";
   document.getElementById("content-solutions").innerHTML = currentChapter.solutions || "";
   document.getElementById("content-code").innerHTML = currentChapter.code || "";
+  const intDiv = document.getElementById("content-interactive");
+  intDiv.innerHTML = "";
+  delete intDiv.dataset.rendered;
 
   // Reset tabs
   document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", i === 0));
   document.querySelectorAll(".tab-content").forEach((t, i) => t.classList.toggle("active", i === 0));
+
+  // Make all code blocks editable + runnable
+  setTimeout(() => makeRunnable(), 50);
 
   // Nav buttons
   document.getElementById("btn-prev").disabled = id === 1;
@@ -4267,6 +5072,18 @@ function switchTab(name, btn) {
   if (tab) tab.classList.add("active");
   if (btn) btn.classList.add("active");
   addCopyHandlers();
+  // Refresh CodeMirror editors when switching tabs (fixes display bug)
+  _cmMap.forEach(({cm}) => setTimeout(() => cm.refresh(), 50));
+  // Render chapter interactive visuals on first open
+  if (name === 'interactive' && currentChapter) {
+    const cont = document.getElementById('content-interactive');
+    if (!cont.dataset.rendered) {
+      cont.dataset.rendered = '1';
+      const fn = CHAPTER_VISUALS[currentChapter.id];
+      if (fn) fn(cont);
+      else cont.innerHTML = '<div class="no-viz-msg">🔬 Interactive visualizations coming soon for this chapter.</div>';
+    }
+  }
 }
 
 // ─────────────────────────────────────────────────
@@ -4276,6 +5093,12 @@ function toggleSolution(btn) {
   btn.classList.toggle("open");
   const body = btn.nextElementSibling;
   body.classList.toggle("open");
+  if (body.classList.contains("open")) {
+    body.querySelectorAll('.code-editor-wrap').forEach(w => {
+      const inst = _cmMap.get(w.dataset.uid);
+      if (inst) inst.cm.refresh();
+    });
+  }
 }
 
 // ─────────────────────────────────────────────────
@@ -4353,6 +5176,366 @@ function copyCode(btn) {
   });
 }
 
+// ═══════════════════════════════════════════════════════════════
+// PYODIDE — load Python WebAssembly runtime on first Run click
+// ================================================================
+let _py = null, _pyReady = false, _pyLoading = false, _pyCBs = [];
+
+async function ensurePyodide() {
+  if (_pyReady) return _py;
+  if (_pyLoading) return new Promise(r => _pyCBs.push(r));
+  _pyLoading = true;
+  const el = document.getElementById('pyodide-status');
+  const txt = document.getElementById('py-status-text');
+  if (el) { el.classList.remove('py-hidden'); txt.textContent = 'Loading Python runtime...'; }
+  try {
+    _py = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.1/full/' });
+    await _py.loadPackage(['numpy', 'pandas', 'matplotlib', 'scipy', 'micropip']);
+    _pyReady = true; _pyLoading = false;
+    _py.globals.set('__file__', '/home/pyodide/main.py');
+    if (el) {
+      el.classList.add('py-ready');
+      txt.textContent = 'Python ready';
+      setTimeout(() => el.classList.add('py-hidden'), 3500);
+    }
+    _pyCBs.forEach(cb => cb(_py)); _pyCBs = [];
+    return _py;
+  } catch(err) {
+    _pyLoading = false;
+    if (el) { txt.textContent = 'Python unavailable'; }
+    throw err;
+  }
+}
+
+const _cmMap = new Map();
+let _editorSeq = 0;
+
+function makeRunnable() {
+  document.querySelectorAll('.content-body pre').forEach(pre => {
+    if (pre.dataset.enhanced) return;
+    const codeEl = pre.querySelector('code.language-python');
+    if (!codeEl) return;
+    pre.dataset.enhanced = '1';
+    const codeClone = codeEl.cloneNode(true);
+    codeClone.querySelectorAll('button').forEach(b => b.remove());
+    const originalCode = codeClone.textContent.trim();
+    const isPython = /^(import |from |\s*def |\s*class |\s*#)/m.test(originalCode) ||
+                     /\b(print\s*\(|\.fit\s*\(|\.predict\s*\(|np\.|pd\.|plt\.|sklearn|numpy|pandas)\b/.test(originalCode) ||
+                     /"[^"]+"\s*:\s*[\[\{0-9"]/.test(originalCode);  // Python dict literals like {"key": [...]}
+    if (!isPython) return;
+    const uid = 'ced_' + (++_editorSeq);
+    const wrap = document.createElement('div');
+    wrap.className = 'code-editor-wrap';
+    wrap.dataset.uid = uid;
+    const toolbar = document.createElement('div');
+    toolbar.className = 'ced-toolbar';
+    toolbar.innerHTML = '<span class="ced-label">python -- editable &amp; runnable</span><div class="ced-actions"><button class="reset-btn" onclick="resetEditor(this)">Reset</button><button class="run-btn" onclick="runEditor(this)">Run</button></div>';
+    const ta = document.createElement('textarea');
+    ta.value = originalCode; ta.id = uid;
+    const out = document.createElement('div');
+    out.className = 'output-area'; out.dataset.for = uid;
+    const hint = document.createElement('div');
+    hint.className = 'kbd-hint'; hint.textContent = 'Ctrl+Enter to run';
+    wrap.appendChild(toolbar); wrap.appendChild(ta); wrap.appendChild(out); wrap.appendChild(hint);
+    pre.replaceWith(wrap);
+    const cm = CodeMirror.fromTextArea(ta, {
+      mode: 'python', theme: 'dracula', lineNumbers: true,
+      indentUnit: 4, indentWithTabs: false, matchBrackets: true,
+      lineWrapping: true, viewportMargin: Infinity,
+      extraKeys: { 'Ctrl-Enter': function() { wrap.querySelector('.run-btn').click(); } }
+    });
+    _cmMap.set(uid, { cm, originalCode });
+    requestAnimationFrame(() => cm.refresh());
+    setTimeout(() => cm.refresh(), 300);
+  });
+}
+
+function resetEditor(btn) {
+  const wrap = btn.closest('.code-editor-wrap');
+  const inst = _cmMap.get(wrap.dataset.uid);
+  if (!inst) return;
+  inst.cm.setValue(inst.originalCode);
+  const out = wrap.querySelector('.output-area');
+  out.innerHTML = ''; out.className = 'output-area';
+}
+
+async function runEditor(btn) {
+  const wrap = btn.closest('.code-editor-wrap');
+  const uid = wrap.dataset.uid;
+  const inst = _cmMap.get(uid);
+  const out = wrap.querySelector('.output-area');
+  if (!inst) return;
+  btn.disabled = true; btn.textContent = 'Running...';
+  out.className = 'output-area oa-visible';
+  out.innerHTML = '<span style="color:#f59e0b">Starting Python runtime...</span>';
+  try {
+    const py = await ensurePyodide();
+    const code = inst.cm.getValue();
+    let stdout = '';
+    py.setStdout({ batched: s => { stdout += s + '\n'; } });
+    py.setStderr({ batched: s => { stdout += 'WARNING: ' + s + '\n'; } });
+    await py.runPythonAsync(`
+import sys, io, builtins, base64
+_captured_figs = []
+if not globals().get('_IML_SETUP_DONE'):
+    _IML_SETUP_DONE = True
+    try:
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+        _TRUE_savefig = plt.savefig
+        def _capture_fig():
+            buf = io.BytesIO()
+            _TRUE_savefig(buf, format='png', dpi=96, bbox_inches='tight')
+            buf.seek(0)
+            _captured_figs.append(base64.b64encode(buf.read()).decode())
+            plt.close('all')
+        plt.show = lambda *a,**kw: _capture_fig()
+        def _patched_sf(fname,*a,**kw):
+            if isinstance(fname,str): _capture_fig(); print("[browser] Chart captured as '"+str(fname)+"'")
+            else: _TRUE_savefig(fname,*a,**kw)
+        plt.savefig = _patched_sf
+    except ImportError: pass
+    _TRUE_open = builtins.open
+    def _safe_open(path,mode='r',*a,**kw):
+        try: return _TRUE_open(path,mode,*a,**kw)
+        except (FileNotFoundError,OSError):
+            if isinstance(path,str) and 'r' in str(mode):
+                print("[browser] '"+str(path)+"' not found.")
+                return io.StringIO('id,name,value\\n1,A,100\\n2,B,200\\n3,C,300')
+            raise
+    builtins.open = _safe_open
+`);
+    const PKG_LOAD = {'numpy':'numpy','pandas':'pandas','matplotlib':'matplotlib','scipy':'scipy','sklearn':'scikit-learn','PIL':'Pillow','statsmodels':'statsmodels','sympy':'sympy'};
+    const PKG_PIP  = {'seaborn':'seaborn','plotly':'plotly'};
+    const importLines = code.match(/^\s*(?:import|from)\s+(\w+)/gm) || [];
+    const mods = [...new Set(importLines.map(l => l.trim().replace(/^(?:import|from)\s+/,'').split(/[\s.]/)[0]))];
+    const toLoad = mods.filter(m => PKG_LOAD[m]).map(m => PKG_LOAD[m]);
+    const toPip  = mods.filter(m => PKG_PIP[m]).map(m => PKG_PIP[m]);
+    if (toLoad.length || toPip.length) {
+      out.innerHTML = '<span style="color:#f59e0b">Installing: ' + [...toLoad,...toPip].join(', ') + '...</span>';
+      if (toLoad.length) await py.loadPackage(toLoad);
+      for (const pkg of toPip) await py.runPythonAsync("import micropip; await micropip.install('" + pkg + "')");
+    }
+    await py.runPythonAsync(code);
+    let figs = [];
+    try { const raw = py.globals.get('_captured_figs'); figs = raw ? (raw.toJs ? raw.toJs() : Array.from(raw)) : []; } catch(_e) {}
+    out.innerHTML = ''; out.className = 'output-area oa-visible';
+    if (stdout.trim()) {
+      const pre = document.createElement('pre');
+      pre.style.cssText = 'margin:0;white-space:pre-wrap;'; pre.textContent = stdout.trim();
+      out.appendChild(pre);
+    }
+    figs.forEach(b64 => {
+      const img = document.createElement('img');
+      img.src = 'data:image/png;base64,' + b64; img.className = 'output-plot';
+      out.appendChild(img);
+    });
+    if (!stdout.trim() && figs.length === 0) {
+      out.innerHTML = '<span style="color:#10b981">Code executed successfully.</span><pre style="margin:6px 0 0;color:#94a3b8;font-size:11px">Add print() calls to see output.</pre>';
+    }
+  } catch(err) {
+    out.className = 'output-area oa-visible oa-error';
+    out.textContent = 'ERROR: ' + (err.message || String(err));
+  } finally {
+    btn.disabled = false; btn.textContent = 'Run';
+  }
+}
+
+// ================================================================
+// CHAPTER INTERACTIVE VISUALIZATIONS (Plotly)
+// ================================================================
+const CHAPTER_VISUALS = {
+
+  1: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">ML Types: Real-World Use-Case Distribution</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Click a bar to reveal a real-world example of each ML type.</p><div id="v1-ml-chart" class="viz-plot"></div><div id="v1-detail" style="margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--accent-light);color:var(--text);font-size:13px;display:none"></div></div></div><div class="viz-section"><div class="viz-header">ML Workflow: Steps & Time Distribution</div><div class="viz-body"><div id="v1-workflow-chart" class="viz-plot" style="min-height:280px"></div></div></div>';
+    const details = {'Supervised':'Gmail spam filter: trained on millions of labelled spam/ham emails. Classifies new emails in milliseconds.','Unsupervised':'Amazon customer segmentation: groups millions of shoppers into clusters — no pre-defined categories needed.','Reinforcement':'AlphaGo: learned to beat world champions through millions of self-play games with a reward signal.','Semi-supervised':'Medical imaging: 500 labelled X-rays + 50,000 unlabelled scans to detect tumours at near-expert accuracy.'};
+    const T = {paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:40,l:40,r:20}};
+    Plotly.newPlot('v1-ml-chart',[{type:'bar',x:['Supervised','Unsupervised','Semi-supervised','Reinforcement'],y:[52,26,13,9],marker:{color:['#6366f1','#10b981','#f59e0b','#ef4444']},text:['52%','26%','13%','9%'],textposition:'auto',hovertemplate:'<b>%{x}</b><br>%{y}% of real-world ML<extra></extra>'}],Object.assign({},T,{yaxis:{title:'% of deployed ML systems',gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+    document.getElementById('v1-ml-chart').on('plotly_click',function(d){var b=document.getElementById('v1-detail');b.style.display='block';b.textContent=details[d.points[0].x]||'';});
+    Plotly.newPlot('v1-workflow-chart',[{type:'bar',orientation:'h',y:['Deploy','Improve','Evaluate','Train Model','Clean Data','Collect Data','Define Problem'],x:[5,15,10,15,35,15,5],marker:{color:['#6366f1','#8b5cf6','#a78bfa','#6366f1','#ef4444','#f59e0b','#10b981']},hovertemplate:'<b>%{y}</b>: %{x}% of project time<extra></extra>'}],Object.assign({},T,{xaxis:{title:'% of project time',gridcolor:'var(--border)'},yaxis:{gridcolor:'var(--border)'},margin:{t:20,b:40,l:130,r:20}}),{responsive:true,displayModeBar:false});
+  },
+
+  2: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Bias-Variance Trade-Off Explorer</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Drag the slider to change model complexity.</p><div class="viz-ctrls"><span class="viz-label">Model Complexity:</span><input type="range" class="viz-slider" id="v2-complexity" min="1" max="10" value="3" step="1" oninput="v2Update()"><span id="v2-lbl" style="font-size:12px;color:var(--text-muted);min-width:70px">Low (3)</span></div><div id="v2-chart" class="viz-plot" style="min-height:300px"></div><div id="v2-verdict" style="margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--accent-light);color:var(--text);font-size:13px;"></div></div></div><div class="viz-section"><div class="viz-header">Training Error vs. Test Error</div><div class="viz-body"><div id="v2-error-chart" class="viz-plot" style="min-height:260px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:50,r:20}};
+    var xs=[1,2,3,4,5,6,7,8,9,10];
+    window.v2Update=function(){
+      var k=+document.getElementById('v2-complexity').value;
+      document.getElementById('v2-lbl').textContent=(k<=3?'Low':k<=7?'Medium':'High')+' ('+k+')';
+      var b2=xs.map(function(x){return Math.pow(10/(x+1),1.8);});
+      var va=xs.map(function(x){return Math.pow(x/3.5,2.2);});
+      var ir=xs.map(function(){return 2;});
+      var tot=xs.map(function(_,i){return b2[i]+va[i]+ir[i];});
+      Plotly.react('v2-chart',[{x:xs,y:b2,name:'Bias squared',line:{color:'#ef4444',width:2.5},mode:'lines'},{x:xs,y:va,name:'Variance',line:{color:'#3b82f6',width:2.5},mode:'lines'},{x:xs,y:ir,name:'Irreducible Error',line:{color:'#94a3b8',width:2,dash:'dot'},mode:'lines'},{x:xs,y:tot,name:'Total Error',line:{color:'#f59e0b',width:3},mode:'lines'},{x:[k],y:[b2[k-1]+va[k-1]+ir[k-1]],mode:'markers',marker:{size:12,color:'#10b981'},name:'Current'}],Object.assign({},T,{xaxis:{title:'Model Complexity',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Error',gridcolor:'var(--border)'},legend:{x:0,y:1}}),{responsive:true,displayModeBar:false});
+      document.getElementById('v2-verdict').textContent=k<=3?'High Bias (Underfitting): Model is too simple.':k<=7?'Sweet Spot: Good balance of bias and variance.':'High Variance (Overfitting): Model memorises training noise.';
+    };
+    v2Update();
+    var trainErr=xs.map(function(k){return Math.max(0.5,12-k*1.1);});
+    var testErr=xs.map(function(k){return Math.max(1.5,k<=5?14-k*2.2:5+Math.pow(k-5,1.5)*1.8);});
+    Plotly.newPlot('v2-error-chart',[{x:xs,y:trainErr,name:'Training Error',line:{color:'#6366f1',width:2.5},mode:'lines'},{x:xs,y:testErr,name:'Test Error',line:{color:'#f59e0b',width:2.5},mode:'lines'}],Object.assign({},T,{xaxis:{title:'Model Complexity',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Error (MSE)',gridcolor:'var(--border)'},legend:{x:0.6,y:0.9}}),{responsive:true,displayModeBar:false});
+  },
+
+  3: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Linear Regression: Interactive House Price Predictor</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Adjust slope and intercept to fit the line. Watch MSE update in real-time.</p><div class="viz-ctrls"><span class="viz-label">Slope:</span><input type="range" class="viz-slider" id="v3-slope" min="0.05" max="0.25" value="0.152" step="0.001" oninput="v3Update()"><span id="v3-slope-lbl" style="font-size:12px;color:var(--text-muted)">0.152</span><span class="viz-label" style="margin-left:14px">Intercept:</span><input type="range" class="viz-slider" id="v3-int" min="-50" max="100" value="30" step="1" oninput="v3Update()"><span id="v3-int-lbl" style="font-size:12px;color:var(--text-muted)">30</span></div><div id="v3-chart" class="viz-plot" style="min-height:320px"></div><div id="v3-mse" style="margin-top:8px;font-size:13px;color:var(--text-muted)"></div></div></div><div class="viz-section"><div class="viz-header">Predict a New House</div><div class="viz-body"><div class="viz-ctrls"><span class="viz-label">Size (sq ft):</span><input type="range" class="viz-slider" id="v3-newsize" min="500" max="3500" value="1500" step="50" oninput="v3Predict()"><span id="v3-size-lbl" style="font-size:12px;color:var(--text-muted)">1500 sq ft</span></div><div id="v3-pred" style="font-size:16px;font-weight:600;color:var(--accent);margin-top:8px;"></div></div></div>';
+    var sizes=[950,1200,1400,1600,1800,2000,2200,2500,2800,3000];
+    var prices=[175,220,245,275,310,340,365,420,475,510];
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:60,r:20}};
+    window.v3Update=function(){
+      var m=+document.getElementById('v3-slope').value;
+      var b=+document.getElementById('v3-int').value;
+      document.getElementById('v3-slope-lbl').textContent=m.toFixed(3);
+      document.getElementById('v3-int-lbl').textContent=b.toFixed(0);
+      var xLine=[500,3500]; var yLine=xLine.map(function(x){return m*x+b;});
+      var pred=sizes.map(function(x){return m*x+b;});
+      var mse=(prices.reduce(function(s,p,i){return s+Math.pow(p-pred[i],2);},0)/sizes.length).toFixed(1);
+      document.getElementById('v3-mse').textContent='MSE: '+mse+' ($k)^2 -- '+(mse<500?'good fit!':'try adjusting sliders');
+      Plotly.react('v3-chart',[{x:sizes,y:prices,mode:'markers',name:'Training data',marker:{size:10,color:'#6366f1'}},{x:xLine,y:yLine,mode:'lines',name:'Your line',line:{color:'#f59e0b',width:2.5}},{x:sizes,y:pred,mode:'markers',name:'Predictions',marker:{size:8,color:'#10b981',symbol:'x'}}],Object.assign({},T,{xaxis:{title:'Size (sq ft)',gridcolor:'var(--border)'},yaxis:{title:'Price ($k)',gridcolor:'var(--border)'},legend:{x:0.02,y:0.9}}),{responsive:true,displayModeBar:false});
+      v3Predict();
+    };
+    window.v3Predict=function(){
+      var m=+document.getElementById('v3-slope').value;
+      var b=+document.getElementById('v3-int').value;
+      var sz=+document.getElementById('v3-newsize').value;
+      document.getElementById('v3-size-lbl').textContent=sz+' sq ft';
+      document.getElementById('v3-pred').textContent='Predicted price: $'+(m*sz+b).toFixed(0)+'k';
+    };
+    v3Update();
+  },
+
+  4: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Classification Threshold Explorer</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Adjust the threshold and see Precision, Recall, and F1 change in real-time.</p><div class="viz-ctrls"><span class="viz-label">Threshold:</span><input type="range" class="viz-slider" id="v4-thresh" min="0.1" max="0.9" value="0.5" step="0.01" oninput="v4Update()"><span id="v4-thresh-lbl" style="font-size:12px;color:var(--text-muted)">0.50</span></div><div id="v4-metrics-chart" class="viz-plot" style="min-height:280px"></div><div id="v4-confusion" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:340px"></div></div></div>';
+    var n=200,probs=[],labels=[];
+    var s=42;function rn(){s=(s*9301+49297)%233280;return s/233280;}
+    for(var i=0;i<n;i++){var isP=i<100;labels.push(isP?1:0);probs.push(isP?Math.min(0.99,0.55+rn()*0.5):Math.max(0.01,0.45-rn()*0.5));}
+    var thVals=[];for(var t2=0.1;t2<=0.9;t2+=0.01)thVals.push(+t2.toFixed(2));
+    function met(t){var tp=0,fp=0,fn=0,tn=0;for(var j=0;j<n;j++){var pred=probs[j]>=t?1:0;if(pred===1&&labels[j]===1)tp++;else if(pred===1&&labels[j]===0)fp++;else if(pred===0&&labels[j]===1)fn++;else tn++;}var pr=tp/(tp+fp)||0,re=tp/(tp+fn)||0,f1=pr+re>0?2*pr*re/(pr+re):0;return{tp:tp,fp:fp,fn:fn,tn:tn,prec:pr,rec:re,f1:f1};}
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:50,r:20}};
+    window.v4Update=function(){
+      var t=+document.getElementById('v4-thresh').value;
+      document.getElementById('v4-thresh-lbl').textContent=t.toFixed(2);
+      var m=met(t);
+      var aP=thVals.map(function(tv){return met(tv).prec;}),aR=thVals.map(function(tv){return met(tv).rec;}),aF=thVals.map(function(tv){return met(tv).f1;});
+      Plotly.react('v4-metrics-chart',[{x:thVals,y:aP,name:'Precision',line:{color:'#3b82f6',width:2},mode:'lines'},{x:thVals,y:aR,name:'Recall',line:{color:'#f59e0b',width:2},mode:'lines'},{x:thVals,y:aF,name:'F1 Score',line:{color:'#10b981',width:3},mode:'lines'},{x:[t,t,t],y:[m.prec,m.rec,m.f1],mode:'markers',marker:{size:10,color:['#3b82f6','#f59e0b','#10b981']},showlegend:false}],Object.assign({},T,{xaxis:{title:'Threshold',gridcolor:'var(--border)'},yaxis:{title:'Score',range:[0,1],gridcolor:'var(--border)'},legend:{x:0.02,y:0.1}}),{responsive:true,displayModeBar:false});
+      document.getElementById('v4-confusion').innerHTML='<div style="background:#d1fae5;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#065f46">True Positive</div><div style="font-size:22px;font-weight:700;color:#059669">'+m.tp+'</div></div><div style="background:#fee2e2;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#991b1b">False Positive</div><div style="font-size:22px;font-weight:700;color:#ef4444">'+m.fp+'</div></div><div style="background:#fef3c7;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#92400e">False Negative</div><div style="font-size:22px;font-weight:700;color:#f59e0b">'+m.fn+'</div></div><div style="background:#dbeafe;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#1e40af">True Negative</div><div style="font-size:22px;font-weight:700;color:#3b82f6">'+m.tn+'</div></div>';
+    };
+    v4Update();
+  },
+
+  5: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">K-Fold Cross-Validation Visualizer</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Choose K and see training/validation splits rotate across folds.</p><div class="viz-ctrls"><button class="viz-btn vz-active" onclick="v5SetK(3,this)">K=3</button><button class="viz-btn" onclick="v5SetK(5,this)">K=5</button><button class="viz-btn" onclick="v5SetK(10,this)">K=10</button></div><div id="v5-chart" class="viz-plot" style="min-height:280px"></div></div></div><div class="viz-section"><div class="viz-header">Validation Error Across Folds</div><div class="viz-body"><div id="v5-error-chart" class="viz-plot" style="min-height:220px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:80,r:20}};
+    function drawCV(k){
+      var n=20,fs=Math.floor(n/k);
+      var z=[];
+      for(var f=0;f<k;f++){var row=[];for(var i=0;i<n;i++){var s2=f*fs,e=Math.min(s2+fs,n);row.push(i>=s2&&i<e?1:0);}z.push(row);}
+      var ticks=[];for(var f2=0;f2<k;f2++)ticks.push(f2);
+      var tickT=[];for(var f3=0;f3<k;f3++)tickT.push('Fold '+(f3+1));
+      Plotly.react('v5-chart',[{type:'heatmap',z:z,colorscale:[[0,'#6366f1'],[1,'#ef4444']],showscale:false}],Object.assign({},T,{xaxis:{title:'Sample Index',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Fold',tickvals:ticks,ticktext:tickT}}),{responsive:true,displayModeBar:false});
+      var seed=7;function rn2(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+      var errs=[];for(var i2=0;i2<k;i2++)errs.push(+(0.12+rn2()*0.08).toFixed(3));
+      var mean=(errs.reduce(function(a,b){return a+b;},0)/k).toFixed(3);
+      var labels2=[];for(var i3=0;i3<k;i3++)labels2.push('Fold '+(i3+1));
+      Plotly.react('v5-error-chart',[{x:labels2,y:errs,type:'bar',marker:{color:'#6366f1'},name:'Val Error'},{x:[labels2[0],labels2[k-1]],y:[mean,mean],type:'scatter',mode:'lines',line:{color:'#f59e0b',width:2,dash:'dash'},name:'Mean ('+mean+')'}],Object.assign({},T,{xaxis:{gridcolor:'var(--border)'},yaxis:{title:'Validation Error',gridcolor:'var(--border)'},margin:{t:20,b:50,l:60,r:20}}),{responsive:true,displayModeBar:false});
+    }
+    window.v5SetK=function(k,btn){document.querySelectorAll('#content-interactive .viz-btn').forEach(function(b){b.classList.remove('vz-active');});btn.classList.add('vz-active');drawCV(k);};
+    drawCV(3);
+  },
+
+  6: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Feature Selection: Model Complexity vs. Error</div><div class="viz-body"><div id="v6-chart" class="viz-plot" style="min-height:300px"></div></div></div><div class="viz-section"><div class="viz-header">Model Selection Criteria (AIC, BIC, Adj. R2)</div><div class="viz-body"><div id="v6-crit-chart" class="viz-plot" style="min-height:240px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:60,r:20}};
+    var numF=[1,2,3,4,5,6,7,8,9,10];
+    var tR=numF.map(function(k){return Math.max(0.5,22-k*2.1);});
+    var vR=numF.map(function(k){return Math.max(1.5,k<=5?23-k*3.2:11+(k-5)*1.1);});
+    var aic=numF.map(function(k,i){return vR[i]+2*k;});
+    var bic=numF.map(function(k,i){return vR[i]+Math.log(100)*k;});
+    Plotly.newPlot('v6-chart',[{x:numF,y:tR,name:'Training RSS',line:{color:'#6366f1',width:2.5},mode:'lines+markers'},{x:numF,y:vR,name:'Validation RSS',line:{color:'#f59e0b',width:2.5},mode:'lines+markers'}],Object.assign({},T,{xaxis:{title:'Number of Features',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'RSS',gridcolor:'var(--border)'},legend:{x:0.6,y:0.9}}),{responsive:true,displayModeBar:false});
+    Plotly.newPlot('v6-crit-chart',[{x:numF,y:aic,name:'AIC',line:{color:'#3b82f6',width:2},mode:'lines+markers'},{x:numF,y:bic,name:'BIC',line:{color:'#ef4444',width:2},mode:'lines+markers'}],Object.assign({},T,{xaxis:{title:'Number of Features',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Criterion Value',gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+  },
+
+  7: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Ridge vs. Lasso: Coefficient Shrinkage</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Increase lambda to see Ridge shrink all coefficients vs. Lasso zeroing some out.</p><div class="viz-ctrls"><span class="viz-label">Lambda (penalty):</span><input type="range" class="viz-slider" id="v7-lambda" min="0" max="5" value="0" step="0.1" oninput="v7Update()"><span id="v7-lbl" style="font-size:12px;color:var(--text-muted)">0.0</span></div><div id="v7-chart" class="viz-plot" style="min-height:300px"></div></div></div><div class="viz-section"><div class="viz-header">Regularisation Path (Ridge)</div><div class="viz-body"><div id="v7-path-chart" class="viz-plot" style="min-height:260px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:60,r:20}};
+    var feats=['Size','Bedrooms','Age','Location','Schools','Crime'];
+    var base=[0.8,-0.3,-0.6,0.5,0.4,-0.7];
+    window.v7Update=function(){
+      var l=+document.getElementById('v7-lambda').value;
+      document.getElementById('v7-lbl').textContent=l.toFixed(1);
+      var rc=base.map(function(b){return b/(1+l);});
+      var lc=base.map(function(b){var t=Math.abs(b)-l*0.15;return t>0?Math.sign(b)*t:0;});
+      Plotly.react('v7-chart',[{x:feats,y:rc,type:'bar',name:'Ridge',marker:{color:'#6366f1'}},{x:feats,y:lc,type:'bar',name:'Lasso',marker:{color:'#f59e0b'}}],Object.assign({},T,{barmode:'group',yaxis:{title:'Coefficient',gridcolor:'var(--border)'},xaxis:{gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+    };
+    v7Update();
+    var lams=[];for(var i=0;i<=50;i++)lams.push(i*0.1);
+    var pathData=base.map(function(b,fi){return{x:lams,y:lams.map(function(l){return b/(1+l);}),name:feats[fi],mode:'lines',line:{width:2}};});
+    Plotly.newPlot('v7-path-chart',pathData,Object.assign({},T,{xaxis:{title:'Lambda',gridcolor:'var(--border)'},yaxis:{title:'Ridge Coefficient',gridcolor:'var(--border)'},legend:{x:0.7,y:0.9}}),{responsive:true,displayModeBar:false});
+  },
+
+  8: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">Decision Tree: Depth vs. Accuracy</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Deeper trees overfit. Find the sweet spot.</p><div class="viz-ctrls"><span class="viz-label">Max Depth:</span><input type="range" class="viz-slider" id="v8-depth" min="1" max="10" value="4" step="1" oninput="v8Update()"><span id="v8-depth-lbl" style="font-size:12px;color:var(--text-muted)">4</span></div><div id="v8-chart" class="viz-plot" style="min-height:300px"></div><div id="v8-verdict" style="margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--accent-light);color:var(--text);font-size:13px;"></div></div></div><div class="viz-section"><div class="viz-header">Feature Importance (Random Forest)</div><div class="viz-body"><div id="v8-imp-chart" class="viz-plot" style="min-height:240px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:60,r:20}};
+    var depths=[1,2,3,4,5,6,7,8,9,10];
+    var trA=depths.map(function(d){return Math.min(0.99,0.65+d*0.04);});
+    var teA=depths.map(function(d){return d<=4?0.70+d*0.04:0.86-Math.pow(d-4,1.5)*0.02;});
+    window.v8Update=function(){
+      var d=+document.getElementById('v8-depth').value;
+      document.getElementById('v8-depth-lbl').textContent=d;
+      Plotly.react('v8-chart',[{x:depths,y:trA,name:'Train Accuracy',line:{color:'#6366f1',width:2.5},mode:'lines+markers'},{x:depths,y:teA,name:'Test Accuracy',line:{color:'#f59e0b',width:2.5},mode:'lines+markers'},{x:[d],y:[teA[d-1]],mode:'markers',marker:{size:14,color:'#10b981'},name:'Current'}],Object.assign({},T,{xaxis:{title:'Tree Depth',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Accuracy',tickformat:'.0%',range:[0.5,1.05],gridcolor:'var(--border)'},legend:{x:0.6,y:0.1}}),{responsive:true,displayModeBar:false});
+      document.getElementById('v8-verdict').textContent=d<=2?'Shallow tree: low variance but underfitting.':d<=5?'Balanced tree: good generalisation.':'Deep tree: overfitting -- memorising training data.';
+    };
+    v8Update();
+    var feats=['Size','Location','Age','Bedrooms','Schools','Crime Rate'];
+    var imps=[0.35,0.28,0.16,0.11,0.06,0.04];
+    Plotly.newPlot('v8-imp-chart',[{type:'bar',x:imps,y:feats,orientation:'h',marker:{color:'#6366f1'},text:imps.map(function(v){return (v*100).toFixed(0)+'%';}),textposition:'auto'}],Object.assign({},T,{xaxis:{title:'Feature Importance',tickformat:'.0%',gridcolor:'var(--border)'},yaxis:{gridcolor:'var(--border)'},margin:{t:20,b:50,l:100,r:20}}),{responsive:true,displayModeBar:false});
+  },
+
+  9: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">SVM: Margin & Support Vectors</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Adjust C to change the margin width. Large C = narrow margin (strict).</p><div class="viz-ctrls"><span class="viz-label">C (regularisation):</span><input type="range" class="viz-slider" id="v9-c" min="0.1" max="10" value="1" step="0.1" oninput="v9Update()"><span id="v9-c-lbl" style="font-size:12px;color:var(--text-muted)">1.0</span></div><div id="v9-chart" class="viz-plot" style="min-height:340px"></div></div></div><div class="viz-section"><div class="viz-header">Kernel Comparison</div><div class="viz-body"><div class="viz-ctrls"><button class="viz-btn vz-active" onclick="v9Kernel(\'linear\',this)">Linear</button><button class="viz-btn" onclick="v9Kernel(\'rbf\',this)">RBF</button><button class="viz-btn" onclick="v9Kernel(\'poly\',this)">Polynomial</button></div><div id="v9-kernel-chart" class="viz-plot" style="min-height:240px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:50,r:20}};
+    var seed2=123;function rn3(){seed2=(seed2*1664525+1013904223)>>>0;return seed2/4294967296;}
+    var cA=[],cB=[];for(var i=0;i<30;i++){cA.push({x:-1+rn3()*1.5,y:-0.5+rn3()*1.5});cB.push({x:0.5+rn3()*1.5,y:-0.5+rn3()*1.5});}
+    window.v9Update=function(){
+      var C=+document.getElementById('v9-c').value;
+      document.getElementById('v9-c-lbl').textContent=C.toFixed(1);
+      var mg=0.8/Math.sqrt(C);
+      Plotly.react('v9-chart',[{x:cA.map(function(p){return p.x;}),y:cA.map(function(p){return p.y;}),mode:'markers',name:'Class A',marker:{color:'#6366f1',size:8}},{x:cB.map(function(p){return p.x;}),y:cB.map(function(p){return p.y;}),mode:'markers',name:'Class B',marker:{color:'#ef4444',size:8}},{x:[-0.5,-0.5],y:[-1.5,2],mode:'lines',name:'Decision Boundary',line:{color:'#10b981',width:2.5}},{x:[-0.5+mg,-0.5+mg],y:[-1.5,2],mode:'lines',line:{color:'#94a3b8',width:1.5,dash:'dash'},showlegend:false},{x:[-0.5-mg,-0.5-mg],y:[-1.5,2],mode:'lines',name:'Margin',line:{color:'#94a3b8',width:1.5,dash:'dash'}}],Object.assign({},T,{xaxis:{range:[-2,2.5],gridcolor:'var(--border)'},yaxis:{range:[-1.5,2],gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+    };
+    v9Update();
+    window.v9Kernel=function(type,btn){
+      document.querySelectorAll('#content-interactive .viz-btn').forEach(function(b){b.classList.remove('vz-active');});btn.classList.add('vz-active');
+      var xs2=[];for(var i2=0;i2<200;i2++)xs2.push(-3+i2*0.03);
+      var ys;
+      if(type==='linear')ys=xs2.map(function(x){return x>0?1:-1;});
+      else if(type==='rbf')ys=xs2.map(function(x){return Math.tanh(x*1.5);});
+      else ys=xs2.map(function(x){return Math.pow(x,2)-0.5;});
+      Plotly.react('v9-kernel-chart',[{x:xs2,y:ys,mode:'lines',line:{color:'#6366f1',width:2.5},name:type+' kernel'}],Object.assign({},T,{xaxis:{title:'Feature Space',gridcolor:'var(--border)'},yaxis:{title:'Decision Value',gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+    };
+    v9Kernel('linear',{classList:{add:function(){},remove:function(){}}});
+  },
+
+  10: function(c) {
+    c.innerHTML = '<div class="viz-section"><div class="viz-header">K-Means Clustering: Elbow Method</div><div class="viz-body"><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">The elbow shows the optimal number of clusters (where WCSS stops dropping sharply).</p><div id="v10-elbow-chart" class="viz-plot" style="min-height:280px"></div></div></div><div class="viz-section"><div class="viz-header">PCA: Explained Variance by Component</div><div class="viz-body"><div class="viz-ctrls"><button class="viz-btn vz-active" onclick="v10PCA(\'scree\',this)">Scree Plot</button><button class="viz-btn" onclick="v10PCA(\'cumulative\',this)">Cumulative</button></div><div id="v10-pca-chart" class="viz-plot" style="min-height:260px"></div></div></div>';
+    var T={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{color:'var(--text-muted)',size:12},margin:{t:20,b:50,l:60,r:20}};
+    var ks=[1,2,3,4,5,6,7,8,9];
+    var wcss=[3800,2200,1500,1100,900,820,790,775,768];
+    Plotly.newPlot('v10-elbow-chart',[{x:ks,y:wcss,mode:'lines+markers',line:{color:'#6366f1',width:2.5},marker:{size:8},name:'WCSS'}],Object.assign({},T,{xaxis:{title:'Number of Clusters K',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'WCSS',gridcolor:'var(--border)'},shapes:[{type:'line',x0:3,x1:3,y0:0,y1:4200,line:{color:'#10b981',dash:'dash',width:2}}],annotations:[{x:3.2,y:3900,text:'Elbow (K=3)',showarrow:false,font:{color:'#10b981',size:12}}]}),{responsive:true,displayModeBar:false});
+    var comps=[1,2,3,4,5,6,7,8,9,10];
+    var varExp=[0.32,0.19,0.13,0.09,0.07,0.06,0.05,0.04,0.03,0.02];
+    var cumVar=varExp.reduce(function(acc,v){acc.push((acc[acc.length-1]||0)+v);return acc;},[]);
+    window.v10PCA=function(mode,btn){
+      document.querySelectorAll('#content-interactive .viz-btn').forEach(function(b){b.classList.remove('vz-active');});
+      if(btn.classList)btn.classList.add('vz-active');
+      if(mode==='scree'){
+        Plotly.react('v10-pca-chart',[{x:comps,y:varExp.map(function(v){return v*100;}),type:'bar',name:'Explained Variance (%)',marker:{color:'#6366f1'}}],Object.assign({},T,{xaxis:{title:'Principal Component',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Variance Explained (%)',gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+      } else {
+        Plotly.react('v10-pca-chart',[{x:comps,y:cumVar.map(function(v){return v*100;}),mode:'lines+markers',name:'Cumulative Variance',line:{color:'#6366f1',width:2.5},marker:{size:7}},{x:[1,10],y:[95,95],mode:'lines',name:'95% threshold',line:{color:'#10b981',dash:'dash',width:2}}],Object.assign({},T,{xaxis:{title:'Number of Components',dtick:1,gridcolor:'var(--border)'},yaxis:{title:'Cumulative Variance (%)',range:[0,105],gridcolor:'var(--border)'}}),{responsive:true,displayModeBar:false});
+      }
+    };
+    v10PCA('scree',{classList:{add:function(){},remove:function(){}}});
+  }
+};
+
 // ─────────────────────────────────────────────────
 // THEME
 // ─────────────────────────────────────────────────
@@ -4401,77 +5584,5 @@ function closeSetup() {
   });
 })();
 </script>
-
-<!-- ── SETUP MODAL ── -->
-<div id="modal-setup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:9000;overflow-y:auto;" onclick="if(event.target===this)closeSetup()">
-  <div style="max-width:720px;margin:40px auto;background:var(--surface);border-radius:12px;padding:36px;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.3);">
-    <button onclick="closeSetup()" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted);">✕</button>
-    <div class="content-body">
-<h2>Setup Guide – Installing Your Machine Learning Toolkit</h2>
-<p>This guide walks you through setting up everything you need to run the Python code in this course. No prior installation experience required.</p>
-<hr>
-<h3>Step 1: Install Python</h3>
-<p>You need <strong>Python 3.10 or later</strong>.</p>
-<h4>Check if Python is already installed</h4>
-<pre><code class="language-bash">python --version</code></pre>
-<p>If you see <code>Python 3.10.x</code> or higher, skip to Step 2. Otherwise:</p>
-<ul>
-<li><strong>Windows</strong>: Download from <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a>. Run the installer and <strong>check "Add Python to PATH"</strong>.</li>
-<li><strong>Mac</strong>: <code>brew install python@3.12</code> (requires <a href="https://brew.sh" target="_blank">Homebrew</a>)</li>
-<li><strong>Linux</strong>: <code>sudo apt install python3.12</code></li>
-</ul>
-<hr>
-<h3>Step 2: Create a Virtual Environment (Recommended)</h3>
-<pre><code class="language-bash"># Navigate to the Machine Learning folder
-cd "Machine learning"
-
-# Create the virtual environment
-python -m venv venv
-
-# Activate it:
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate</code></pre>
-<p>You'll see <code>(venv)</code> at the start of your terminal prompt when active.</p>
-<hr>
-<h3>Step 3: Install Required Libraries</h3>
-<pre><code class="language-bash">pip install numpy pandas scikit-learn matplotlib seaborn</code></pre>
-<table class="data-table"><thead><tr><th>Library</th><th>Purpose</th></tr></thead><tbody>
-<tr><td><strong>numpy</strong></td><td>Fast numerical arrays and mathematical operations</td></tr>
-<tr><td><strong>pandas</strong></td><td>Tabular data (DataFrames) — like Excel in Python</td></tr>
-<tr><td><strong>scikit-learn</strong></td><td>All ML algorithms: regression, classification, clustering, PCA, cross-validation</td></tr>
-<tr><td><strong>matplotlib</strong></td><td>Plotting and visualisation</td></tr>
-<tr><td><strong>seaborn</strong></td><td>Beautiful statistical charts built on matplotlib</td></tr>
-</tbody></table>
-<hr>
-<h3>Step 4: Verify Your Installation</h3>
-<pre><code class="language-python"># test_setup.py
-import sys
-print(f"Python version: {sys.version}")
-
-libraries = ["numpy", "pandas", "sklearn", "matplotlib", "seaborn"]
-for lib in libraries:
-    try:
-        __import__(lib)
-        print(f"  [OK] {lib}")
-    except ImportError:
-        print(f"  [MISSING] {lib} -- run: pip install {lib}")</code></pre>
-<pre><code class="language-bash">python test_setup.py</code></pre>
-<p>All lines should show <code>[OK]</code>.</p>
-<hr>
-<h3>Step 5: Run Your First Chapter Script</h3>
-<pre><code class="language-bash">cd chapter_01_what_is_ml/solutions
-python main.py</code></pre>
-<hr>
-<h3>Troubleshooting</h3>
-<p><strong>"pip is not recognised"</strong> — try <code>pip3</code> or <code>python -m pip install ...</code></p>
-<p><strong>"Permission denied" on Mac/Linux</strong> — add <code>--user</code>: <code>pip install --user numpy</code></p>
-<p><strong>ImportError after installing</strong> — make sure your virtual environment is activated (look for <code>(venv)</code> in the prompt).</p>
-<hr>
-<p>You are ready to begin. Start with Chapter 1 and work through in order!</p>
-    </div>
-  </div>
-</div>
 </body>
 </html>
