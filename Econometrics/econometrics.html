@@ -207,6 +207,34 @@
   .py-output .py-err { color:#f87171; }
   .py-output .py-ok { color:#34d399; font-size:11px; }
   .py-output img { max-width:100%; margin:8px 0; display:block; border-radius:4px; }
+
+/* ── Top-right nav buttons ─────────────────────────────────────────────── */
+.topbar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.topbar-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid var(--border, #e2e8f0);
+  background: var(--card-bg, #fff);
+  color: var(--text, #1e293b);
+  transition: background .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.topbar-nav-btn:hover {
+  background: var(--hover-bg, #f1f5f9);
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
 </style>
 </head>
 <body>
@@ -242,7 +270,11 @@
   <header id="topbar">
     <button id="menu-toggle" class="topbar-btn" onclick="toggleSidebar()">☰</button>
     <span class="topbar-title" id="topbar-title">Introductory Econometrics – Learning Guide</span>
-    <button class="topbar-btn" onclick="toggleTheme()">🌙 Theme</button>
+    <div class="topbar-nav-group">
+      <a class="topbar-nav-btn" href="https://narcissesandwidi.com/" target="_blank" rel="noopener">🏠 Home</a>
+      <a class="topbar-nav-btn" href="mailto:sand02@yahoo.com">✉ Contact</a>
+      <button class="topbar-nav-btn" onclick="toggleTheme()">🌙 Theme</button>
+    </div>
   </header>
 
   <!-- HOME -->
