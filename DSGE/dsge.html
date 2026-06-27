@@ -203,6 +203,32 @@ body {
   color: white;
 }
 .btn-primary:hover { background: #2563eb; }
+.btn-pill {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.btn-pill:hover {
+  border-color: var(--accent-blue);
+  background: var(--body-bg);
+  box-shadow: 0 0 0 2px rgba(59,130,246,.12);
+}
+.btn-pill.active {
+  border-color: var(--accent-blue);
+  background: rgba(59,130,246,.08);
+  color: var(--accent-blue);
+}
 
 /* ── CONTENT ── */
 #content { padding: 0 32px 80px; max-width: 940px; margin: 0 auto; }
@@ -318,45 +344,52 @@ body {
 }
 
 /* Code blocks */
+/* ── CODE EDITOR ── */
 .code-block-wrap {
-  position: relative;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  overflow: hidden;
   margin: 16px 0;
+  background: #111827;
+}
+.code-header {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background: #1e2535;
+  border-bottom: 1px solid #374151;
+  min-height: 36px;
 }
 .code-tabs {
   display: flex;
-  gap: 2px;
-  margin-bottom: 0;
+  gap: 0;
 }
 .code-tab {
-  padding: 6px 14px;
+  padding: 0 18px;
   font-size: 12px;
   font-weight: 600;
-  border: 1px solid #374151;
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
+  border: none;
+  border-right: 1px solid #374151;
   cursor: pointer;
-  background: #1f2937;
-  color: #9ca3af;
+  background: transparent;
+  color: #6b7280;
   transition: all .15s;
+  display: flex;
+  align-items: center;
 }
+.code-tab:hover { color: #d1d5db; background: #273044; }
 .code-tab.active {
   background: #111827;
   color: #e5e7eb;
-  border-color: #4b5563;
+  border-bottom: 2px solid var(--accent-blue);
 }
-.code-panel { display: none; }
-.code-panel.active { display: block; }
-pre[class*="language-"] {
-  margin: 0 !important;
-  border-radius: 0 8px 8px 8px !important;
-  font-size: 13px !important;
-  max-height: 420px;
-  overflow-y: auto;
+.code-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
 }
 .copy-btn {
-  position: absolute;
-  top: 34px;
-  right: 10px;
   padding: 4px 10px;
   font-size: 11px;
   font-weight: 600;
@@ -366,41 +399,96 @@ pre[class*="language-"] {
   border-radius: 5px;
   cursor: pointer;
   transition: all .15s;
-  z-index: 10;
+  white-space: nowrap;
 }
 .copy-btn:hover { background: #4b5563; }
 .copy-btn.copied { background: var(--accent-green); color: white; }
 .run-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 6px 14px;
+  gap: 5px;
+  padding: 4px 12px;
   font-size: 12px;
   font-weight: 600;
   background: #1d4ed8;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background .15s;
+  white-space: nowrap;
 }
 .run-btn:hover { background: #2563eb; }
 .run-btn:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
-.pyodide-output {
-  margin-top: 8px;
-  padding: 12px 16px;
+.code-panel { display: none; }
+.code-panel.active { display: block; }
+pre[class*="language-"] {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  font-size: 13px !important;
+  max-height: 400px;
+  overflow-y: auto;
+}
+/* ── OUTPUT PANEL ── */
+.code-output {
+  display: none;
+  border-top: 1px solid #374151;
+}
+.code-output.visible { display: block; }
+.output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 12px;
   background: #0f172a;
-  border-radius: 8px;
+  border-bottom: 1px solid #1e293b;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.output-close {
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.output-close:hover { color: #94a3b8; }
+.output-text {
+  padding: 10px 14px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
+  font-size: 12px;
   color: #86efac;
   white-space: pre-wrap;
-  max-height: 200px;
+  background: #0f172a;
+  max-height: 180px;
   overflow-y: auto;
-  display: none;
+  line-height: 1.6;
 }
-.pyodide-output.visible { display: block; }
+.output-text:empty { display: none; padding: 0; }
+.output-chart {
+  background: #fff;
+  text-align: center;
+  padding: 4px 0;
+}
+.output-chart img {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.output-chart:empty { display: none; padding: 0; }
+.output-r-note {
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #fbbf24;
+  background: #0f172a;
+  line-height: 1.6;
+}
 
 /* Simulation panel */
 .sim-panel {
@@ -773,6 +861,8 @@ strong { color: var(--text-primary); }
   <div id="topbar">
     <div id="topbar-title">DSGE Models: An Interactive Graduate Course</div>
     <div id="topbar-actions">
+      <a href="https://narcissesandwidi.com/" target="_blank" rel="noopener" class="btn-pill active">🏠 Home</a>
+      <a href="mailto:sand02@yahoo.com" class="btn-pill">✉️ Contact</a>
       <button class="btn btn-ghost" onclick="openGlossary()">📚 Glossary</button>
       <button class="btn btn-ghost" id="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none">☰ Menu</button>
     </div>
@@ -789,6 +879,22 @@ strong { color: var(--text-primary); }
         <div class="section-badge">📍 Module 1</div>
         <h1 class="section-title">Introduction to DSGE Models</h1>
         <p class="section-subtitle">Understand what Dynamic Stochastic General Equilibrium models are, how they evolved, and why they remain the dominant framework in modern macroeconomics.</p>
+      </div>
+
+      <div class="info-box ib-purple" style="margin-bottom:24px">
+        <div class="ib-icon">📋</div>
+        <div class="ib-content">
+          <div class="ib-title">Course Prerequisites</div>
+          <div class="ib-body">This course is pitched at the <strong>graduate macroeconomics</strong> level. You should be comfortable with: (1) <strong>Constrained optimization</strong> — Lagrangians, first-order conditions, envelope theorem; (2) <strong>Linear algebra</strong> — matrix operations, eigenvalues/eigenvectors; (3) <strong>Probability and statistics</strong> — expectations, probability distributions, Bayes' theorem; (4) <strong>Basic macroeconomics</strong> — IS-LM, aggregate demand/supply, monetary policy. No prior DSGE experience is required. Key texts: Galí (2008) <em>Monetary Policy, Inflation, and the Business Cycle</em> (primary); Woodford (2003) <em>Interest and Prices</em> (comprehensive reference); Walsh (2010) <em>Monetary Theory and Policy</em>.</div>
+        </div>
+      </div>
+
+      <div class="info-box ib-green" style="margin-bottom:24px">
+        <div class="ib-icon">🎯</div>
+        <div class="ib-content">
+          <div class="ib-title">Course Learning Objectives</div>
+          <div class="ib-body">By completing this course you will be able to: (1) derive the New Keynesian IS curve and Phillips curve from household and firm optimization; (2) characterize monetary policy rules and equilibrium determinacy conditions; (3) solve a linearized DSGE model using Blanchard-Kahn and the method of undetermined coefficients; (4) understand Bayesian estimation via the Kalman filter and MCMC; (5) interpret impulse response functions and variance decompositions; (6) describe frontier extensions including HANK, financial frictions, and open-economy models.</div>
+        </div>
       </div>
 
       <div class="three-col">
@@ -881,6 +987,24 @@ strong { color: var(--text-primary); }
         <div class="ib-content">
           <div class="ib-title">Criticisms &amp; Limitations</div>
           <div class="ib-body">DSGE models have faced criticism: they assumed away financial frictions before the 2008 crisis (Stiglitz, Romer), rely on the representative-agent assumption that misses distributional effects, and require strong parametric assumptions on preferences and technology. Modern DSGE research actively addresses these limitations through HANK models and financial-friction extensions.</div>
+        </div>
+      </div>
+
+      <h3>Key References &amp; Software</h3>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📚 Essential Texts</div>
+          <p><strong>Galí (2008)</strong> <em>Monetary Policy, Inflation, and the Business Cycle</em> (Princeton UP) — the standard graduate DSGE textbook; closely followed in this course.<br><br>
+          <strong>Woodford (2003)</strong> <em>Interest and Prices</em> (Princeton UP) — the comprehensive reference for welfare and optimal policy.<br><br>
+          <strong>Walsh (2010)</strong> <em>Monetary Theory and Policy</em> (MIT Press) — broad coverage including empirical methods.<br><br>
+          <strong>Ljungqvist &amp; Sargent (2018)</strong> <em>Recursive Macroeconomic Theory</em> (MIT Press) — recursive methods and heterogeneous-agent foundations.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🛠️ Software &amp; Tools</div>
+          <p><strong>Dynare</strong> (dynare.org) — the industry-standard platform for DSGE model solution and Bayesian estimation. Free, MATLAB/Octave/Python. Most central bank models are coded as Dynare <code>.mod</code> files.<br><br>
+          <strong>RISE</strong> — R/MATLAB toolbox for regime-switching DSGE models.<br><br>
+          <strong>gensys</strong> — Christopher Sims's original MATLAB code for solving linear rational-expectations models (implements the QZ method in Module 7).<br><br>
+          <strong>SSJ / sequence-space Jacobian</strong> (github.com/shade-econ/sequence-jacobian) — Python toolkit for solving heterogeneous-agent HANK models (Auclert et al. 2021).</p>
         </div>
       </div>
 
@@ -1012,12 +1136,17 @@ strong { color: var(--text-primary); }
 
       <h3>Code: Euler Equation &amp; Household Simulation</h3>
       <div class="code-block-wrap" id="cb-household">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-household','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-household','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-household','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-household','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-household')">Copy</button>
+            <button class="run-btn" id="run-household" onclick="runEditor('cb-household','out-household')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-household-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1069,7 +1198,6 @@ plt.show()
 print("Figure saved to euler_simulation.png")</code></pre>
         </div>
         <div class="code-panel" id="cb-household-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Parameters ──────────────────────────────────────────────
 beta  <- 0.99    # Discount factor (quarterly)
 sigma <- 1.0     # Inverse IES (log utility when sigma=1)
@@ -1109,8 +1237,14 @@ plot(c_path * 100, type = "l", col = "#3b82f6", lwd = 2,
      xlab = "Quarters", ylab = "% deviation from SS")
 abline(h = 0, lty = 2, col = "grey")</code></pre>
         </div>
-        <button class="run-btn" id="run-household" onclick="runPyodide('run-household','out-household', document.querySelector('#cb-household-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-household"></div>
+        <div class="code-output" id="out-household">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-household')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-household-text"></div>
+          <div class="output-chart" id="out-household-chart"></div>
+        </div>
       </div>
 
       <!-- QUIZ 2 -->
@@ -1252,12 +1386,17 @@ abline(h = 0, lty = 2, col = "grey")</code></pre>
 
       <h3>Code: Calvo Pricing &amp; NKPC</h3>
       <div class="code-block-wrap" id="cb-firms">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-firms','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-firms','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-firms','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-firms','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-firms')">Copy</button>
+            <button class="run-btn" id="run-firms" onclick="runEditor('cb-firms','out-firms')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-firms-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1303,7 +1442,6 @@ plt.tight_layout()
 plt.show()</code></pre>
         </div>
         <div class="code-panel" id="cb-firms-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Parameters ──────────────────────────────────────────────
 beta    <- 0.99
 theta   <- 0.75   # Calvo parameter
@@ -1341,8 +1479,14 @@ plot(theta_grid, kappa_grid, type = "l", col = "#10b981", lwd = 2.5,
      main = "NKPC Slope vs. Calvo Parameter")
 abline(v = 0.75, col = "red", lty = 2)</code></pre>
         </div>
-        <button class="run-btn" id="run-firms" onclick="runPyodide('run-firms','out-firms', document.querySelector('#cb-firms-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-firms"></div>
+        <div class="code-output" id="out-firms">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-firms')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-firms-text"></div>
+          <div class="output-chart" id="out-firms-chart"></div>
+        </div>
       </div>
 
       <!-- QUIZ 3 -->
@@ -1462,12 +1606,17 @@ abline(v = 0.75, col = "red", lty = 2)</code></pre>
 
       <h3>Code: Taylor Rule Dynamics</h3>
       <div class="code-block-wrap" id="cb-policy">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-policy','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-policy','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-policy','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-policy','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-policy')">Copy</button>
+            <button class="run-btn" id="run-policy" onclick="runEditor('cb-policy','out-policy')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-policy-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1553,7 +1702,6 @@ plt.tight_layout()
 plt.show()</code></pre>
         </div>
         <div class="code-panel" id="cb-policy-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Taylor Rule Dynamics in R ──────────────────────────────
 beta  <- 0.99; sigma <- 1.0; kappa <- 0.125; phi_y <- 0.125
 
@@ -1596,8 +1744,14 @@ for (panel in 1:3) {
          col=colors, lwd=2, cex=0.8)
 }</code></pre>
         </div>
-        <button class="run-btn" id="run-policy" onclick="runPyodide('run-policy','out-policy', document.querySelector('#cb-policy-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-policy"></div>
+        <div class="code-output" id="out-policy">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-policy')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-policy-text"></div>
+          <div class="output-chart" id="out-policy-chart"></div>
+        </div>
       </div>
     </section>
 
@@ -1641,6 +1795,39 @@ for (panel in 1:3) {
         </div>
       </div>
 
+      <h3>Extending to Capital and Investment</h3>
+      <p>The three-equation model is a deliberately stripped-down benchmark. Real central-bank DSGE models (e.g., Smets-Wouters 2003/2007) add <strong>capital accumulation</strong> and <strong>investment adjustment costs</strong>, which are essential for matching the persistence of output and the volatility of investment.</p>
+
+      <div class="math-box">
+        <div class="math-label">Capital Accumulation</div>
+        $$K_{t+1} = (1-\delta)\,K_t + I_t\!\left[1 - S\!\left(\frac{I_t}{I_{t-1}}\right)\right]$$
+      </div>
+      <p>where $\delta$ is the depreciation rate, $I_t$ is gross investment, and $S(\cdot)$ is an <strong>investment adjustment cost</strong> function with $S(1)=0$, $S'(1)=0$, $S''(1) = \kappa_I > 0$ (Christiano-Eichenbaum-Evans 2005). When $\kappa_I = 0$, costs vanish and we recover the standard frictionless case.</p>
+
+      <div class="math-box">
+        <div class="math-label">Tobin's Q and Investment</div>
+        $$Q_t = E_t\!\left[\beta \frac{\lambda_{t+1}}{\lambda_t}\left((1-\delta)Q_{t+1} + r_{t+1}^k\right)\right]$$
+        $$\hat{\imath}_t = \frac{1}{\kappa_I} \hat{q}_t$$
+      </div>
+      <p>The log-linearized investment equation links investment to <strong>Tobin's Q</strong> ($\hat{q}_t$, the shadow price of capital): investment rises when the value of an additional unit of installed capital exceeds its replacement cost. The coefficient $1/\kappa_I$ falls when adjustment costs are large, flattening the investment response.</p>
+
+      <div class="two-col">
+        <div class="info-box ib-blue" style="margin:0">
+          <div class="ib-icon">📌</div>
+          <div class="ib-content">
+            <div class="ib-title">The Extended 5-Equation System</div>
+            <div class="ib-body">Adding capital and investment to the three-equation model gives: (1) IS curve (with investment), (2) NKPC, (3) Taylor rule, (4) capital accumulation, (5) investment/Tobin's Q equation. Habit formation in consumption (parameter $h$) and wage stickiness (a wage Phillips curve) bring the system to the 7-equation Smets-Wouters scale used by central banks.</div>
+          </div>
+        </div>
+        <div class="info-box ib-amber" style="margin:0">
+          <div class="ib-icon">⚠️</div>
+          <div class="ib-content">
+            <div class="ib-title">Why Capital Matters for Estimation</div>
+            <div class="ib-body">Without capital, the model has no endogenous persistence beyond shock autocorrelation — implying implausibly fast reversion of output. Adding capital (and adjustment costs) gives the model the "hump-shaped" IRF for output that matches the data. The Smets-Wouters model has 10 structural equations and 7 structural shocks — far beyond the toy three-equation system.</div>
+          </div>
+        </div>
+      </div>
+
       <h3>Log-Linearization Technique</h3>
       <p>Log-linearization approximates nonlinear equations around a steady state. The key steps are:</p>
 
@@ -1676,12 +1863,17 @@ for (panel in 1:3) {
       <p>The solution to this system — finding $[x_t, \pi_t]'$ as functions of current and expected shocks — is exactly the Blanchard-Kahn problem covered in Module 7. For AR(1) shocks with persistence $\rho$, the method of undetermined coefficients gives the closed-form solution $(A - \rho B)^{-1} C$.</p>
 
       <div class="code-block-wrap" id="cb-equations">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-equations','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-equations','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-equations','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-equations','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-equations')">Copy</button>
+            <button class="run-btn" id="run-equations" onclick="runEditor('cb-equations','out-equations')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-equations-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 
 def nk3eq_solution(beta=0.99, sigma=1.0, kappa=0.125,
@@ -1737,7 +1929,6 @@ print("Log-linear: c_t = c_{t+1} - (1/sigma)*r_t")
 print(f"With sigma={params['sigma']}: c_t = c_{{t+1}} - r_t")</code></pre>
         </div>
         <div class="code-panel" id="cb-equations-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── 3-Equation NK Model Solution ─────────────────────────
 nk3eq_solution <- function(beta=0.99, sigma=1.0, kappa=0.125,
                            phi_pi=1.5, phi_y=0.125, rho=0.5,
@@ -1774,8 +1965,14 @@ pi_irf <- a_mp[2] * 0.5^h * 400      # annualized
 cat(sprintf("\nMP shock: peak output gap = %.3f pp\n", min(x_irf)))
 cat(sprintf("MP shock: peak inflation  = %.3f pp\n", min(pi_irf)))</code></pre>
         </div>
-        <button class="run-btn" id="run-equations" onclick="runPyodide('run-equations','out-equations', document.querySelector('#cb-equations-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-equations"></div>
+        <div class="code-output" id="out-equations">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-equations')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-equations-text"></div>
+          <div class="output-chart" id="out-equations-chart"></div>
+        </div>
       </div>
 
       <!-- QUIZ 5 -->
@@ -1841,6 +2038,14 @@ cat(sprintf("MP shock: peak inflation  = %.3f pp\n", min(pi_irf)))</code></pre>
         <div class="ib-content">
           <div class="ib-title">How This Simulation Works</div>
           <div class="ib-body">The simulation solves the 3-equation NK model analytically using the method of undetermined coefficients. For an AR(1) shock $z_t = \rho z_{t-1} + \varepsilon_t$, the equilibrium takes the form $[x_t, \pi_t]' = [a_x, a_\pi]' z_t$ where $[a_x, a_\pi]' = (A - \rho B)^{-1}C$. Charts update instantly as you move sliders.</div>
+        </div>
+      </div>
+
+      <div class="info-box ib-purple">
+        <div class="ib-icon">🔗</div>
+        <div class="ib-content">
+          <div class="ib-title">Connection to Solution Methods (Module 7)</div>
+          <div class="ib-body">The IRF coefficients $[a_x, a_\pi]'$ shown here come from a closed-form solution that is only valid for the simple 3-equation model. In general, larger DSGE models with capital, multiple shocks, and predetermined state variables cannot be solved this way. <strong>Module 7</strong> explains the Blanchard-Kahn theorem and QZ decomposition that handle the general case — which is what software like Dynare actually computes behind the scenes. Revisiting this simulator after completing Module 7 will give you a much deeper appreciation of what the sliders are doing.</div>
         </div>
       </div>
 
@@ -2012,12 +2217,17 @@ cat(sprintf("MP shock: peak inflation  = %.3f pp\n", min(pi_irf)))</code></pre>
 
       <h3>Code: Blanchard-Kahn Check &amp; State-Space Solution</h3>
       <div class="code-block-wrap" id="cb-solution">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-solution','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-solution','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-solution','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-solution','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-solution')">Copy</button>
+            <button class="run-btn" id="run-solution" onclick="runEditor('cb-solution','out-solution')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-solution-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 from scipy.linalg import schur, ordqz
 
@@ -2099,7 +2309,6 @@ def nk_state_space(beta=0.99, sigma=1.0, kappa=0.125,
 nk_state_space()</code></pre>
         </div>
         <div class="code-panel" id="cb-solution-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Blanchard-Kahn Check ─────────────────────────────────
 check_bk <- function(A, B, n_forward, label="System") {
   # Eigenvalues of A^{-1} B
@@ -2152,8 +2361,14 @@ for (phi in c(1.1, 1.5, 2.5)) {
   cat(sprintf("phi_pi=%.1f: a_x=%.4f, a_pi=%.4f\n", phi, a[1], a[2]))
 }</code></pre>
         </div>
-        <button class="run-btn" id="run-solution" onclick="runPyodide('run-solution','out-solution', document.querySelector('#cb-solution-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-solution"></div>
+        <div class="code-output" id="out-solution">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-solution')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-solution-text"></div>
+          <div class="output-chart" id="out-solution-chart"></div>
+        </div>
       </div>
     </section>
 
@@ -2208,13 +2423,15 @@ for (phi in c(1.1, 1.5, 2.5)) {
       <div class="math-box">
         <div class="math-label">Kalman Filter Recursion</div>
         $$\begin{aligned}
-        s_{t|t-1} &= F \, s_{t-1|t-1} \quad\quad \text{(prediction)} \\
-        P_{t|t-1} &= F \, P_{t-1|t-1} F^T + GQG^T \\
+        &\textbf{Predict:}\\
+        s_{t|t-1} &= F \, s_{t-1|t-1} \\
+        P_{t|t-1} &= F \, P_{t-1|t-1} F^T + Q \\[6pt]
+        &\textbf{Update:}\\
         \nu_t &= y_t - H \, s_{t|t-1} \quad \text{(innovation)} \\
         S_t &= H \, P_{t|t-1} H^T + R \\
         K_t &= P_{t|t-1} H^T S_t^{-1} \quad\text{(Kalman gain)} \\
-        s_{t|t} &= s_{t|t-1} + K_t \nu_t \quad \text{(update)} \\
-        P_{t|t} &= (I - K_t H) P_{t|t-1}
+        s_{t|t} &= s_{t|t-1} + K_t \nu_t \\
+        P_{t|t} &= (I - K_t H)\, P_{t|t-1}\,(I - K_t H)^T + K_t R K_t^T \quad \text{(Joseph form)}
         \end{aligned}$$
       </div>
       <p>The log-likelihood is the sum of Gaussian log-likelihoods of the innovations:</p>
@@ -2243,12 +2460,17 @@ for (phi in c(1.1, 1.5, 2.5)) {
 
       <h3>Code: Kalman Filter &amp; Bayesian Estimation</h3>
       <div class="code-block-wrap" id="cb-estimation">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-estimation','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-estimation','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-estimation','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-estimation','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-estimation')">Copy</button>
+            <button class="run-btn" id="run-estimation" onclick="runEditor('cb-estimation','out-estimation')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-estimation-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
@@ -2320,9 +2542,14 @@ def kalman_loglik(params, y_data):
         except:
             return -np.inf
         
-        K = P @ H.T @ np.linalg.inv(S)   # Kalman gain
-        s = F @ (s + K @ inn)             # predict next state
-        P = F @ (np.eye(n) - K @ H) @ P @ F.T + Q
+        K = P @ H.T @ np.linalg.solve(S, np.eye(S.shape[0]))  # Kalman gain
+        # ── Update step (filtered estimates at time t) ──────────
+        s_upd = s + K @ inn               # s_{t|t}  filtered state
+        ImKH  = np.eye(n) - K @ H
+        P_upd = ImKH @ P @ ImKH.T + K @ R @ K.T  # Joseph form (numerically stable)
+        # ── Predict step (one-step-ahead for t+1) ───────────────
+        s = F @ s_upd                     # s_{t+1|t}
+        P = F @ P_upd @ F.T + Q           # P_{t+1|t}
     
     return log_lik
 
@@ -2371,17 +2598,20 @@ for n, t, e in zip(names, true_params, res.x):
     print(f"  {n:<8}: true={t:.3f}, estimated={e:.3f}")</code></pre>
         </div>
         <div class="code-panel" id="cb-estimation-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Kalman Filter in R ────────────────────────────────────
 kalman_loglik_r <- function(F, H, Q, R, y_data) {
   n <- nrow(F); T_data <- nrow(y_data)
   
-  # Unconditional covariance (discrete Lyapunov)
-  # Simple iterative solution
+  # Unconditional covariance: solve discrete Lyapunov P = F P F' + Q
+  # via iteration with convergence check (reliable when spectral radius of F < 1)
   P <- Q
-  for (i in 1:500) P <- F %*% P %*% t(F) + Q
+  for (i in 1:2000) {
+    P_new <- F %*% P %*% t(F) + Q
+    if (max(abs(P_new - P)) < 1e-12) break
+    P <- P_new
+  }
   s <- rep(0, n)
-  
+
   log_lik <- 0
   for (t in 1:T_data) {
     y_pred  <- H %*% s
@@ -2389,9 +2619,14 @@ kalman_loglik_r <- function(F, H, Q, R, y_data) {
     S       <- H %*% P %*% t(H) + R
     Sinv    <- solve(S)
     log_lik <- log_lik - 0.5*(log(det(S)) + t(inn) %*% Sinv %*% inn)
-    K <- P %*% t(H) %*% Sinv              # Kalman gain
-    s <- F %*% (s + K %*% inn)            # Predict
-    P <- F %*% (diag(n) - K %*% H) %*% P %*% t(F) + Q
+    K     <- P %*% t(H) %*% Sinv              # Kalman gain
+    # ── Update step (filtered estimates at time t) ────────────
+    s_upd <- s + K %*% inn                    # s_{t|t}
+    ImKH  <- diag(n) - K %*% H
+    P_upd <- ImKH %*% P %*% t(ImKH) + K %*% R %*% t(K)  # Joseph form
+    # ── Predict step (one-step-ahead for t+1) ─────────────────
+    s <- F %*% s_upd                          # s_{t+1|t}
+    P <- F %*% P_upd %*% t(F) + Q            # P_{t+1|t}
   }
   as.numeric(log_lik)
 }
@@ -2437,9 +2672,64 @@ cat(sprintf("Output gap   — mean: %.4f, sd: %.4f\n",
 cat(sprintf("Inflation    — mean: %.4f, sd: %.4f\n",
     mean(obs[,2]), sd(obs[,2])))</code></pre>
         </div>
-        <button class="run-btn" id="run-estimation" onclick="runPyodide('run-estimation','out-estimation', document.querySelector('#cb-estimation-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-estimation"></div>
+        <div class="code-output" id="out-estimation">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-estimation')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-estimation-text"></div>
+          <div class="output-chart" id="out-estimation-chart"></div>
+        </div>
       </div>
+
+      <h3>Alternative Estimation Approaches</h3>
+      <p>While Bayesian full-information methods dominate modern empirical DSGE work, researchers sometimes prefer <strong>limited-information</strong> alternatives for reasons of robustness:</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🔧 GMM / Simulated Method of Moments</div>
+          <p>Proposed by Christiano &amp; Eichenbaum (1992) for RBC models. The estimator chooses parameters to match a set of model-implied moments (e.g., autocorrelations, cross-correlations) to their empirical counterparts. <strong>Advantage:</strong> robust to misspecification of the likelihood — if the model is wrong, GMM still gives valid inference for the targeted moments. <strong>Disadvantage:</strong> efficiency loss versus full-information Bayesian; moment selection is arbitrary.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🔧 Indirect Inference</div>
+          <p>Fit an auxiliary VAR to both the actual data and model-simulated data, then choose structural parameters to minimize the distance between the two sets of VAR coefficients. Increasingly used in heterogeneous-agent models where the likelihood is computationally intractable. Can be combined with impulse-response matching (IRFM) when identifying specific structural shocks.</p>
+        </div>
+      </div>
+
+      <div class="info-box ib-amber">
+        <div class="ib-icon">⚠️</div>
+        <div class="ib-content">
+          <div class="ib-title">Identification Caution</div>
+          <div class="ib-body">Not all DSGE parameters are identifiable from aggregate data alone. Canova &amp; Sala (2009) and Komunjer &amp; Ng (2011) provide formal identification tests. Common weak-identification cases: the IES ($\sigma$) and the Calvo parameter ($\theta$) are often jointly poorly pinned down by standard observables (output, inflation, interest rate). Using a richer observation equation — bond yields, consumption data, survey expectations — substantially helps identification.</div>
+        </div>
+      </div>
+
+      <h3>NKPC Empirical Performance: What the Data Say</h3>
+      <p>The New Keynesian Phillips Curve is theoretically elegant, but its empirical performance is contested. Three empirical episodes are particularly important for a practitioner to know:</p>
+
+      <div class="card">
+        <div class="card-title">📉 The Phillips Curve Flattening (post-1990)</div>
+        <p>Since the mid-1990s, inflation has become less responsive to the output gap in most advanced economies — consistent with a rise in $\theta$ (more price stickiness) or a fall in $\kappa$. This "flat Phillips curve" means large output gaps can persist without producing much inflation, complicating central bank communication about the inflation-output trade-off.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📉 Missing Disinflation (2008–2012)</div>
+        <p>Standard NKPC models predicted a sharp deflation following the deep recession of 2008–2009. Instead, inflation fell only modestly — the "missing disinflation" puzzle (Ball &amp; Mazumder 2011, Mavroeidis, Plagborg-Møller &amp; Stock 2014). Proposed explanations include anchored inflation expectations, downward wage rigidity, and import price effects — none of which appear explicitly in the baseline NK model.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📈 Surprise Inflation (2021–2023)</div>
+        <p>Conversely, inflation surged far more than standard linearized NK models predicted after the COVID-19 fiscal stimulus and supply disruptions of 2021. This episode re-opened debates about nonlinearities in the Phillips curve, the role of supply chains, and the importance of supply-side shocks that the three-equation model abstracts away from. Central banks running DSGE forecasting models substantially under-predicted the inflation surge.</p>
+      </div>
+
+      <div class="info-box ib-blue">
+        <div class="ib-icon">💡</div>
+        <div class="ib-content">
+          <div class="ib-title">Takeaway for Practitioners</div>
+          <div class="ib-body">The NKPC remains the workhorse of structural macro because of its theoretical discipline and tractability — but treat its quantitative predictions with humility. For real-world policy use, it is always used alongside reduced-form forecasting models (BVARs, time-varying parameter models) and expert judgment, not as a standalone oracle.</div>
+        </div>
+      </div>
+
     </section>
 
     <hr class="divider">
@@ -2534,12 +2824,17 @@ cat(sprintf("Inflation    — mean: %.4f, sd: %.4f\n",
 
       <h3>Code: Aiyagari Steady State</h3>
       <div class="code-block-wrap" id="cb-advanced">
-        <div class="code-tabs">
-          <button class="code-tab active" onclick="switchTab('cb-advanced','python')">Python</button>
-          <button class="code-tab" onclick="switchTab('cb-advanced','r')">R</button>
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab('cb-advanced','python')">Python</button>
+            <button class="code-tab" onclick="switchTab('cb-advanced','r')">R</button>
+          </div>
+          <div class="code-actions">
+            <button class="copy-btn" onclick="copyActiveCode('cb-advanced')">Copy</button>
+            <button class="run-btn" id="run-advanced" onclick="runEditor('cb-advanced','out-advanced')">▶ Run</button>
+          </div>
         </div>
         <div class="code-panel active" id="cb-advanced-python">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-python">import numpy as np
 from scipy.optimize import brentq
 
@@ -2560,19 +2855,33 @@ n_a    = 200      # Grid points for assets
 rho_z  = 0.9      # Persistence of log-income AR(1)
 sig_z  = 0.2      # Std dev of income shocks
 
-# ── Income process (Rouwenhorst discretization, 5 states) ──
+# ── Income process: Rouwenhorst (1995) discretization ──────
+# Rouwenhorst gives accurate approximations even for highly persistent
+# processes (ρ ≈ 0.9), where Tauchen's method underestimates variance.
+# Ref: Kopecky & Suen (2010), Review of Economic Dynamics.
 n_z = 5
-z_vals = np.linspace(-2*sig_z, 2*sig_z, n_z)  # log-income grid
-z_vals = np.exp(z_vals - z_vals.mean())         # normalize mean to 1
+p   = (1 + rho_z) / 2   # Rouwenhorst transition probability
 
-# Markov transition (simplified: equal spacing Rouwenhorst)
-p = (1 + rho_z) / 2
-Pi = np.zeros((n_z, n_z))
-Pi[0,0] = p; Pi[0,1] = 1-p
-Pi[-1,-2] = 1-p; Pi[-1,-1] = p
-for i in range(1, n_z-1):
-    Pi[i, i-1] = (1-p)/2; Pi[i,i] = (p); Pi[i,i+1] = (1-p)/2
-    Pi[i,:] /= Pi[i,:].sum()  # normalize rows
+def rouwenhorst_matrix(n, p):
+    """Build the n×n Rouwenhorst (1995) Markov transition matrix."""
+    if n == 2:
+        return np.array([[p, 1-p], [1-p, p]])
+    P_prev = rouwenhorst_matrix(n - 1, p)
+    P_new  = np.zeros((n, n))
+    P_new[:n-1, :n-1] +=     p  * P_prev
+    P_new[:n-1,  1:n] += (1-p)  * P_prev
+    P_new[ 1:n, :n-1] += (1-p)  * P_prev
+    P_new[ 1:n,  1:n] +=     p  * P_prev
+    P_new[1:-1, :]    /= 2       # interior rows are double-counted
+    return P_new
+
+Pi = rouwenhorst_matrix(n_z, p)
+
+# Grid: symmetric, spanning ±√(n_z−1)·σ_z in log-income space
+sigma_z = sig_z / np.sqrt(1 - rho_z**2)   # unconditional std dev of log income
+z_vals  = np.linspace(-np.sqrt(n_z - 1) * sigma_z,
+                        np.sqrt(n_z - 1) * sigma_z, n_z)
+z_vals  = np.exp(z_vals - z_vals.mean())   # income levels, mean normalized to 1
 
 # Stationary distribution of income
 from numpy.linalg import eig
@@ -2601,8 +2910,8 @@ def solve_household(r, w, tol=1e-6, max_iter=500):
     
     V = np.zeros((n_a, n_z))
     for it in range(max_iter):
-        EV = V @ Pi.T                           # (n_a, n_z): E[V(a', z')]
-        Q  = u_mat + beta * EV[None, None, :]  # (n_a, n_z, n_a)
+        EV = V @ Pi.T                           # (n_a, n_z): EV[future_a, current_z]
+        Q  = u_mat + beta * EV.T[None, :, :]   # (1, n_z, n_a) broadcasts to (n_a, n_z, n_a)
         V_new = Q.max(axis=2)
         pol_idx = Q.argmax(axis=2)
         
@@ -2612,7 +2921,7 @@ def solve_household(r, w, tol=1e-6, max_iter=500):
             break
     
     a_pol = a_grid[pol_idx]   # savings policy function (n_a, n_z)
-    c_pol = budget[:,:,0] + (1+r)*a_grid[:,None] + w*z_vals[None,:] - a_pol
+    c_pol = budget[:,:,0] - a_pol      # (1+r)*a + w*z - a'  (n_a, n_z)
     return a_pol, c_pol, V
 
 # ── Find GE interest rate ────────────────────────────────────
@@ -2656,7 +2965,6 @@ print("\nNote: Full GE requires iteration until K_supply = K_demand.")
 print("At the equilibrium r*, precautionary savings push r* < 1/β - 1.")</code></pre>
         </div>
         <div class="code-panel" id="cb-advanced-r">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><code class="language-r"># ── Aiyagari Steady State in R ────────────────────────────
 # Simplified version illustrating the structure
 
@@ -2714,8 +3022,14 @@ cat(sprintf("  Avg. savings  = %.4f\n", avg_savings))
 cat(sprintf("  Excess demand = %.4f\n", avg_savings - K_demand))
 cat("\nIn GE: iterate r until avg. savings = capital demand.")</code></pre>
         </div>
-        <button class="run-btn" id="run-advanced" onclick="runPyodide('run-advanced','out-advanced', document.querySelector('#cb-advanced-python code').textContent)">▶ Run in Browser (Python)</button>
-        <div class="pyodide-output" id="out-advanced"></div>
+        <div class="code-output" id="out-advanced">
+          <div class="output-header">
+            <span>Output</span>
+            <button class="output-close" onclick="closeOutput('out-advanced')" title="Close">✕</button>
+          </div>
+          <div class="output-text" id="out-advanced-text"></div>
+          <div class="output-chart" id="out-advanced-chart"></div>
+        </div>
       </div>
 
       <!-- QUIZ 9 -->
@@ -3083,20 +3397,23 @@ function computeIRF(p, shock) {
   const ax  = (c1*m22 - c2*m12) / det;
   const api = (m11*c2 - m21*c1) / det;
 
-  const SCALE = 1/sigma * 400;  // normalize to 1pp annualized shock
-  const norm = shock === 'monetary' ? SCALE : 400;
+  // Normalize IRFs to a 1 pp annualized shock.
+  // Monetary impulse vector has c1 = -1/σ, so ax ∝ 1/σ — multiply by σ to restore unit scale.
+  // Demand and cost-push impulse vectors have unit entries (c1=1 or c2=1): no σ adjustment needed.
+  const shockScale = shock === 'monetary' ? sigma : 1;
+  const annualise  = 400;  // × 400 converts quarterly fractions to annualized pp
 
   const horizon = Array.from({length: PERIODS}, (_, i) => i);
-  const x_irf  = horizon.map(h => ax  * Math.pow(rho, h) * norm * sigma);
-  const pi_irf = horizon.map(h => api * Math.pow(rho, h) * norm * sigma);
+  const x_irf  = horizon.map(h => ax  * Math.pow(rho, h) * annualise * shockScale);
+  const pi_irf = horizon.map(h => api * Math.pow(rho, h) * annualise * shockScale);
   const i_irf  = horizon.map(h => {
-    const xh = ax  * Math.pow(rho, h) * norm * sigma;
-    const ph = api * Math.pow(rho, h) * norm * sigma;
-    const shk = (shock === 'monetary') ? Math.pow(rho, h) * norm * sigma : 0;
+    const xh  = ax  * Math.pow(rho, h) * annualise * shockScale;
+    const ph  = api * Math.pow(rho, h) * annualise * shockScale;
+    const shk = (shock === 'monetary') ? Math.pow(rho, h) * annualise * shockScale : 0;
     return phi_pi * ph + phi_y * xh + shk;
   });
   const r_irf = horizon.map((h, idx) => {
-    const pi_next = api * Math.pow(rho, h+1) * norm * sigma;
+    const pi_next = api * Math.pow(rho, h+1) * annualise * shockScale;
     return i_irf[idx] - pi_next;
   });
 
@@ -3117,66 +3434,53 @@ function updateSim() {
   const irf = computeIRF(p, currentShock);
   if (!irf) return;
 
-  const colors = { x: '#3b82f6', pi: '#ef4444', i: '#10b981', r: '#8b5cf6' };
-  const labels = { x: 'Output Gap (pp)', pi: 'Inflation Ann. (pp)', i: 'Nom. Rate Ann. (pp)', r: 'Real Rate Ann. (pp)' };
+  const shockLabel = currentShock === 'monetary' ? 'Monetary Policy Shock (+1pp rate)'
+                   : currentShock === 'demand'   ? 'Demand Shock (+1pp IS)'
+                                                 : 'Cost-Push Shock (+1pp NKPC)';
 
-  let traces;
-  if (currentIRFView === 'all') {
-    traces = Object.entries({ x: irf.x, pi: irf.pi, i: irf.i, r: irf.r }).map(([k, v]) => ({
-      x: irf.horizon, y: v, name: labels[k], line: { color: colors[k], width: 2.5 },
-      mode: 'lines+markers', marker: { size: 4, color: colors[k] },
-    }));
-  } else {
-    const v = irf[currentIRFView];
-    traces = [{ x: irf.horizon, y: v, name: labels[currentIRFView],
-                line: { color: colors[currentIRFView], width: 2.5 },
-                mode: 'lines+markers', marker: { size: 5, color: colors[currentIRFView] } }];
-  }
+  const traces = [];
+  const colors = { x: '#3b82f6', pi: '#ef4444', i: '#f59e0b', r: '#10b981' };
+  const labels = { x: 'Output gap', pi: 'Inflation (ann.)', i: 'Nominal rate (ann.)', r: 'Real rate (ann.)' };
 
-  const shockLabel = { monetary: 'Monetary Policy Shock (1pp rate hike)',
-                       demand: 'Positive Demand Shock', costpush: 'Cost-Push Shock' }[currentShock];
+  const show = currentIRFView;
+  if (show === 'all' || show === 'x')  traces.push({ x: irf.horizon, y: irf.x,  mode:'lines', name: labels.x,  line:{color:colors.x,  width:2.5} });
+  if (show === 'all' || show === 'pi') traces.push({ x: irf.horizon, y: irf.pi, mode:'lines', name: labels.pi, line:{color:colors.pi, width:2.5} });
+  if (show === 'all' || show === 'i')  traces.push({ x: irf.horizon, y: irf.i,  mode:'lines', name: labels.i,  line:{color:colors.i,  width:2.5} });
+  if (show === 'all' || show === 'r')  traces.push({ x: irf.horizon, y: irf.r,  mode:'lines', name: labels.r,  line:{color:colors.r,  width:2.5, dash:'dot'} });
+
   const layout = {
     title: { text: `IRFs — ${shockLabel}`, font: { size: 13 } },
-    xaxis: { title: 'Quarters', gridcolor: '#f1f5f9' },
-    yaxis: { title: 'Deviation (pp)', gridcolor: '#f1f5f9', zeroline: true, zerolinecolor: '#94a3b8', zerolinewidth: 1.5 },
-    legend: { orientation: 'h', y: -0.25 },
-    margin: { l: 52, r: 20, t: 44, b: 60 },
-    paper_bgcolor: 'white', plot_bgcolor: 'white',
-    shapes: [{ type: 'line', x0: 0, x1: PERIODS-1, y0: 0, y1: 0,
-               line: { color: '#94a3b8', width: 1, dash: 'dot' } }],
+    xaxis: { title: 'Quarters after shock', gridcolor: '#f1f5f9' },
+    yaxis: { title: 'Percentage points (ann.)', gridcolor: '#f1f5f9', zeroline: true, zerolinecolor: '#94a3b8' },
+    legend: { orientation: 'h', y: -0.2 },
+    margin: { t: 45, b: 60, l: 55, r: 20 },
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor:  'rgba(0,0,0,0)',
+    font: { family: 'Inter, sans-serif', size: 12 },
+    shapes: [{ type:'line', x0:0, x1:PERIODS-1, y0:0, y1:0, line:{color:'#94a3b8', width:1} }]
   };
 
-  Plotly.react('irf-plot', traces, layout, { responsive: true, displayModeBar: false });
+  Plotly.react('irf-plot', traces, layout, {responsive:true, displayModeBar:false});
 }
 
 function setShock(type, btn) {
   currentShock = type;
-  document.querySelectorAll('.shock-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.shock-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateSim();
 }
 
 function setIRFView(view, btn) {
   currentIRFView = view;
-  document.querySelectorAll('.irf-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.irf-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateSim();
 }
 
-function resetSimParams() {
-  const defaults = {
-    's-beta': 0.99, 's-sigma': 1.0, 's-theta': 0.75,
-    's-phi-pi': 1.5, 's-phi-y': 0.125, 's-rho': 0.5
-  };
-  Object.entries(defaults).forEach(([id, val]) => {
-    document.getElementById(id).value = val;
-  });
-  updateSim();
-}
+// ═══════════════════════════════════════════════════════════
+// CODE EDITOR: TAB SWITCHING, COPY, RUN
+// ═══════════════════════════════════════════════════════════
 
-// ═══════════════════════════════════════════════════════════
-// CODE TAB SWITCHING & COPY
-// ═══════════════════════════════════════════════════════════
 function switchTab(blockId, lang) {
   const panels = document.querySelectorAll(`#${blockId} .code-panel`);
   const tabs   = document.querySelectorAll(`#${blockId} .code-tab`);
@@ -3185,33 +3489,105 @@ function switchTab(blockId, lang) {
 
   const targetPanel = document.getElementById(`${blockId}-${lang}`);
   if (targetPanel) targetPanel.classList.add('active');
-
   const tabIdx = lang === 'python' ? 0 : 1;
   if (tabs[tabIdx]) tabs[tabIdx].classList.add('active');
 
-  // Move copy button to active panel
-  const allCopyBtns = document.querySelectorAll(`#${blockId} .copy-btn`);
-  allCopyBtns.forEach(btn => {
-    if (btn.closest('.code-panel')) {
-      btn.style.display = btn.closest('.code-panel').classList.contains('active') ? '' : 'none';
-    }
+  // Update Run button label to reflect active language
+  const runBtn = document.querySelector(`#${blockId} .run-btn`);
+  if (runBtn && !runBtn.disabled) {
+    runBtn.textContent = lang === 'python' ? '▶ Run' : '▶ Copy R';
+  }
+}
+
+// Copy the currently active panel's code to clipboard
+function copyActiveCode(blockId) {
+  const activePanel = document.querySelector(`#${blockId} .code-panel.active`);
+  const code = activePanel?.querySelector('code');
+  if (!code) return;
+  const btn = document.querySelector(`#${blockId} .copy-btn`);
+  navigator.clipboard.writeText(code.textContent).then(() => {
+    if (btn) { btn.textContent = '✓ Copied!'; btn.classList.add('copied'); }
+    setTimeout(() => { if (btn) { btn.textContent = 'Copy'; btn.classList.remove('copied'); }}, 2000);
   });
 }
 
-function copyCode(btn) {
-  const pre = btn.closest('.code-panel')?.querySelector('code') ||
-              btn.parentElement.querySelector('code');
-  if (!pre) return;
-  navigator.clipboard.writeText(pre.textContent).then(() => {
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  });
+// Close (hide) the output panel
+function closeOutput(outputId) {
+  const panel = document.getElementById(outputId);
+  if (panel) panel.classList.remove('visible');
+}
+
+// ── Unified Run button handler ───────────────────────────────
+// Detects active tab: runs Python via Pyodide, or copies R code with a note
+async function runEditor(blockId, outputId) {
+  const activePanel = document.querySelector(`#${blockId} .code-panel.active`);
+  const isR = activePanel && activePanel.id.endsWith('-r');
+  const runBtn = document.querySelector(`#${blockId} .run-btn`);
+
+  if (isR) {
+    // R: copy to clipboard and show guidance
+    const code = activePanel?.querySelector('code')?.textContent || '';
+    navigator.clipboard.writeText(code).catch(() => {});
+    const outPanel = document.getElementById(outputId);
+    const textEl   = document.getElementById(outputId + '-text');
+    const chartEl  = document.getElementById(outputId + '-chart');
+    if (textEl)  textEl.innerHTML  = '';
+    if (chartEl) chartEl.innerHTML = '';
+    if (outPanel) {
+      outPanel.classList.add('visible');
+      const note = document.createElement('div');
+      note.className = 'output-r-note';
+      note.innerHTML =
+        '📋 <strong>R code copied to clipboard.</strong><br>' +
+        'Paste into RStudio or an R console to run and see plots.<br>' +
+        '<span style="color:#94a3b8;font-size:11px">Tip: install <code>ggplot2</code> or <code>base R</code> graphics — both work.</span>';
+      // Insert note into output-text area
+      if (textEl) { textEl.appendChild(note); }
+    }
+    return;
+  }
+
+  // Python: run via Pyodide
+  const code = activePanel?.querySelector('code')?.textContent || '';
+  await runPyodide(runBtn, outputId, code);
 }
 
 // ═══════════════════════════════════════════════════════════
 // QUIZ SYSTEM
 // ═══════════════════════════════════════════════════════════
+
+// Shuffles option order on page load so the correct answer is not always 'b'.
+// Preserves the original value in data-original so gradeQuiz can still use
+// the hardcoded answer key (e.g. {'q1-1':'b'}) unchanged after shuffling.
+function shuffleQuizOptions() {
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const container = q.querySelector('.quiz-options');
+    if (!container) return;
+    const labels = Array.from(container.querySelectorAll('label.quiz-option'));
+    if (labels.length < 2) return;
+
+    // Tag every input with its original value before shuffling
+    labels.forEach(lbl => {
+      const inp = lbl.querySelector('input[type="radio"]');
+      if (inp && !inp.dataset.original) inp.dataset.original = inp.value;
+    });
+
+    // Fisher-Yates shuffle of DOM labels
+    for (let i = labels.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      if (i !== j) container.insertBefore(labels[j], labels[i]);
+      [labels[i], labels[j]] = [labels[j], labels[i]];
+    }
+
+    // Re-assign sequential values (a, b, c, d) in the new display order
+    const vals = ['a', 'b', 'c', 'd'];
+    labels.forEach((lbl, idx) => {
+      const inp = lbl.querySelector('input[type="radio"]');
+      if (inp) inp.value = vals[idx];
+    });
+  });
+}
+
 function gradeQuiz(quizId, answers, feedback) {
   const quiz = document.getElementById(quizId);
   let correct = 0, total = Object.keys(answers).length;
@@ -3226,23 +3602,25 @@ function gradeQuiz(quizId, answers, feedback) {
       continue;
     }
 
-    const val = selected.value;
-    const isCorrect = val === correctVal;
+    // Use data-original (pre-shuffle value) so the answer key stays valid after shuffling
+    const origVal = selected.dataset.original || selected.value;
+    const isCorrect = origVal === correctVal;
     if (isCorrect) correct++;
 
-    // Style the selected option
+    // Style options — find the correct one by its original value
     options.forEach(opt => {
       const label = opt.parentElement;
       label.classList.remove('correct', 'wrong');
       if (opt.checked) label.classList.add(isCorrect ? 'correct' : 'wrong');
-      if (opt.value === correctVal && !isCorrect) label.classList.add('correct');
+      const optOrig = opt.dataset.original || opt.value;
+      if (optOrig === correctVal && !isCorrect) label.classList.add('correct');
       opt.disabled = true;
     });
 
-    // Show feedback
+    // Show feedback (keyed by original value)
     if (fb) {
-      const fbKey = `${qname}-${val}`;
-      const fbText = feedback[fbKey] || (isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${correctVal}.`);
+      const fbKey = `${qname}-${origVal}`;
+      const fbText = feedback[fbKey] || (isCorrect ? 'Correct!' : 'Incorrect. Please review the material.');
       fb.innerHTML = (isCorrect ? '✅ ' : '❌ ') + fbText;
       fb.className = `quiz-feedback show ${isCorrect ? 'correct' : 'wrong'}`;
     }
@@ -3298,9 +3676,7 @@ function closeGlossary() {
   document.getElementById('glossary-modal').classList.remove('open');
 }
 
-// ═══════════════════════════════════════════════════════════
-// PYODIDE (in-browser Python)
-// ═══════════════════════════════════════════════════════════
+// CODE EDITOR: PYODIDE (in-browser Python execution + matplotlib chart rendering)
 let pyodideReady = false;
 let pyodideInstance = null;
 let pyodideLoading = false;
@@ -3308,74 +3684,102 @@ const pyodideQueue = [];
 
 async function loadPyodideIfNeeded() {
   if (pyodideReady) return pyodideInstance;
-  if (pyodideLoading) {
-    return new Promise(resolve => pyodideQueue.push(resolve));
-  }
+  if (pyodideLoading) return new Promise(r => pyodideQueue.push(r));
   pyodideLoading = true;
 
-  // Dynamically load Pyodide
   const script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
   document.head.appendChild(script);
+  await new Promise(r => { script.onload = r; });
 
-  await new Promise(resolve => { script.onload = resolve; });
   pyodideInstance = await loadPyodide();
-  await pyodideInstance.loadPackagesFromImports('import numpy as np\nimport matplotlib\nimport scipy');
-
   try { await pyodideInstance.loadPackage(['numpy', 'scipy', 'matplotlib']); } catch(e) {}
+
+  // Use non-interactive Agg backend so figures render to PNG buffers
+  pyodideInstance.runPython("import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt");
 
   pyodideReady = true;
   pyodideLoading = false;
-  pyodideQueue.forEach(resolve => resolve(pyodideInstance));
+  pyodideQueue.forEach(r => r(pyodideInstance));
   return pyodideInstance;
 }
 
-async function runPyodide(btnId, outputId, code) {
-  const btn = document.getElementById(btnId);
-  const out = document.getElementById(outputId);
+// Appended after user code: collect all open figures as base64 PNGs
+const FIGURE_CAPTURE = `
+import io as _io, base64 as _b64
+import matplotlib.pyplot as _plt
+_dsge_figs = []
+for _fn in _plt.get_fignums():
+    _buf = _io.BytesIO()
+    _plt.figure(_fn).savefig(_buf, format='png', dpi=130, bbox_inches='tight',
+                              facecolor='#ffffff', edgecolor='none')
+    _buf.seek(0)
+    _dsge_figs.append(_b64.b64encode(_buf.read()).decode())
+_plt.close('all')
+`;
 
-  btn.disabled = true;
-  btn.textContent = '⏳ Loading Python…';
-  out.textContent = 'Loading Python runtime (first run may take 20–30s)…';
-  out.classList.add('visible');
+// Main runner called by runEditor() for the Python path
+async function runPyodide(runBtn, outputId, code) {
+  const outPanel = document.getElementById(outputId);
+  const textEl   = document.getElementById(outputId + '-text');
+  const chartEl  = document.getElementById(outputId + '-chart');
+
+  runBtn.disabled = true;
+  runBtn.textContent = 'Loading...';
+  if (textEl)  { textEl.textContent = 'Loading Python runtime (first run ~20 s)...'; textEl.style.display = 'block'; }
+  if (chartEl) chartEl.innerHTML = '';
+  if (outPanel) outPanel.classList.add('visible');
 
   try {
     const py = await loadPyodideIfNeeded();
-    btn.textContent = '▶ Running…';
-    out.textContent = 'Running…';
+    runBtn.textContent = 'Running...';
+    if (textEl) textEl.textContent = 'Running...';
 
     // Redirect stdout
-    py.runPython(`
-import sys, io
-_stdout_capture = io.StringIO()
-sys.stdout = _stdout_capture
-`);
+    py.runPython(`import sys, io as _sio\n_cap = _sio.StringIO()\nsys.stdout = _cap`);
 
-    // Strip matplotlib.pyplot.show() calls (no display in pyodide easily)
-    const safeCode = code.replace(/plt\.show\(\)/g, 'pass  # plt.show() skipped in browser')
-                         .replace(/plt\.savefig\([^)]+\)/g, 'pass  # savefig skipped');
+    // Strip plt.show() / savefig -- we render them ourselves
+    const safe = code
+      .replace(/plt\.show\(\)/g, '# plt.show() handled by runner')
+      .replace(/plt\.savefig\([^)]*\)/g, '# savefig handled by runner');
 
-    py.runPython(safeCode);
-    const output = py.runPython('_stdout_capture.getvalue()');
+    py.runPython(safe);
+
+    const stdout = py.runPython('_cap.getvalue()');
     py.runPython('sys.stdout = sys.__stdout__');
 
-    out.textContent = output || '✓ Ran successfully (no text output)';
+    // Capture matplotlib figures
+    py.runPython(FIGURE_CAPTURE);
+    const figs = py.runPython('_dsge_figs').toJs();
+
+    if (textEl) {
+      textEl.textContent = stdout || (figs.length ? '' : 'Done (no text output).');
+      textEl.style.display = (stdout || !figs.length) ? 'block' : 'none';
+    }
+    if (chartEl) {
+      chartEl.innerHTML = '';
+      figs.forEach(b64 => {
+        const img = document.createElement('img');
+        img.src = 'data:image/png;base64,' + b64;
+        img.style.cssText = 'max-width:100%;display:block;margin:0 auto 4px';
+        chartEl.appendChild(img);
+      });
+    }
   } catch(err) {
-    out.textContent = '❌ Error: ' + err.message;
+    if (textEl) { textEl.textContent = 'Error: ' + err.message; textEl.style.display = 'block'; }
+    if (chartEl) chartEl.innerHTML = '';
   } finally {
-    btn.disabled = false;
-    btn.textContent = '▶ Run in Browser (Python)';
+    runBtn.disabled = false;
+    runBtn.textContent = '\u25b6 Run';
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // INITIALIZATION
-// ═══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
+  shuffleQuizOptions();
   initNav();
-  updateSim();  // Initialize the IRF chart
+  updateSim();
 
-  // Mobile menu
   if (window.innerWidth <= 900) {
     document.getElementById('mobile-menu-btn').style.display = 'inline-flex';
   }
@@ -3384,10 +3788,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.innerWidth <= 900 ? 'inline-flex' : 'none';
   });
 
-  // MathJax re-render hint
-  if (window.MathJax && MathJax.typesetPromise) {
-    MathJax.typesetPromise();
-  }
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
 });
 </script>
 </body>
