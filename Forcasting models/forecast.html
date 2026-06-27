@@ -522,6 +522,50 @@ pre[class*="language-"]{
 .callout.warn{background:#fffbeb;border-left:4px solid var(--warn);color:#78350f}
 .callout.concept{background:#fdf4ff;border-left:4px solid var(--accent2);color:#4a044e}
 
+/* ===== LEARNING OBJECTIVES & KEY TAKEAWAYS ===== */
+.learning-objectives{
+  background:#f0f7ff;
+  border:1px solid #c3d9f7;
+  border-left:4px solid #2563eb;
+  border-radius:8px;
+  padding:14px 18px;
+  margin:0 0 20px 0;
+}
+.learning-objectives h4{
+  font-size:.82rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:#2563eb;
+  margin:0 0 8px 0;
+}
+.learning-objectives ul{
+  margin:0;padding-left:18px;
+  color:#1e3a6e;
+  font-size:.88rem;line-height:1.65;
+}
+.key-takeaways{
+  background:#f0fdf4;
+  border:1px solid #a7f3d0;
+  border-left:4px solid #059669;
+  border-radius:8px;
+  padding:14px 18px;
+  margin:24px 0 8px 0;
+}
+.key-takeaways h4{
+  font-size:.82rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:#059669;
+  margin:0 0 8px 0;
+}
+.key-takeaways ul{
+  margin:0;padding-left:18px;
+  color:#14532d;
+  font-size:.88rem;line-height:1.65;
+}
+
 /* ===== EXPANDABLE SECTION ===== */
 .expandable{margin:12px 0}
 .expand-header{
@@ -644,6 +688,142 @@ pre[class*="language-"]{
   transition:all .2s;
 }
 .start-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+/* ===== INTERACTIVE EDITOR BLOCKS ===== */
+.editor-block {
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.editor-header {
+  background: var(--code-bg);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.editor-lang-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7c9cbf;
+}
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.run-status {
+  font-size: .72rem;
+  color: #8892a4;
+  font-style: italic;
+}
+.copy-btn-editor {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #ccc;
+  font-size: .7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all .2s;
+}
+.copy-btn-editor:hover { background: rgba(255,255,255,.2); color: #fff; }
+.run-btn-py, .run-btn-r {
+  border: none;
+  color: #fff;
+  padding: 5px 14px;
+  font-size: .78rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all .2s;
+  display: flex; align-items: center; gap: 5px;
+}
+.run-btn-py { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.run-btn-py:hover { filter: brightness(1.1); }
+.run-btn-py:disabled { opacity: .5; cursor: not-allowed; }
+.run-btn-r { background: linear-gradient(135deg, #4f8ef7, #2c6de0); }
+.run-btn-r:hover { filter: brightness(1.1); }
+.run-btn-r:disabled { opacity: .5; cursor: not-allowed; }
+.code-editor {
+  width: 100%;
+  background: #1a1f30;
+  color: #abb2bf;
+  border: none;
+  font-family: var(--mono);
+  font-size: .82rem;
+  padding: 16px;
+  resize: vertical;
+  min-height: 160px;
+  max-height: 480px;
+  outline: none;
+  line-height: 1.55;
+  tab-size: 2;
+  display: block;
+}
+.code-editor:focus { background: #1d2236; }
+.editor-output {
+  background: #0d1117;
+  min-height: 48px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 12px 16px;
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: #4ade80;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.editor-output.has-error { color: var(--danger); }
+.editor-output.running   { color: var(--warn); font-style: italic; }
+
+/* R status indicator */
+#r-status {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .75rem; color: var(--text-muted);
+  background: var(--card-bg);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+#r-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  transition: background .3s;
+}
+#r-status-dot.loading { background: var(--warn); animation: pulse 1s infinite; }
+#r-status-dot.ready   { background: var(--success); }
+#r-status-dot.error   { background: var(--danger); }
+
+
+/* ===== TOPBAR NAV BUTTONS ===== */
+.topbar-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.topbar-nav-btn:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+.home-btn:hover { border-color: var(--accent2); color: var(--accent2); background: #fdf4ff; }
+.contact-btn:hover { border-color: var(--success); color: var(--success); background: #f0fdf4; }
+
 </style>
 </head>
 <body>
@@ -750,7 +930,17 @@ pre[class*="language-"]{
 <main id="main">
   <div id="topbar">
     <h1 id="topbar-title">Welcome to the Forecasting Course</h1>
-    <div id="pyodide-status">
+    <a href="https://narcissesandwidi.com/" target="_blank" class="topbar-nav-btn home-btn" title="Home">
+    🏠 Home
+  </a>
+  <a href="mailto:sand02@yahoo.com" class="topbar-nav-btn contact-btn" title="Contact">
+    ✉ Contact
+  </a>
+  <div id="r-status">
+    <div id="r-status-dot" class="loading"></div>
+    <span id="r-status-text">Loading R…</span>
+  </div>
+  <div id="pyodide-status">
       <div id="pyodide-dot" class="loading"></div>
       <span id="pyodide-text">Loading Python...</span>
     </div>
@@ -764,6 +954,9 @@ pre[class*="language-"]{
       <div class="hero-icon">📈</div>
       <h1>Forecasting Models</h1>
       <p>A complete interactive course covering time series fundamentals, classical econometrics, machine learning, and production workflows — with runnable Python, interactive simulations, and quizzes.</p>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 18px;max-width:560px;text-align:left;margin-bottom:16px;font-size:.87rem;color:#78350f">
+        <strong>📋 Prerequisites:</strong> Basic statistics (mean, variance, probability), introductory linear algebra (matrix multiplication, eigenvalues), and familiarity with either Python or R. No prior time series experience required.
+      </div>
       <button class="start-btn" onclick="showLesson('m1l1')">▶ Start Course</button>
       <div class="module-grid">
         <div class="module-card" onclick="showLesson('m1l1')">
@@ -806,6 +999,15 @@ pre[class*="language-"]{
     <span class="lesson-badge">Module 1 · Lesson 1</span>
     <h1>Time Series Concepts</h1>
     <p>A <strong>time series</strong> is an ordered sequence of observations indexed by time: $\{y_t\}_{t=1}^{T}$. Unlike cross-sectional data, observations are temporally dependent — the value at time $t$ is correlated with past values $y_{t-1}, y_{t-2}, \ldots$</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Define a time series and distinguish it from cross-sectional data</li>
+        <li>Identify and interpret the four components: trend, seasonality, cyclicality, and noise</li>
+        <li>Recognize additive vs. multiplicative series and select the appropriate model form</li>
+      </ul>
+    </div>
 
     <h2>Core Definitions</h2>
     <p>Every time series can be characterized by four statistical moments:</p>
@@ -878,37 +1080,73 @@ pre[class*="language-"]{
         <button class="code-tab-btn" onclick="switchTab(this,'r-m1l1')">📊 R</button>
       </div>
       <div id="py-m1l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m1l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m1l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m1l1')" id="btn-py-m1l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m1l1" spellcheck="false">import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 # Generate synthetic time series with trend + seasonality + noise
 np.random.seed(42)
 n = 120  # 10 years monthly
 t = np.arange(n)
 
-trend     = 0.05 * t
-seasonal  = 10 * np.sin(2 * np.pi * t / 12)
-noise     = np.random.normal(0, 3, n)
-y         = 50 + trend + seasonal + noise
+trend_comp = 0.05 * t
+seasonal   = 10 * np.sin(2 * np.pi * t / 12)
+noise      = np.random.normal(0, 3, n)
+y          = 50 + trend_comp + seasonal + noise
 
-dates = pd.date_range('2014-01', periods=n, freq='ME')
+dates = pd.date_range('2014-01', periods=n, freq='M')
 ts    = pd.Series(y, index=dates, name='value')
 
-print(ts.describe())
-print(f"\nMean: {ts.mean():.2f}")
-print(f"Std:  {ts.std():.2f}")
-print(f"Autocorr(lag=1): {ts.autocorr(lag=1):.4f}")
-print(f"Autocorr(lag=12): {ts.autocorr(lag=12):.4f}")</code></pre>
-        </div>
-      </div>
+print(ts.describe().round(3).to_string())
+print(f"\nAutocorr lag=1:  {ts.autocorr(lag=1):.4f}")
+print(f"Autocorr lag=12: {ts.autocorr(lag=12):.4f}")
+
+# ── Plot 1: raw series with trend overlay ────────────────────────────
+fig, axes = plt.subplots(3, 1, figsize=(11, 8))
+
+axes[0].plot(dates, y, color='#2563eb', linewidth=1.2, label='Observed')
+axes[0].plot(dates, 50 + trend_comp, color='#dc2626', linewidth=2,
+             linestyle='--', label='True trend')
+axes[0].set_title('Synthetic Time Series (Trend + Seasonality + Noise)', fontsize=12)
+axes[0].legend(fontsize=9); axes[0].grid(True, alpha=0.3)
+
+# ── Plot 2: seasonal decomposition ───────────────────────────────────
+decomp = seasonal_decompose(ts, model='additive', period=12)
+axes[1].plot(dates, decomp.trend, color='#7c3aed', linewidth=2, label='Estimated Trend')
+axes[1].set_title('STL Trend Component', fontsize=11)
+axes[1].legend(fontsize=9); axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(dates, decomp.seasonal, color='#16a34a', linewidth=1.4, label='Seasonal')
+axes[2].axhline(0, color='#999', linewidth=0.7)
+axes[2].set_title('Seasonal Component (period=12)', fontsize=11)
+axes[2].legend(fontsize=9); axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()</textarea>
+    <div class="output-area editor-output" id="output-py-m1l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m1l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(ggplot2)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-1l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m1l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m1l1')" id="btn-r-m1l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m1l1" spellcheck="false">library(ggplot2)
 
 # Generate synthetic time series
 set.seed(42)
@@ -931,56 +1169,29 @@ ts_obj <- ts(y, start = c(2014, 1), frequency = 12)
 
 # Plot
 plot(ts_obj, main = "Synthetic Time Series",
-     ylab = "Value", xlab = "Time", col = "steelblue", lwd = 1.5)</code></pre>
-        </div>
-      </div>
+     ylab = "Value", xlab = "Time", col = "steelblue", lwd = 1.5)</textarea>
+    <div class="output-area editor-output" id="output-r-m1l1">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <!-- Pyodide block -->
-    <div class="expandable">
-      <div class="expand-header" onclick="toggleExpand(this)">
-        ▶ Run Python in Browser <span style="color:var(--success);font-size:.75rem;margin-left:8px">● Pyodide</span>
-        <span class="expand-arrow">▶</span>
-      </div>
-      <div class="expand-body">
-        <div class="pyodide-block" id="py-run-m1l1">
-          <div class="pyodide-header">
-            <span>🐍 Python Playground</span>
-          </div>
-          <textarea id="py-code-m1l1">import numpy as np
-
-# Generate a simple time series
-np.random.seed(42)
-n = 50
-t = np.arange(n)
-trend = 0.05 * t
-seasonal = 10 * np.sin(2 * np.pi * t / 12)
-noise = np.random.normal(0, 3, n)
-y = 50 + trend + seasonal + noise
-
-print("Time series summary:")
-print(f"Length: {n}")
-print(f"Mean:   {np.mean(y):.3f}")
-print(f"Std:    {np.std(y):.3f}")
-print(f"Min:    {np.min(y):.3f}")
-print(f"Max:    {np.max(y):.3f}")
-
-# Lag-1 autocorrelation
-corr_lag1 = np.corrcoef(y[:-1], y[1:])[0,1]
-print(f"Autocorr(lag=1): {corr_lag1:.4f}")
-</textarea>
-          <div class="run-controls">
-            <button class="run-btn" onclick="runPyodide('m1l1')"><span>▶</span> Run</button>
-          </div>
-          <div class="output-area" id="py-output-m1l1">Output will appear here...</div>
-        </div>
-      </div>
-    </div>
+    
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>📦 Retail Demand Forecasting</h4>
       <p>Amazon and Walmart model product demand as time series. Understanding trend (growing popularity), seasonality (holiday spikes), and noise (promotional randomness) allows them to optimize inventory. Monthly seasonal amplitude can be 3–5× the baseline — missing this pattern leads to stockouts or overstock worth billions.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Time series observations are ordered and temporally dependent — this distinguishes them from i.i.d. data and requires specialized methods.</li>
+        <li>The four components (trend, seasonality, cycle, noise) provide a conceptual framework for decomposing and modeling any series.</li>
+        <li>Choose an additive model when seasonal amplitude is roughly constant; choose multiplicative when it grows with the level of the series.</li>
+        <li>Before modeling, always visualize the series — plot, histogram, and ACF reveal structure that guides every subsequent decision.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -996,6 +1207,15 @@ print(f"Autocorr(lag=1): {corr_lag1:.4f}")
     <span class="lesson-badge">Module 1 · Lesson 2</span>
     <h1>Stationarity &amp; Unit Roots</h1>
     <p><strong>Stationarity</strong> is the single most important concept in time series analysis. Most classical models (AR, ARIMA, VAR) assume some form of stationarity — violating it leads to spurious regressions and invalid inference.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Distinguish strict stationarity from weak (covariance) stationarity and state why the latter is sufficient in practice</li>
+        <li>Conduct and correctly interpret ADF and KPSS unit root tests</li>
+        <li>Transform a non-stationary series to stationarity using differencing or log transformation</li>
+      </ul>
+    </div>
 
     <h2>Strict vs. Weak Stationarity</h2>
     <div class="math-box">
@@ -1075,49 +1295,76 @@ print(f"Autocorr(lag=1): {corr_lag1:.4f}")
         <button class="code-tab-btn" onclick="switchTab(this,'r-m1l2')">📊 R</button>
       </div>
       <div id="py-m1l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m1l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m1l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m1l2')" id="btn-py-m1l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m1l2" spellcheck="false">import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller, kpss
 
 def test_stationarity(series, name="Series"):
     """Run ADF and KPSS stationarity tests."""
-    # ADF Test
     adf_result = adfuller(series, autolag='AIC')
     print(f"=== {name} ===")
-    print(f"ADF Statistic:  {adf_result[0]:.4f}")
-    print(f"ADF p-value:    {adf_result[1]:.4f}")
-    print(f"Critical (1%):  {adf_result[4]['1%']:.4f}")
-    print(f"Critical (5%):  {adf_result[4]['5%']:.4f}")
-    adf_stat = "STATIONARY ✓" if adf_result[1] < 0.05 else "NON-STATIONARY ✗"
-    print(f"ADF Decision:   {adf_stat}")
-
-    # KPSS Test
+    print(f"ADF Statistic:  {adf_result[0]:.4f}  p={adf_result[1]:.4f}  "
+          f"→ {'STATIONARY ✓' if adf_result[1] < 0.05 else 'NON-STATIONARY ✗'}")
     kpss_result = kpss(series, regression='c', nlags='auto')
-    print(f"\nKPSS Statistic: {kpss_result[0]:.4f}")
-    print(f"KPSS p-value:   {kpss_result[1]:.4f}")
-    kpss_stat = "STATIONARY ✓" if kpss_result[1] > 0.05 else "NON-STATIONARY ✗"
-    print(f"KPSS Decision:  {kpss_stat}")
+    print(f"KPSS Statistic: {kpss_result[0]:.4f}  p={kpss_result[1]:.4f}  "
+          f"→ {'STATIONARY ✓' if kpss_result[1] > 0.05 else 'NON-STATIONARY ✗'}")
     print()
 
 # Generate processes
 np.random.seed(42)
 n = 200
 
-rw   = np.cumsum(np.random.normal(0,1,n))     # Random walk
-ar1  = np.zeros(n)
-for i in range(1,n): ar1[i] = 0.7*ar1[i-1] + np.random.normal(0,1)
+rw  = np.cumsum(np.random.normal(0, 1, n))
+ar1 = np.zeros(n)
+for i in range(1, n):
+    ar1[i] = 0.7 * ar1[i-1] + np.random.normal(0, 1)
+rw_diff = np.diff(rw)
 
-test_stationarity(rw, "Random Walk")
-test_stationarity(ar1, "AR(1) φ=0.7")
-test_stationarity(np.diff(rw), "Differenced Random Walk")</code></pre>
-        </div>
-      </div>
+test_stationarity(rw,      "Random Walk")
+test_stationarity(ar1,     "AR(1) φ=0.7")
+test_stationarity(rw_diff, "Differenced Random Walk")
+
+# ── Visualise the three processes ────────────────────────────────────
+fig, axes = plt.subplots(3, 1, figsize=(11, 8), sharex=False)
+
+axes[0].plot(rw, color='#dc2626', linewidth=1.2)
+axes[0].set_title('Random Walk  (non-stationary — drifts without bound)', fontsize=11)
+axes[0].axhline(0, color='#999', linewidth=0.6); axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(ar1, color='#2563eb', linewidth=1.2)
+axes[1].set_title('AR(1) φ=0.7  (stationary — mean-reverts to 0)', fontsize=11)
+axes[1].axhline(0, color='#999', linewidth=0.6); axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(rw_diff, color='#16a34a', linewidth=1.2)
+axes[2].set_title('Differenced Random Walk  (stationary after Δ)', fontsize=11)
+axes[2].axhline(0, color='#999', linewidth=0.6); axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()</textarea>
+    <div class="output-area editor-output" id="output-py-m1l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m1l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(tseries)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-1l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m1l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m1l2')" id="btn-r-m1l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m1l2" spellcheck="false">library(tseries)
 
 set.seed(42)
 n   <- 200
@@ -1143,63 +1390,28 @@ cat("\nKPSS on Random Walk:\n")
 kpss.test(rw)
 
 cat("\nKPSS on AR(1):\n")
-kpss.test(ar1)</code></pre>
-        </div>
-      </div>
+kpss.test(ar1)</textarea>
+    <div class="output-area editor-output" id="output-r-m1l2">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
-    <div class="expandable">
-      <div class="expand-header" onclick="toggleExpand(this)">
-        ▶ Run Stationarity Tests in Browser
-        <span class="expand-arrow">▶</span>
-      </div>
-      <div class="expand-body">
-        <div class="pyodide-block" id="py-run-m1l2">
-          <div class="pyodide-header"><span>🐍 Python Playground</span></div>
-          <textarea id="py-code-m1l2">import numpy as np
-
-np.random.seed(42)
-n = 200
-
-# Random walk
-rw = np.cumsum(np.random.normal(0, 1, n))
-
-# AR(1) phi=0.7
-ar1 = np.zeros(n)
-for i in range(1, n):
-    ar1[i] = 0.7 * ar1[i-1] + np.random.normal(0, 1)
-
-# Manual ADF-like check: regress Δy on y_{t-1}
-def quick_unit_root_check(y, name):
-    dy = np.diff(y)
-    y_lag = y[:-1]
-    # OLS: dy = alpha + delta * y_lag
-    X = np.column_stack([np.ones(len(y_lag)), y_lag])
-    beta = np.linalg.lstsq(X, dy, rcond=None)[0]
-    delta = beta[1]
-    resid = dy - X @ beta
-    s2 = np.var(resid)
-    se = np.sqrt(s2 * np.linalg.inv(X.T @ X)[1,1])
-    t_stat = delta / se
-    print(f"{name}: delta={delta:.4f}, t-stat={t_stat:.4f}")
-    print(f"  {'Likely stationary' if t_stat < -3 else 'Likely non-stationary (unit root)'}")
-
-quick_unit_root_check(rw, "Random Walk")
-quick_unit_root_check(ar1, "AR(1) phi=0.7")
-quick_unit_root_check(np.diff(rw), "1st-differenced RW")
-</textarea>
-          <div class="run-controls">
-            <button class="run-btn" onclick="runPyodide('m1l2')"><span>▶</span> Run</button>
-          </div>
-          <div class="output-area" id="py-output-m1l2">Output will appear here...</div>
-        </div>
-      </div>
-    </div>
+    
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>💱 Exchange Rate Forecasting</h4>
       <p>Central banks and FX traders test exchange rate series for unit roots. Most nominal exchange rates follow random walks (efficient market hypothesis), meaning short-term forecasting is near-impossible. However, real exchange rates (adjusted for inflation) often revert to purchasing power parity — a mean-reverting stationary process — enabling longer-horizon forecasting.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>A series is weakly stationary if its mean, variance, and autocovariance structure are constant over time — most classical models require at least this.</li>
+        <li>ADF tests the null of a unit root (use when you suspect non-stationarity); KPSS tests the null of stationarity. Running both together gives a more reliable conclusion.</li>
+        <li>First-differencing eliminates linear trends and is the most common stationarity fix. Log-differencing ($\Delta \log y_t$) addresses both non-stationarity and proportional variance growth.</li>
+        <li>Non-stationarity without correction produces spurious regressions: artificially high R², significant t-tests, and meaningless forecasts.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -1215,6 +1427,15 @@ quick_unit_root_check(np.diff(rw), "1st-differenced RW")
     <span class="lesson-badge">Module 1 · Lesson 3</span>
     <h1>ACF, PACF &amp; Autocorrelation</h1>
     <p>The <strong>autocorrelation function (ACF)</strong> and <strong>partial autocorrelation function (PACF)</strong> are diagnostic tools that reveal the memory structure of a time series and guide model order selection.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Compute and interpret ACF and PACF plots for an observed time series</li>
+        <li>Use ACF/PACF patterns to identify likely AR, MA, or ARMA model structures</li>
+        <li>Apply the Ljung-Box test to assess whether residual autocorrelation is statistically significant</li>
+      </ul>
+    </div>
 
     <h2>Autocorrelation Function (ACF)</h2>
     <div class="math-box">
@@ -1306,9 +1527,16 @@ quick_unit_root_check(np.diff(rw), "1st-differenced RW")
         <button class="code-tab-btn" onclick="switchTab(this,'r-m1l3')">📊 R</button>
       </div>
       <div id="py-m1l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m1l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m1l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m1l3')" id="btn-py-m1l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m1l3" spellcheck="false">import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import acf, pacf
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
@@ -1335,13 +1563,21 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 plot_acf(y,  ax=ax1, lags=20, title='ACF — AR(2)')
 plot_pacf(y, ax=ax2, lags=20, title='PACF — AR(2)', method='ywm')
 plt.tight_layout()
-plt.show()</code></pre>
-        </div>
-      </div>
+plt.show()</textarea>
+    <div class="output-area editor-output" id="output-py-m1l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m1l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r"># Simulate AR(2)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-1l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m1l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m1l3')" id="btn-r-m1l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m1l3" spellcheck="false"># Simulate AR(2)
 set.seed(42)
 ar2 <- arima.sim(model = list(ar = c(0.7, -0.3)), n = 300)
 
@@ -1356,9 +1592,20 @@ cat("ACF values (lags 1-10):\n")
 print(round(acf(ar2, lag.max = 10, plot = FALSE)$acf[-1], 4))
 
 cat("\nPACF values (lags 1-10):\n")
-print(round(pacf(ar2, lag.max = 10, plot = FALSE)$acf, 4))</code></pre>
-        </div>
-      </div>
+print(round(pacf(ar2, lag.max = 10, plot = FALSE)$acf, 4))</textarea>
+    <div class="output-area editor-output" id="output-r-m1l3">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>ACF measures total correlation at each lag including indirect paths; PACF removes those indirect paths — only the direct effect of lag $k$ remains.</li>
+        <li>Model identification rule: AR(p) → ACF decays gradually, PACF cuts off at lag $p$; MA(q) → PACF decays gradually, ACF cuts off at lag $q$; ARMA → both decay.</li>
+        <li>The $\pm 1.96/\sqrt{T}$ confidence band is approximate and valid only under white noise. For residual diagnostics use the Ljung-Box Q-statistic, which tests the joint significance of multiple lags simultaneously.</li>
+        <li>In practice, ACF/PACF identification is unreliable for mixed ARMA processes — information criteria (AIC, BIC) via <code>auto.arima</code> or <code>pmdarima</code> are more reliable for order selection.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -1375,6 +1622,15 @@ print(round(pacf(ar2, lag.max = 10, plot = FALSE)$acf, 4))</code></pre>
     <h1>Time Series Decomposition</h1>
     <p>Decomposition separates a time series into interpretable structural components, revealing the underlying patterns masked by noise.</p>
 
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Decompose a time series into trend, seasonal, and residual components using classical and STL methods</li>
+        <li>Choose between additive and multiplicative decomposition based on the series' variance structure</li>
+        <li>Assess residual randomness after decomposition to verify that structural patterns were fully captured</li>
+      </ul>
+    </div>
+
     <h2>Classical Decomposition</h2>
     <div class="math-box">
       <div class="math-label">Additive Decomposition Model</div>
@@ -1386,7 +1642,7 @@ print(round(pacf(ar2, lag.max = 10, plot = FALSE)$acf, 4))</code></pre>
     <p><strong>Seasonal-Trend decomposition using Loess (STL)</strong> is more robust than classical decomposition because it handles outliers and allows the seasonal component to change over time.</p>
     <div class="callout concept">
       <span class="callout-icon">🎯</span>
-      <div><strong>STL advantages:</strong> Works with any seasonal period, robust to outliers, seasonal component can evolve, handles missing values. Widely used in production forecasting (e.g., Facebook Prophet is partly based on STL ideas).</div>
+      <div><strong>STL advantages:</strong> Works with any seasonal period, robust to outliers, seasonal component can evolve, handles missing values. Widely used in production forecasting. Note: Facebook Prophet uses a similar additive decomposition philosophy (trend + seasonality + holidays) but fits components via Bayesian curve-fitting rather than the STL iterative loess procedure.</div>
     </div>
 
     <h2>X-11 / X-13ARIMA-SEATS</h2>
@@ -1417,9 +1673,16 @@ print(round(pacf(ar2, lag.max = 10, plot = FALSE)$acf, 4))</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m1l4')">📊 R</button>
       </div>
       <div id="py-m1l4" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m1l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m1l4')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m1l4')" id="btn-py-m1l4">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m1l4" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose, STL
 import plotly.graph_objects as go
@@ -1430,7 +1693,7 @@ np.random.seed(42)
 n = 120
 t = np.arange(n)
 y = 100 + 0.5*t + 20*np.sin(2*np.pi*t/12) + np.random.normal(0, 4, n)
-dates = pd.date_range('2014-01', periods=n, freq='ME')
+dates = pd.date_range('2014-01', periods=n, freq='M')
 ts = pd.Series(y, index=dates)
 
 # Classical decomposition
@@ -1452,13 +1715,21 @@ print(f"  Residual std:   {res.resid.std():.3f}")
 var_resid = np.var(res.resid)
 var_detrend = np.var(res.resid + res.seasonal)
 seasonal_strength = max(0, 1 - var_resid/var_detrend)
-print(f"  Seasonal strength: {seasonal_strength:.3f}")</code></pre>
-        </div>
-      </div>
+print(f"  Seasonal strength: {seasonal_strength:.3f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m1l4">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m1l4" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(stats)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-1l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m1l4')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m1l4')" id="btn-r-m1l4">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m1l4" spellcheck="false">library(stats)
 
 # Generate data
 set.seed(42)
@@ -1470,6 +1741,7 @@ ts_obj <- ts(y, start = c(2014, 1), frequency = 12)
 # Classical decomposition
 decomp <- decompose(ts_obj, type = "additive")
 plot(decomp)
+dev.off()  # render as its own chart
 
 # STL decomposition (more robust)
 stl_res <- stl(ts_obj, s.window = "periodic", robust = TRUE)
@@ -1485,15 +1757,26 @@ cat("STL Seasonal Strength:", round(seasonal_strength(stl_res), 3), "\n")
 
 # Component summary
 cat("\nSTL Components:\n")
-print(summary(stl_res$time.series))</code></pre>
-        </div>
-      </div>
+print(summary(stl_res$time.series))</textarea>
+    <div class="output-area editor-output" id="output-r-m1l4">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>📈 GDP Seasonal Adjustment</h4>
       <p>Every GDP figure reported by the BLS or Eurostat is seasonally adjusted — Q4 is always stronger due to holiday spending. The X-13ARIMA-SEATS procedure decomposes the raw series, removes seasonal effects, and publishes the "seasonally adjusted annual rate" (SAAR) that economists compare quarter-over-quarter to assess business cycle position.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Classical decomposition is a useful first pass but assumes fixed seasonality — it cannot adapt when seasonal patterns change over time.</li>
+        <li>STL (Cleveland et al., 1990) is the preferred general-purpose decomposition: it handles any seasonal period, is robust to outliers, and lets the seasonal component evolve.</li>
+        <li>After decomposition, examine the residual component — it should behave like white noise. Persistent patterns in residuals indicate that the model failed to capture all structure.</li>
+        <li>Decomposition is not just for visualization — seasonally adjusted series are the input to ARIMA modeling (after removing seasonal effects, fit on the seasonally adjusted series).</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -1546,7 +1829,29 @@ print(summary(stl_res$time.series))</code></pre>
         <div class="quiz-feedback" id="q3-feedback"></div>
       </div>
 
-      <button class="quiz-submit" onclick="checkQuiz('m1',{q1:'b',q2:'b',q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="q4">
+        <p>4. You apply the ADF test to a series and fail to reject the null hypothesis. The KPSS test rejects its null. Together, these results indicate:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="q4" value="a"> The series is clearly stationary</label>
+          <label class="quiz-opt"><input type="radio" name="q4" value="b"> The results are contradictory — the series is non-stationary (both suggest unit root)</label>
+          <label class="quiz-opt"><input type="radio" name="q4" value="c"> The series is clearly stationary by the KPSS result</label>
+          <label class="quiz-opt"><input type="radio" name="q4" value="d"> The series has a seasonal unit root</label>
+        </div>
+        <div class="quiz-feedback" id="q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="q5">
+        <p>5. After additive STL decomposition, what should the residual component look like if the decomposition is adequate?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="q5" value="a"> A clear upward or downward trend</label>
+          <label class="quiz-opt"><input type="radio" name="q5" value="b"> Stationary white noise with no visible pattern</label>
+          <label class="quiz-opt"><input type="radio" name="q5" value="c"> A seasonal pattern at the same frequency as the series</label>
+          <label class="quiz-opt"><input type="radio" name="q5" value="d"> A mirror image of the trend component</label>
+        </div>
+        <div class="quiz-feedback" id="q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m1',{q1:'b',q2:'b',q3:'b',q4:'b',q5:'b'})">Submit Answers</button>
     </div>
 
     <div class="lesson-nav">
@@ -1562,6 +1867,15 @@ print(summary(stl_res$time.series))</code></pre>
     <span class="lesson-badge">Module 2 · Lesson 1</span>
     <h1>AR &amp; MA Models</h1>
     <p>The two building blocks of all classical linear time series models: the <strong>Autoregressive (AR)</strong> process and the <strong>Moving Average (MA)</strong> process.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Write and interpret the AR(p) and MA(q) model equations using backshift operator notation</li>
+        <li>State the stationarity condition for AR models and the invertibility condition for MA models</li>
+        <li>Fit AR and MA models in Python and R and interpret the estimated parameters</li>
+      </ul>
+    </div>
 
     <h2>Autoregressive Model — AR(p)</h2>
     <p>An AR(p) model expresses the current value as a linear function of its own past $p$ values plus a white-noise error.</p>
@@ -1635,10 +1949,18 @@ print(summary(stl_res$time.series))</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m2l1')">📊 R</button>
       </div>
       <div id="py-m2l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m2l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m2l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m2l1')" id="btn-py-m2l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m2l1" spellcheck="false">import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from statsmodels.tsa.arima_process import ArmaProcess
 from statsmodels.tsa.arima.model import ARIMA
 
@@ -1654,24 +1976,58 @@ y_ma1 = ma1_process.generate_sample(nsample=200)
 # --- Fit AR(1) ---
 model = ARIMA(y_ar1, order=(1, 0, 0))
 result = model.fit()
-print(result.summary())
-
-# --- Key metrics ---
-print(f"\nFitted AR(1) coefficient: {result.params['ar.L1']:.4f}")
-print(f"AIC: {result.aic:.2f}")
-print(f"BIC: {result.bic:.2f}")
+print(f"Fitted AR(1) coefficient: {result.arparams[0]:.4f}  (true: 0.7)")
+print(f"AIC: {result.aic:.2f}  |  BIC: {result.bic:.2f}")
+print(f"Residual std: {result.resid.std():.4f}")
 
 # --- 10-step forecast ---
-forecast = result.forecast(steps=10)
-conf_int = result.get_forecast(steps=10).conf_int()
-print(f"\n10-step forecast: {forecast.values}")
-</code></pre>
-        </div>
-      </div>
+fc = result.get_forecast(steps=10)
+fc_mean = np.array(fc.predicted_mean)          # always numpy
+fc_ci   = np.array(fc.conf_int())              # shape (10, 2) — works in all statsmodels versions
+print(f"\n10-step forecast (point estimates):")
+for i in range(10):
+    print(f"  h={i+1:2d}: {fc_mean[i]:+.4f}  95% CI [{fc_ci[i,0]:+.4f}, {fc_ci[i,1]:+.4f}]")
+
+# ── Plot: last 60 obs + 10-step forecast ─────────────────────────────
+tail = 60
+x_hist  = np.arange(tail)
+x_fc    = np.arange(tail, tail + 10)
+
+fig, axes = plt.subplots(2, 1, figsize=(11, 7))
+
+# AR(1) forecast
+axes[0].plot(x_hist, y_ar1[-tail:], color='#2563eb', linewidth=1.3, label='AR(1) series')
+axes[0].plot(x_fc, fc_mean, color='#dc2626', linewidth=2,
+             marker='o', markersize=4, label='10-step forecast')
+axes[0].fill_between(x_fc, fc_ci[:, 0], fc_ci[:, 1],
+                     color='#dc2626', alpha=0.2, label='95% CI')
+axes[0].axvline(tail - 1, color='#888', linestyle='--', linewidth=0.8)
+axes[0].set_title('AR(1) — Fitted + 10-Step Forecast', fontsize=11)
+axes[0].legend(fontsize=9); axes[0].grid(True, alpha=0.3)
+
+# Residuals
+axes[1].plot(result.resid[-tail:], color='#7c3aed', linewidth=1, alpha=0.8)
+axes[1].axhline(0, color='#999', linewidth=0.7, linestyle='--')
+axes[1].set_title('AR(1) Residuals (last 60 obs)', fontsize=11)
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+</textarea>
+    <div class="output-area editor-output" id="output-py-m2l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m2l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-2l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m2l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m2l1')" id="btn-r-m2l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m2l1" spellcheck="false">library(forecast)
 
 # Simulate AR(1): y_t = 0.7*y_{t-1} + e_t
 set.seed(42)
@@ -1689,15 +2045,26 @@ print(summary(fit_ma1))
 # Forecast 10 steps
 fc <- forecast(fit_ar1, h = 10)
 plot(fc, main = "AR(1) Forecast")
-print(fc)</code></pre>
-        </div>
-      </div>
+print(fc)</textarea>
+    <div class="output-area editor-output" id="output-r-m2l1">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>📡 Interest Rate Modeling</h4>
       <p>The Vasicek model for short-term interest rates is essentially an AR(1) process in continuous time: $dr_t = \kappa(\theta - r_t)dt + \sigma dW_t$. The discrete analog $r_t = (1-\kappa)\theta + \kappa r_{t-1} + \varepsilon_t$ is estimated directly on Fed Funds rate data. Central banks use AR models as baseline forecasts for monetary policy decisions.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>AR(p) models current $y_t$ as a linear combination of $p$ past values plus noise; MA(q) models $y_t$ as a linear combination of $q$ past shocks plus noise.</li>
+        <li>AR stationarity requires all roots of the characteristic polynomial to lie outside the unit circle (equivalently, $|$AR coefficients$| < 1$ for AR(1)).</li>
+        <li>MA invertibility ensures a unique MA representation and is required for parameter estimation to be well-defined.</li>
+        <li>Both AR and MA are special cases of ARMA, which is itself a building block for the more general ARIMA and SARIMA frameworks covered in the next lessons.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -1712,6 +2079,15 @@ print(fc)</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 2 · Lesson 2</span>
     <h1>ARMA &amp; ARIMA Models</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Extend AR and MA to the full ARMA(p, q) framework and explain when combining both components is necessary</li>
+        <li>Apply $d$-order differencing to achieve stationarity and construct the ARIMA(p, d, q) model</li>
+        <li>Estimate ARIMA models via maximum likelihood and validate residuals using Ljung-Box and normality tests</li>
+      </ul>
+    </div>
 
     <h2>ARMA(p, q)</h2>
     <p>The ARMA model combines both autoregressive and moving average components, providing a parsimonious representation of many real-world stationary processes.</p>
@@ -1771,9 +2147,16 @@ print(fc)</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m2l2')">📊 R</button>
       </div>
       <div id="py-m2l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m2l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m2l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m2l2')" id="btn-py-m2l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m2l2" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
@@ -1789,7 +2172,7 @@ y_raw = 100 * np.exp(0.02*t/12) * (1 + 0.3*np.sin(2*np.pi*t/12)) + \
         np.random.normal(0, 5, n)
 y = np.log(y_raw)  # log transform
 
-dates = pd.date_range('2012-01', periods=n, freq='ME')
+dates = pd.date_range('2012-01', periods=n, freq='M')
 ts = pd.Series(y, index=dates)
 
 # Test stationarity of log series
@@ -1813,18 +2196,28 @@ resid = result.resid
 print(f"\nResidual diagnostics:")
 print(f"  Mean:    {resid.mean():.5f} (should be ≈ 0)")
 print(f"  Std:     {resid.std():.4f}")
-print(f"  Ljung-Box (lag=10): p={result.test_serial_correlation('ljungbox',lags=[10])['lb_pvalue'].iloc[0]:.4f}")
+from statsmodels.stats.diagnostic import acorr_ljungbox
+lb = acorr_ljungbox(resid, lags=[10], return_df=True)
+print(f"  Ljung-Box (lag=10): p={lb['lb_pvalue'].iloc[0]:.4f}")
 
 # Forecast
 fc = result.get_forecast(steps=24)
 print(f"\n24-step forecast (log scale, last 3):")
-print(fc.predicted_mean.tail(3))</code></pre>
-        </div>
-      </div>
+print(fc.predicted_mean.tail(3))</textarea>
+    <div class="output-area editor-output" id="output-py-m2l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m2l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-2l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m2l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m2l2')" id="btn-r-m2l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m2l2" spellcheck="false">library(forecast)
 library(tseries)
 
 # AirPassengers is built-in
@@ -1850,55 +2243,22 @@ print(summary(auto_fit))
 # Forecast
 fc <- forecast(auto_fit, h = 24)
 plot(fc, main = "ARIMA Forecast of log(AirPassengers)")
-print(fc)</code></pre>
-        </div>
-      </div>
+print(fc)</textarea>
+    <div class="output-area editor-output" id="output-r-m2l2">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
-    <div class="expandable">
-      <div class="expand-header" onclick="toggleExpand(this)">
-        ▶ Run ARIMA in Browser (Python)
-        <span class="expand-arrow">▶</span>
-      </div>
-      <div class="expand-body">
-        <div class="pyodide-block" id="py-run-m2l2">
-          <div class="pyodide-header"><span>🐍 Python Playground</span></div>
-          <textarea id="py-code-m2l2">import numpy as np
+    
 
-# Manually implement ARIMA(1,1,0) step by step
-np.random.seed(42)
-n = 100
-
-# Generate ARIMA(1,1,0) data:
-# Innovations
-eps = np.random.normal(0, 1, n)
-# Stationary AR(1) on differenced series
-dy = np.zeros(n)
-for t in range(1, n):
-    dy[t] = 0.6 * dy[t-1] + eps[t]
-# Integrate (cumsum = undo differencing)
-y = np.cumsum(dy)
-
-print(f"ARIMA(1,1,0) series:")
-print(f"Mean: {y.mean():.3f}")
-print(f"Std:  {y.std():.3f}")
-print(f"Range: [{y.min():.2f}, {y.max():.2f}]")
-
-# OLS estimate of AR(1) on differenced series
-dy_obs = np.diff(y)
-X = np.column_stack([dy_obs[:-1]])
-Y = dy_obs[1:]
-phi_hat = (X.T @ Y) / (X.T @ X)
-print(f"\nOLS estimate of AR(1) coefficient: {phi_hat[0]:.4f}")
-print(f"True value: 0.6000")
-print(f"Residual std: {np.std(Y - X @ phi_hat):.4f}")
-</textarea>
-          <div class="run-controls">
-            <button class="run-btn" onclick="runPyodide('m2l2')"><span>▶</span> Run</button>
-          </div>
-          <div class="output-area" id="py-output-m2l2">Output will appear here...</div>
-        </div>
-      </div>
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>ARIMA(p, d, q) = ARMA applied to the $d$-times differenced series. The integration order $d$ transforms a non-stationary series into a stationary one.</li>
+        <li>Maximum likelihood estimation is the standard method for ARIMA parameters; OLS is only valid for pure AR models.</li>
+        <li>Residual diagnostics are essential: white noise residuals (no significant ACF, Ljung-Box p &gt; 0.05, near-normal distribution) validate the model.</li>
+        <li><strong>Limitations of ARIMA:</strong> assumes linear dynamics, is sensitive to structural breaks, and the manual order selection via ACF/PACF is unreliable for mixed processes. Use <code>auto.arima()</code> or <code>pmdarima.auto_arima()</code> for data-driven order selection in practice.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -1913,6 +2273,15 @@ print(f"Residual std: {np.std(Y - X @ phi_hat):.4f}")
    <div class="lesson-content">
     <span class="lesson-badge">Module 2 · Lesson 3</span>
     <h1>SARIMA &amp; ARIMAX</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Extend ARIMA to SARIMA by adding seasonal AR, differencing, and MA terms and interpret the $(P, D, Q)_s$ notation</li>
+        <li>Include exogenous variables in an ARIMAX model and understand when they improve forecast accuracy</li>
+        <li>Diagnose and correct residual seasonality remaining after ARIMA fitting</li>
+      </ul>
+    </div>
 
     <h2>SARIMA — Seasonal ARIMA</h2>
     <p>When a series exhibits seasonal patterns (e.g., monthly sales, quarterly GDP), the SARIMA model adds seasonal AR, I, and MA terms to the ARIMA framework.</p>
@@ -1971,9 +2340,16 @@ print(f"Residual std: {np.std(Y - X @ phi_hat):.4f}")
         <button class="code-tab-btn" onclick="switchTab(this,'r-m2l3')">📊 R</button>
       </div>
       <div id="py-m2l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m2l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m2l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m2l3')" id="btn-py-m2l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m2l3" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 import warnings
@@ -1986,7 +2362,7 @@ t = np.arange(n)
 # Trend + seasonality + noise
 y = (100 + 0.5*t + 20*np.sin(2*np.pi*t/12) +
      5*np.sin(4*np.pi*t/12) + np.random.normal(0, 3, n))
-dates = pd.date_range('2014-01', periods=n, freq='ME')
+dates = pd.date_range('2014-01', periods=n, freq='M')
 ts = pd.Series(y, index=dates)
 
 # === SARIMA(1,1,1)(1,1,1,12) ===
@@ -2001,25 +2377,33 @@ print(f"\nAIC: {result.aic:.2f} | BIC: {result.bic:.2f}")
 
 # Forecast 24 months
 fc = result.get_forecast(steps=24)
-fc_mean = fc.predicted_mean
-fc_ci   = fc.conf_int()
+fc_mean = fc.predicted_mean                  # pandas Series with DatetimeIndex
+fc_ci   = np.array(fc.conf_int())           # (24,2) numpy — safe across statsmodels versions
 print(f"\nForecast next 24 months (first 5):")
 for i in range(5):
     d = fc_mean.index[i].strftime('%Y-%m')
-    print(f"  {d}: {fc_mean.iloc[i]:.2f} [{fc_ci.iloc[i,0]:.2f}, {fc_ci.iloc[i,1]:.2f}]")
+    print(f"  {d}: {fc_mean.iloc[i]:.2f} [{fc_ci[i,0]:.2f}, {fc_ci[i,1]:.2f}]")
 
 # === ARIMAX (with exogenous variable) ===
 exog = np.sin(2 * np.pi * t / 12)  # known seasonal regressor
 model_x = SARIMAX(ts, exog=exog.reshape(-1,1), order=(1,1,1))
 result_x = model_x.fit(disp=False)
 print(f"\nARIMAX AIC: {result_x.aic:.2f} | BIC: {result_x.bic:.2f}")
-print(f"Exog coefficient: {result_x.params['x1']:.4f}")</code></pre>
-        </div>
-      </div>
+print(f"Exog coefficient: {result_x.params['x1']:.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m2l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m2l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-2l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m2l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m2l3')" id="btn-r-m2l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m2l3" spellcheck="false">library(forecast)
 
 # AirPassengers: classic SARIMA example
 data(AirPassengers)
@@ -2031,6 +2415,7 @@ fit_airline <- Arima(lap,
                      seasonal = list(order = c(0, 1, 1), period = 12))
 summary(fit_airline)
 checkresiduals(fit_airline)
+dev.off()  # render residual diagnostics as its own chart
 
 # Auto-ARIMA with seasonal
 auto_fit <- auto.arima(lap, seasonal = TRUE, stepwise = FALSE,
@@ -2038,6 +2423,7 @@ auto_fit <- auto.arima(lap, seasonal = TRUE, stepwise = FALSE,
 print(auto_fit)
 fc <- forecast(auto_fit, h = 24)
 plot(fc, main = "SARIMA Forecast — AirPassengers")
+dev.off()  # render as its own chart
 
 # ARIMAX: include exogenous variable (fourier terms)
 library(forecast)
@@ -2045,15 +2431,26 @@ k <- 2  # number of fourier pairs
 xreg <- fourier(lap, K = k)
 fit_x <- auto.arima(lap, xreg = xreg, seasonal = FALSE)
 fc_x  <- forecast(fit_x, xreg = fourier(lap, K = k, h = 24), h = 24)
-plot(fc_x, main = "ARIMAX with Fourier Terms")</code></pre>
-        </div>
-      </div>
+plot(fc_x, main = "ARIMAX with Fourier Terms")</textarea>
+    <div class="output-area editor-output" id="output-r-m2l3">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>✈️ Airline Capacity Planning</h4>
       <p>The "airline model" SARIMA(0,1,1)(0,1,1)₁₂ was identified by Box and Jenkins (1976) on the classic AirPassengers dataset and remains a benchmark. Major airlines use variants with fuel price, GDP growth, and competitor capacity as ARIMAX exogenous regressors. The model drives yield management systems that set ticket prices to maximize revenue per available seat mile (RASM).</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>SARIMA adds seasonal differencing ($D$) and seasonal AR/MA lags at multiples of the period $s$, allowing the model to directly capture periodic patterns without pre-removing seasonality.</li>
+        <li>The shorthand SARIMA$(p,d,q)(P,D,Q)_s$ fully specifies a seasonal model — $(0,1,1)(0,1,1)_{12}$ (the "airline model") remains a strong benchmark for monthly economic data.</li>
+        <li>ARIMAX adds exogenous regressors as deterministic inputs; they shift the level of the forecast but the ARIMA errors capture remaining temporal dependence.</li>
+        <li>Always check seasonal ACF spikes at multiples of $s$ in residuals — their persistence signals that seasonal differencing or a seasonal MA term is still needed.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2068,6 +2465,15 @@ plot(fc_x, main = "ARIMAX with Fourier Terms")</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 2 · Lesson 4</span>
     <h1>Model Selection: AIC, BIC &amp; ADF</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Apply AIC and BIC to compare competing ARIMA specifications and explain the difference in their penalty terms</li>
+        <li>Use <code>auto.arima()</code> / <code>pmdarima.auto_arima()</code> for automated, data-driven order selection</li>
+        <li>Conduct a full model diagnostic: residual ACF, Ljung-Box test, and normality check</li>
+      </ul>
+    </div>
 
     <h2>Information Criteria</h2>
     <p>Information criteria trade off <em>goodness of fit</em> against <em>model complexity</em>, penalizing over-parameterization to prevent overfitting.</p>
@@ -2127,9 +2533,16 @@ plot(fc_x, main = "ARIMAX with Fourier Terms")</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m2l4')">📊 R</button>
       </div>
       <div id="py-m2l4" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m2l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m2l4')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m2l4')" id="btn-py-m2l4">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m2l4" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 import warnings
@@ -2160,13 +2573,21 @@ for p in range(5):
         except: pass
 
 print(f"\nBest AIC: ARMA({best_aic[1]},{best_aic[2]}) = {best_aic[0]:.2f}")
-print(f"Best BIC: ARMA({best_bic[1]},{best_bic[2]}) = {best_bic[0]:.2f}")</code></pre>
-        </div>
-      </div>
+print(f"Best BIC: ARMA({best_bic[1]},{best_bic[2]}) = {best_bic[0]:.2f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m2l4">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m2l4" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-2l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m2l4')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m2l4')" id="btn-r-m2l4">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m2l4" spellcheck="false">library(forecast)
 library(tseries)
 
 # Generate AR(2) data
@@ -2198,9 +2619,20 @@ print(auto.arima(y, max.p = 4, max.q = 4, ic = "bic"))
 cat("\nADF test:\n")
 print(adf.test(y))
 cat("\nKPSS test:\n")
-print(kpss.test(y))</code></pre>
-        </div>
-      </div>
+print(kpss.test(y))</textarea>
+    <div class="output-area editor-output" id="output-r-m2l4">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>AIC penalizes by $2k$ and is designed for prediction; BIC penalizes by $k \ln T$ and favors sparser models. For forecasting tasks, AIC is generally preferred over BIC.</li>
+        <li>Automated order selection via <code>auto.arima()</code> searches a grid of (p, d, q) combinations, testing stationarity and returning the AIC-optimal model — this is the recommended workflow in practice.</li>
+        <li>A valid ARIMA model has white noise residuals: no significant ACF spikes, Ljung-Box p-value &gt; 0.05, and an approximately normal distribution.</li>
+        <li>Forecast intervals from ARIMA assume Gaussian errors; if residuals show heavy tails or skewness, widen intervals manually or use bootstrap prediction intervals.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2247,7 +2679,29 @@ print(kpss.test(y))</code></pre>
         </div>
         <div class="quiz-feedback" id="m2q3-feedback"></div>
       </div>
-      <button class="quiz-submit" onclick="checkQuiz('m2',{m2q1:'b',m2q2:'c',m2q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="m2q4">
+        <p>4. For an ARMA(p, q) process, both the ACF and PACF decay gradually. If you see this pattern, which model class should you consider?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m2q4" value="a"> Pure AR(p)</label>
+          <label class="quiz-opt"><input type="radio" name="m2q4" value="b"> Pure MA(q)</label>
+          <label class="quiz-opt"><input type="radio" name="m2q4" value="c"> ARMA(p, q) with both AR and MA terms</label>
+          <label class="quiz-opt"><input type="radio" name="m2q4" value="d"> White noise</label>
+        </div>
+        <div class="quiz-feedback" id="m2q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="m2q5">
+        <p>5. The residuals of a well-specified ARIMA model should pass which diagnostic test?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m2q5" value="a"> ADF test (non-stationary residuals)</label>
+          <label class="quiz-opt"><input type="radio" name="m2q5" value="b"> Ljung-Box test (no significant residual autocorrelation)</label>
+          <label class="quiz-opt"><input type="radio" name="m2q5" value="c"> Johansen test (cointegration among residuals)</label>
+          <label class="quiz-opt"><input type="radio" name="m2q5" value="d"> Granger causality test</label>
+        </div>
+        <div class="quiz-feedback" id="m2q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m2',{m2q1:'b',m2q2:'c',m2q3:'b',m2q4:'c',m2q5:'b'})">Submit Answers</button>
     </div>
     <div class="lesson-nav">
       <button class="nav-btn" onclick="showLesson('m2l4')">← Model Selection</button>
@@ -2261,6 +2715,14 @@ print(kpss.test(y))</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 3 · Lesson 1</span>
     <h1>Vector Autoregression (VAR)</h1>
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Specify a VAR(p) model for a system of $K$ stationary variables and interpret each equation as a multivariate generalization of AR(p)</li>
+        <li>Determine the optimal lag order using information criteria (AIC, BIC, HQIC) and test VAR stability via eigenvalues</li>
+        <li>Forecast a multivariate system with a VAR model and quantify the curse of dimensionality ($K^2 p$ parameters)</li>
+      </ul>
+    </div>
     <p>VAR models extend the univariate AR framework to <em>multiple time series</em>, allowing each variable to depend on its own lags and the lags of all other variables in the system. This is the workhorse of empirical macroeconomics.</p>
 
     <h2>VAR(p) Definition</h2>
@@ -2321,9 +2783,16 @@ print(kpss.test(y))</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m3l1')">📊 R</button>
       </div>
       <div id="py-m3l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m3l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m3l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m3l1')" id="btn-py-m3l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m3l1" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.api import VAR
 from statsmodels.tsa.stattools import adfuller
@@ -2369,13 +2838,21 @@ print(f"  F-stat: {gc.test_statistic:.4f}, p-value: {gc.pvalue:.4f}")
 
 # Forecast
 fc = result.forecast(y[-1:], steps=10)
-print(f"\n10-step forecast:\n{pd.DataFrame(fc, columns=df.columns).round(4)}")</code></pre>
-        </div>
-      </div>
+print(f"\n10-step forecast:\n{pd.DataFrame(fc, columns=df.columns).round(4)}")</textarea>
+    <div class="output-area editor-output" id="output-py-m3l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m3l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(vars)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-3l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m3l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m3l1')" id="btn-r-m3l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m3l1" spellcheck="false">library(vars)
 
 # Simulate VAR(1)
 set.seed(42)
@@ -2400,15 +2877,27 @@ causality(fit, cause = "Inflation")
 # Forecast
 fc <- predict(fit, n.ahead = 10, ci = 0.95)
 plot(fc)
-print(fc)</code></pre>
-        </div>
-      </div>
+print(fc)</textarea>
+    <div class="output-area editor-output" id="output-r-m3l1">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>🏦 Federal Reserve Policy Analysis</h4>
+
       <p>The Fed's FAVAR (Factor-Augmented VAR) model uses ~120 macroeconomic indicators compressed to a small number of factors, then fits a VAR to model the interplay between those factors and the Federal Funds Rate. When the FOMC raises rates, the FAVAR traces how the shock propagates: rising yields → tighter credit → slowing investment → GDP deceleration → eventual disinflationary effect (typically 12-18 months). The impulse response functions from this model directly inform rate decisions.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>A VAR(p) with $K$ variables has $K^2 p + K$ parameters — the number grows quadratically in $K$, limiting VAR to small systems (usually $K \leq 8$) without regularization.</li>
+        <li>VAR stability requires all eigenvalues of the companion matrix to lie strictly inside the unit circle; instability produces explosive forecasts.</li>
+        <li>Granger causality tests whether lagged values of one variable help predict another — it captures predictive precedence, not structural causation.</li>
+        <li>For systems with more variables, consider Factor-Augmented VAR (FAVAR) or Bayesian VAR with a Minnesota prior to handle the curse of dimensionality.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2423,6 +2912,15 @@ print(fc)</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 3 · Lesson 2</span>
     <h1>Cointegration &amp; VECM</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Define cointegration and explain why it permits modeling non-stationary I(1) series in levels without spurious regression</li>
+        <li>Apply the Johansen trace and maximum eigenvalue tests to determine the cointegrating rank</li>
+        <li>Interpret the $\alpha$ (adjustment speed) and $\beta$ (cointegrating vectors) matrices in a VECM</li>
+      </ul>
+    </div>
 
     <h2>Cointegration</h2>
     <p>Two (or more) individually I(1) series are <strong>cointegrated</strong> if there exists a linear combination that is I(0) — they share a long-run equilibrium relationship. This is the economic concept of <em>long-run co-movement</em>.</p>
@@ -2464,9 +2962,16 @@ print(fc)</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m3l2')">📊 R</button>
       </div>
       <div id="py-m3l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m3l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m3l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m3l2')" id="btn-py-m3l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m3l2" spellcheck="false">import numpy as np
 import pandas as pd
 from statsmodels.tsa.vector_ar.vecm import VECM, coint_johansen
 import warnings
@@ -2500,13 +3005,21 @@ print(f"\nVECM Adjustment coefficients (alpha):\n{result.alpha}")
 print(f"\nCointegrating vector (beta):\n{result.beta}")
 print(f"\nSpeed of adjustment:")
 print(f"  y1: {result.alpha[0,0]:.4f} (should be negative for y1 above equilibrium)")
-print(f"  y2: {result.alpha[1,0]:.4f}")</code></pre>
-        </div>
-      </div>
+print(f"  y2: {result.alpha[1,0]:.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m3l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m3l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(vars)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-3l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m3l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m3l2')" id="btn-r-m3l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m3l2" spellcheck="false">library(vars)
 library(urca)
 
 # Simulate cointegrated system
@@ -2528,15 +3041,26 @@ print(vecm)
 # VECM forecast via VAR representation
 vec2var_model <- vec2var(joh, r = 1)
 fc <- predict(vec2var_model, n.ahead = 20)
-plot(fc)</code></pre>
-        </div>
-      </div>
+plot(fc)</textarea>
+    <div class="output-area editor-output" id="output-r-m3l2">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>💵 Purchasing Power Parity (PPP)</h4>
       <p>The PPP hypothesis states that exchange rates and relative price levels are cointegrated — they may diverge in the short run but converge to equilibrium over 3-5 years. Central bank economists fit VECM to USD/EUR and US-EU CPI differential data. The cointegrating vector gives the long-run PPP rate; the adjustment coefficients show whether the exchange rate or domestic prices do more of the correcting.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Cointegration is the correct framework when variables share a common stochastic trend — fitting a VAR in differences on cointegrated data discards the long-run equilibrium information.</li>
+        <li>The Johansen test determines the cointegrating rank $r$: $r=0$ means no cointegration; $r=K$ means all variables are stationary; $0 &lt; r &lt; K$ means $r$ cointegrating relationships exist.</li>
+        <li>In the VECM, $\beta$ contains the cointegrating vectors (long-run relations) and $\alpha$ contains the adjustment speeds — a negative $\alpha$ for the error correction term means the variable corrects back toward equilibrium.</li>
+        <li>Always test for cointegration before choosing between VAR-in-levels (cointegrated), VAR-in-differences (not cointegrated), or VECM (cointegrated with error correction).</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2551,6 +3075,15 @@ plot(fc)</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 3 · Lesson 3</span>
     <h1>Impulse Response Functions &amp; DSGE</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Compute and interpret impulse response functions (IRFs) from a VAR to trace how shocks propagate across variables over time</li>
+        <li>Explain the role of Cholesky decomposition in structural identification and the assumption it imposes</li>
+        <li>Describe how DSGE models differ from reduced-form VARs in terms of theoretical grounding and use cases</li>
+      </ul>
+    </div>
 
     <h2>Impulse Response Functions (IRF)</h2>
     <p>IRFs trace the dynamic response of all variables in a VAR system to a one-time, one-unit shock in one variable's error term. They are the primary tool for identifying monetary policy transmission mechanisms.</p>
@@ -2602,10 +3135,18 @@ plot(fc)</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m3l3')">📊 R</button>
       </div>
       <div id="py-m3l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m3l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m3l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m3l3')" id="btn-py-m3l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m3l3" spellcheck="false">import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from statsmodels.tsa.api import VAR
 
 # Simulate 3-variable macro VAR: [GDP growth, Inflation, Fed Funds Rate]
@@ -2631,27 +3172,88 @@ df = pd.DataFrame(y, columns=['GDP_growth','Inflation','Fed_Rate'])
 model = VAR(df)
 result = model.fit(1)
 
-# Compute IRF (impulse response)
-irf = result.irf(periods=20)
-print("IRF: Response of GDP_growth to 1-std Fed_Rate shock:")
+# Compute Cholesky IRF manually (Fed Rate shock → GDP, Inflation)
 chol = np.linalg.cholesky(result.sigma_u)
-irfs = []
-shock = np.zeros(3); shock[2] = chol[2,2]  # Fed rate shock
+shock = np.zeros(3); shock[2] = chol[2, 2]
+
+horizons = range(20)
+irf_gdp, irf_inf, irf_fed = [], [], []
 resp = np.zeros(3)
-for h in range(20):
-    if h == 0:
-        resp = result.coefs[0] @ np.zeros(3) + shock
-    else:
-        resp = result.coefs[0] @ resp
-    irfs.append(resp[0])
-    print(f"  h={h+1:2d}: GDP response = {resp[0]:+.4f}")
-</code></pre>
-        </div>
-      </div>
+for h in horizons:
+    resp = result.coefs[0] @ (resp if h > 0 else np.zeros(3)) + (shock if h == 0 else np.zeros(3))
+    irf_gdp.append(resp[0])
+    irf_inf.append(resp[1])
+    irf_fed.append(resp[2])
+
+print("IRF: Response to 1-SD Fed Rate shock")
+print(f"{'h':>3}  {'GDP':>10}  {'Inflation':>10}  {'FedRate':>10}")
+print("-" * 42)
+for h, (g, inf, f) in enumerate(zip(irf_gdp, irf_inf, irf_fed), 1):
+    print(f"{h:3d}  {g:+10.4f}  {inf:+10.4f}  {f:+10.4f}")
+
+# ── Plot IRF ──────────────────────────────────────────────────────────
+fig, axes = plt.subplots(1, 3, figsize=(13, 4), sharey=False)
+labels = ['GDP Growth', 'Inflation', 'Fed Rate']
+irfs_all = [irf_gdp, irf_inf, irf_fed]
+colors = ['#2563eb', '#dc2626', '#16a34a']
+
+for ax, vals, lab, col in zip(axes, irfs_all, labels, colors):
+    ax.plot(list(horizons), vals, color=col, linewidth=2, marker='o', markersize=4)
+    ax.axhline(0, color='#888', linewidth=0.8, linestyle='--')
+    ax.fill_between(list(horizons), vals, 0, alpha=0.1, color=col)
+    ax.set_title(f'Response: {lab}', fontsize=11)
+    ax.set_xlabel('Horizon (periods)')
+    ax.set_ylabel('Response')
+    ax.grid(True, alpha=0.3)
+
+fig.suptitle('IRF — Response to 1-SD Fed Rate Shock', fontsize=13, fontweight='bold')
+plt.tight_layout()
+plt.show()
+
+# ── FEVD: bootstrap variance decomposition ───────────────────────────
+H = 20
+fevd_gdp = []
+irf_matrix = np.zeros((H, 3, 3))
+for s in range(3):
+    sh = np.zeros(3); sh[s] = chol[s, s]
+    r = np.zeros(3)
+    for h in range(H):
+        r = result.coefs[0] @ (r if h > 0 else np.zeros(3)) + (sh if h == 0 else np.zeros(3))
+        irf_matrix[h, :, s] = r
+
+mse = np.cumsum(irf_matrix[:, 0, :] ** 2, axis=0)
+fevd = mse / mse.sum(axis=1, keepdims=True) * 100
+
+fig2, ax2 = plt.subplots(figsize=(8, 4))
+bottom = np.zeros(H)
+shock_labels = ['GDP Shock', 'Inflation Shock', 'FedRate Shock']
+bar_colors = ['#2563eb', '#dc2626', '#16a34a']
+x = np.arange(1, H + 1)
+for s, (lab, col) in enumerate(zip(shock_labels, bar_colors)):
+    ax2.bar(x, fevd[:, s], bottom=bottom, label=lab, color=col, alpha=0.85)
+    bottom += fevd[:, s]
+
+ax2.set_title('FEVD — % of GDP Forecast Variance by Shock', fontsize=12)
+ax2.set_xlabel('Horizon'); ax2.set_ylabel('% Contribution')
+ax2.legend(loc='upper right', fontsize=9)
+ax2.grid(True, alpha=0.3, axis='y')
+plt.tight_layout()
+plt.show()
+</textarea>
+    <div class="output-area editor-output" id="output-py-m3l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m3l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(vars)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-3l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m3l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m3l3')" id="btn-r-m3l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m3l3" spellcheck="false">library(vars)
 
 # 3-variable macro VAR
 set.seed(42)
@@ -2669,19 +3271,49 @@ for (t in 2:n) {
 colnames(y) <- c("GDP", "Inflation", "FedRate")
 df <- as.data.frame(y)
 
-# Fit VAR
+# Fit VAR(1)
 fit <- VAR(df, p = 1, type = "const")
+cat("VAR(1) model — AIC:", AIC(fit), "\n\n")
 
 # Impulse Response Functions
 irf_obj <- irf(fit, impulse = "FedRate", response = c("GDP","Inflation"),
                n.ahead = 20, boot = TRUE, ci = 0.9)
+
+# Print numerical IRF table
+irf_vals <- irf_obj$irf$FedRate
+cat("IRF: Response to a 1-SD Fed Rate shock\n")
+cat(sprintf("%-4s  %-10s  %-10s\n", "h", "GDP", "Inflation"))
+cat(strrep("-", 30), "\n")
+for (h in seq_len(nrow(irf_vals))) {
+  cat(sprintf("%-4d  %+.5f   %+.5f\n", h, irf_vals[h, 1], irf_vals[h, 2]))
+}
+
+# Plot IRF (renders as chart below)
 plot(irf_obj, main = "IRF: Federal Rate Shock")
+dev.off()   # close SVG 1 so FEVD gets its own chart
 
 # Forecast Error Variance Decomposition
 fevd_obj <- fevd(fit, n.ahead = 20)
-plot(fevd_obj)</code></pre>
-        </div>
-      </div>
+cat("\nFEVD — % of GDP forecast variance explained by each shock:\n")
+fevd_mat <- round(fevd_obj$GDP * 100, 2)
+print(fevd_mat[c(1,4,8,12,16,20), ])
+
+# Plot FEVD (renders as chart below)
+plot(fevd_obj)
+dev.off()   # close SVG 2</textarea>
+    <div class="output-area editor-output" id="output-r-m3l3">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Impulse response functions (IRFs) answer "if variable $j$ receives a shock today, how does variable $i$ respond over the next $h$ periods?" — they are the primary tool for policy analysis.</li>
+        <li>Structural identification (who shocked whom) cannot be recovered from a reduced-form VAR alone; Cholesky decomposition imposes a recursive ordering assumption — the ordering matters and must be theoretically justified.</li>
+        <li>Forecast Error Variance Decomposition (FEVD) answers what fraction of a variable's forecast uncertainty at horizon $h$ is attributable to each structural shock.</li>
+        <li>DSGE models impose full economic theory (microfoundations, rational expectations) and are harder to estimate but yield structural interpretations that reduced-form VARs cannot.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2728,7 +3360,29 @@ plot(fevd_obj)</code></pre>
         </div>
         <div class="quiz-feedback" id="m3q3-feedback"></div>
       </div>
-      <button class="quiz-submit" onclick="checkQuiz('m3',{m3q1:'c',m3q2:'c',m3q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="m3q4">
+        <p>4. A Granger causality test finding that variable X "Granger-causes" Y means:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m3q4" value="a"> X is a structural cause of Y</label>
+          <label class="quiz-opt"><input type="radio" name="m3q4" value="b"> Past values of X help predict Y beyond Y's own lags</label>
+          <label class="quiz-opt"><input type="radio" name="m3q4" value="c"> Y does not cause X in any sense</label>
+          <label class="quiz-opt"><input type="radio" name="m3q4" value="d"> X and Y are cointegrated</label>
+        </div>
+        <div class="quiz-feedback" id="m3q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="m3q5">
+        <p>5. In the VECM, a negative value for the error correction coefficient $\alpha_i$ (associated with the cointegrating relation) implies:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m3q5" value="a"> Variable $i$ moves away from the long-run equilibrium</label>
+          <label class="quiz-opt"><input type="radio" name="m3q5" value="b"> Variable $i$ corrects back toward the equilibrium (error-correcting behavior)</label>
+          <label class="quiz-opt"><input type="radio" name="m3q5" value="c"> The cointegrating vector is invalid</label>
+          <label class="quiz-opt"><input type="radio" name="m3q5" value="d"> Variable $i$ is I(2) rather than I(1)</label>
+        </div>
+        <div class="quiz-feedback" id="m3q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m3',{m3q1:'c',m3q2:'c',m3q3:'b',m3q4:'b',m3q5:'b'})">Submit Answers</button>
     </div>
     <div class="lesson-nav">
       <button class="nav-btn" onclick="showLesson('m3l3')">← IRF & DSGE</button>
@@ -2743,6 +3397,15 @@ plot(fevd_obj)</code></pre>
     <span class="lesson-badge">Module 4 · Lesson 1</span>
     <h1>Random Forest for Time Series</h1>
     <p>Machine learning models like Random Forest don't assume linearity or Gaussian errors, making them attractive for complex, nonlinear time series. The key is proper <strong>feature engineering</strong> — transforming the raw series into tabular supervised learning format.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Engineer lag features, rolling statistics, and calendar/Fourier features to convert a time series into a supervised regression problem</li>
+        <li>Train a Random Forest regressor on a time-based train/test split (not random k-fold) and evaluate out-of-sample accuracy</li>
+        <li>Interpret feature importances to understand which lagged periods and calendar effects drive the forecast</li>
+      </ul>
+    </div>
 
     <h2>Feature Engineering for Time Series</h2>
     <p>Converting a time series into an ML-ready dataset involves creating lag features, rolling statistics, and calendar variables:</p>
@@ -2796,9 +3459,16 @@ plot(fevd_obj)</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m4l1')">📊 R</button>
       </div>
       <div id="py-m4l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m4l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m4l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m4l1')" id="btn-py-m4l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m4l1" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -2868,13 +3538,46 @@ print(f"  MAPE: {mape:.2f}%")
 # Feature importance (top 10)
 imp = pd.Series(rf.feature_importances_, index=X_train.columns)
 print(f"\nTop 10 Features:")
-print(imp.sort_values(ascending=False).head(10).round(4))</code></pre>
-        </div>
-      </div>
+print(imp.sort_values(ascending=False).head(10).round(4))
+
+# ── Plot 1: actual vs predicted (test set) ────────────────────────────
+fig, axes = plt.subplots(2, 1, figsize=(12, 8))
+
+test_idx = data.index[cutoff:]
+axes[0].plot(test_idx, y_test.values, color='#2563eb', linewidth=1.2,
+             label='Actual', alpha=0.9)
+axes[0].plot(test_idx, y_pred, color='#dc2626', linewidth=1.2,
+             label='RF Forecast', alpha=0.85)
+axes[0].set_title(f'Random Forest Forecast vs Actual  (MAE={mae:.2f}, RMSE={rmse:.2f})',
+                  fontsize=11)
+axes[0].legend(fontsize=9); axes[0].grid(True, alpha=0.3)
+
+# ── Plot 2: feature importance (top 15) ──────────────────────────────
+top15 = imp.sort_values(ascending=False).head(15)
+colors = ['#2563eb' if 'lag' in c else '#dc2626' if 'roll' in c
+          else '#16a34a' if 'sin' in c or 'cos' in c else '#7c3aed'
+          for c in top15.index]
+axes[1].barh(top15.index[::-1], top15.values[::-1], color=colors[::-1], edgecolor='none')
+axes[1].set_title('Top 15 Feature Importances', fontsize=11)
+axes[1].set_xlabel('Importance')
+axes[1].grid(True, alpha=0.3, axis='x')
+
+plt.tight_layout()
+plt.show()</textarea>
+    <div class="output-area editor-output" id="output-py-m4l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m4l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(ranger)       # fast Random Forest
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-4l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m4l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m4l1')" id="btn-r-m4l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m4l1" spellcheck="false">library(ranger)       # fast Random Forest
 library(lubridate)
 
 # Generate daily time series
@@ -2921,15 +3624,26 @@ cat(sprintf("RMSE: %.3f\n", sqrt(mean((test$y - preds)^2))))
 
 # Feature importance
 imp <- sort(rf$variable.importance, decreasing = TRUE)
-print(head(imp, 10))</code></pre>
-        </div>
-      </div>
+print(head(imp, 10))</textarea>
+    <div class="output-area editor-output" id="output-r-m4l1">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>⚡ Electricity Load Forecasting</h4>
       <p>Grid operators (PJM, ERCOT, National Grid) use Random Forest to forecast hourly electricity demand 24–72 hours ahead. Temperature, humidity, calendar effects, and economic activity are key features. RF handles the nonlinear interaction between temperature and demand (both extreme cold and extreme heat spike consumption) better than ARIMA — critical for avoiding costly spinning reserve shortfalls.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Random Forest excels at capturing nonlinear relationships and interactions but has no built-in temporal structure — all time information must be injected as engineered features.</li>
+        <li>Standard k-fold cross-validation is invalid for time series because future data leaks into training. Always use time-based splits (earlier period trains, later period tests).</li>
+        <li>Feature importance measures how much each feature reduces MSE across all trees — lag features dominate for short-horizon forecasts; calendar features dominate for seasonal ones.</li>
+        <li>Random Forest is naturally resistant to overfitting via bagging and random subspacing, but it cannot extrapolate beyond the range of training data — a key limitation for trending series.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -2945,6 +3659,15 @@ print(head(imp, 10))</code></pre>
     <span class="lesson-badge">Module 4 · Lesson 2</span>
     <h1>Gradient Boosting &amp; XGBoost</h1>
     <p>Gradient boosting builds an ensemble sequentially — each new tree corrects the <em>residual errors</em> of the previous ensemble. XGBoost (eXtreme Gradient Boosting) adds regularization, second-order gradients, and parallelism, making it the dominant algorithm in tabular ML competitions.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Explain the gradient boosting algorithm and derive the XGBoost objective function including its second-order Taylor expansion and regularization terms</li>
+        <li>Tune key hyperparameters (learning rate, max depth, subsample) and use early stopping with a held-out validation fold</li>
+        <li>Compare XGBoost with Random Forest and select the appropriate model based on the characteristics of the series</li>
+      </ul>
+    </div>
 
     <h2>Gradient Boosting Framework</h2>
     <div class="math-box">
@@ -2989,9 +3712,16 @@ print(head(imp, 10))</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m4l2')">📊 R</button>
       </div>
       <div id="py-m4l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m4l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m4l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m4l2')" id="btn-py-m4l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m4l2" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import warnings
@@ -3033,9 +3763,12 @@ def create_features(y, lags=26):
 
 data = create_features(y)
 feat_cols = [c for c in data.columns if c != 'y']
-cut = int(len(data)*0.8)
-X_tr, y_tr = data[feat_cols].iloc[:cut], data['y'].iloc[:cut]
-X_te, y_te = data[feat_cols].iloc[cut:], data['y'].iloc[cut:]
+# Time-based splits: 70% train, 10% validation (for early stopping), 20% test
+cut1 = int(len(data)*0.70)
+cut2 = int(len(data)*0.80)
+X_tr, y_tr   = data[feat_cols].iloc[:cut1],       data['y'].iloc[:cut1]
+X_val, y_val = data[feat_cols].iloc[cut1:cut2],   data['y'].iloc[cut1:cut2]
+X_te, y_te   = data[feat_cols].iloc[cut2:],       data['y'].iloc[cut2:]
 
 # ── Train ──────────────────────────────────────────────────────────
 if USE_XGB:
@@ -3044,7 +3777,8 @@ if USE_XGB:
         subsample=0.8, colsample_bytree=0.8, reg_lambda=1,
         early_stopping_rounds=50, eval_metric='rmse', random_state=42
     )
-    model.fit(X_tr, y_tr, eval_set=[(X_te, y_te)], verbose=False)
+    # Use held-out validation fold (not test set) to avoid look-ahead contamination
+    model.fit(X_tr, y_tr, eval_set=[(X_val, y_val)], verbose=False)
 else:
     model = GradientBoostingRegressor(
         n_estimators=300, learning_rate=0.05, max_depth=5,
@@ -3066,13 +3800,21 @@ print(f"  MAPE: {mape:.2f}%")
 if hasattr(model, 'feature_importances_'):
     imp = pd.Series(model.feature_importances_, index=feat_cols)
     print("\nTop 10 features by importance:")
-    print(imp.nlargest(10).round(4))</code></pre>
-        </div>
-      </div>
+    print(imp.nlargest(10).round(4))</textarea>
+    <div class="output-area editor-output" id="output-py-m4l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m4l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(xgboost)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-4l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m4l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m4l2')" id="btn-r-m4l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m4l2" spellcheck="false">library(xgboost)
 
 # Generate weekly time series
 set.seed(42)
@@ -3092,21 +3834,30 @@ for (k in 1:3) {
   X[paste0("sin_",k)] <- sin(2*pi*k*t/52)
   X[paste0("cos_",k)] <- cos(2*pi*k*t/52)
 }
-df     <- cbind(y = y, X) |> na.omit()
-cut    <- floor(nrow(df) * 0.8)
-tr     <- df[1:cut,];  te <- df[(cut+1):nrow(df),]
-feat   <- setdiff(names(df), "y")
+df   <- cbind(y = y, X) |> na.omit()
+# Time-based splits: 70% train, 10% validation, 20% test
+# Random k-fold must NOT be used for time series (look-ahead bias)
+n_df  <- nrow(df)
+cut1  <- floor(n_df * 0.70)
+cut2  <- floor(n_df * 0.80)
+tr    <- df[1:cut1, ];  val <- df[(cut1+1):cut2, ];  te <- df[(cut2+1):n_df, ]
+feat  <- setdiff(names(df), "y")
 
-dtrain <- xgb.DMatrix(as.matrix(tr[, feat]), label = tr$y)
+dtrain <- xgb.DMatrix(as.matrix(tr[, feat]),  label = tr$y)
+dval   <- xgb.DMatrix(as.matrix(val[, feat]), label = val$y)
 dtest  <- xgb.DMatrix(as.matrix(te[, feat]))
 
 params <- list(eta = 0.05, max_depth = 5,
                subsample = 0.8, colsample_bytree = 0.8,
                objective = "reg:squarederror")
 
-cv <- xgb.cv(params, dtrain, nrounds = 500, nfold = 5,
-             early_stopping_rounds = 30, verbose = FALSE)
-best_n <- cv$best_iteration
+# Use watchlist with held-out validation fold (not test set) for early stopping
+watchlist <- list(train = dtrain, val = dval)
+model_cv  <- xgb.train(params, dtrain, nrounds = 500,
+                        watchlist = watchlist,
+                        early_stopping_rounds = 30, verbose = 0)
+best_n <- model_cv$best_iteration
+cat(sprintf("Best iteration: %d\n", best_n))
 
 model <- xgb.train(params, dtrain, nrounds = best_n)
 preds <- predict(model, dtest)
@@ -3114,9 +3865,20 @@ cat(sprintf("XGBoost  MAE: %.3f  RMSE: %.3f\n",
             mean(abs(te$y - preds)),
             sqrt(mean((te$y - preds)^2))))
 
-xgb.importance(model = model) |> head(10) |> print()</code></pre>
-        </div>
-      </div>
+xgb.importance(model = model) |> head(10) |> print()</textarea>
+    <div class="output-area editor-output" id="output-r-m4l2">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Gradient boosting fits trees sequentially to the negative gradient of the loss, addding a small learning-rate-scaled correction at each step — this provides principled bias reduction.</li>
+        <li>XGBoost's second-order Taylor expansion of the loss makes optimization more precise and enables closed-form leaf weight computation with $L_1$/$L_2$ regularization.</li>
+        <li>Early stopping requires a held-out <em>validation</em> set (never the test set); use a chronologically later slice of training data to avoid leakage.</li>
+        <li>XGBoost consistently dominates structured/tabular time series competitions; prefer it over Random Forest when the signal-to-noise ratio is high and features are well-engineered.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -3132,6 +3894,15 @@ xgb.importance(model = model) |> head(10) |> print()</code></pre>
     <span class="lesson-badge">Module 4 · Lesson 3</span>
     <h1>LSTM &amp; Recurrent Neural Networks</h1>
     <p>Long Short-Term Memory (LSTM) networks are a class of RNNs that can learn <em>long-range dependencies</em> through gating mechanisms that control information flow across time steps — solving the vanishing gradient problem of vanilla RNNs.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Derive all six LSTM gate equations and explain the role of the forget, input, and output gates in controlling memory</li>
+        <li>Prepare multivariate time series data in the (samples, timesteps, features) tensor format required by LSTM</li>
+        <li>Train and evaluate an LSTM model with proper sequence length selection and early stopping on a validation set</li>
+      </ul>
+    </div>
 
     <h2>LSTM Cell Equations</h2>
     <div class="math-box">
@@ -3175,9 +3946,16 @@ xgb.importance(model = model) |> head(10) |> print()</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m4l3')">📊 R</button>
       </div>
       <div id="py-m4l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m4l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m4l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m4l3')" id="btn-py-m4l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m4l3" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -3244,63 +4022,65 @@ except ImportError:
     preds = X_test[:, -1, 0]
     true  = y_test[:, 0]
     rmse  = np.sqrt(mean_squared_error(true, preds))
-    print(f"Naive baseline RMSE: {rmse:.4f}")</code></pre>
-        </div>
-      </div>
+    print(f"Naive baseline RMSE: {rmse:.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m4l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m4l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r"># LSTM in R via keras
-# Install: install.packages("keras"); keras::install_keras()
-library(keras)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-4l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m4l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m4l3')" id="btn-r-m4l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m4l3" spellcheck="false"># LSTM in R (keras/tensorflow requires a local install)
+# In-browser: we demonstrate the same concept using forecast::nnetar
+# (Neural Network AR model — a single-hidden-layer NNAR equivalent)
+library(forecast)
 
 set.seed(42)
 n <- 500
 t <- 1:n
 y <- sin(2*pi*t/50) + 0.5*sin(2*pi*t/25) + 0.1*rnorm(n)
+ts_y <- ts(y)
 
-# Normalize
-y_sc <- (y - min(y)) / (max(y) - min(y))
-LOOK <- 30; HOR <- 5
+# Train/test split
+cut   <- floor(n * 0.8)
+train <- window(ts_y, end = cut)
+test  <- window(ts_y, start = cut + 1)
 
-# Create sequences
-make_seq <- function(series, lookback, horizon) {
-  X <- matrix(0, length(series)-lookback-horizon+1, lookback)
-  Y <- matrix(0, nrow(X), horizon)
-  for (i in seq_len(nrow(X))) {
-    X[i,] <- series[i:(i+lookback-1)]
-    Y[i,] <- series[(i+lookback):(i+lookback+horizon-1)]
-  }
-  list(X = array(X, c(nrow(X), lookback, 1)), Y = Y)
-}
+# NNAR(p, k): p lagged inputs, k hidden nodes
+# Analogous to a 1-layer LSTM with p lookback steps
+nnar_model <- nnetar(train, p = 30, size = 32, repeats = 5)
+cat("Model:", nnar_model$method, "\n")
 
-dat   <- make_seq(y_sc, LOOK, HOR)
-cut   <- floor(nrow(dat$X) * 0.8)
-X_tr  <- dat$X[1:cut,,, drop=FALSE]; Y_tr <- dat$Y[1:cut,]
-X_te  <- dat$X[(cut+1):nrow(dat$X),,, drop=FALSE]; Y_te <- dat$Y[(cut+1):nrow(dat$Y),]
+# Forecast horizon = length of test set
+h     <- length(test)
+fc    <- forecast(nnar_model, h = h)
+preds <- as.numeric(fc$mean)
 
-model <- keras_model_sequential(list(
-  layer_lstm(units = 64, return_sequences = TRUE, input_shape = c(LOOK, 1)),
-  layer_dropout(rate = 0.2),
-  layer_lstm(units = 32),
-  layer_dropout(rate = 0.2),
-  layer_dense(units = HOR)
-))
-model |> compile(optimizer = "adam", loss = "mse")
-summary(model)
+rmse <- sqrt(mean((as.numeric(test) - preds)^2))
+mae  <- mean(abs(as.numeric(test) - preds))
+cat(sprintf("NNAR RMSE: %.4f\n", rmse))
+cat(sprintf("NNAR MAE:  %.4f\n", mae))
+cat("\nNote: For full LSTM, install keras locally:\n")
+cat("  install.packages('keras'); keras::install_keras()\n")</textarea>
+    <div class="output-area editor-output" id="output-r-m4l3">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
 
-history <- model |> fit(
-  X_tr, Y_tr, epochs = 100, batch_size = 32,
-  validation_split = 0.2,
-  callbacks = list(callback_early_stopping(patience = 15)),
-  verbose = 0
-)
-preds  <- model |> predict(X_te)
-rmse   <- sqrt(mean((Y_te[,1] - preds[,1])^2))
-cat(sprintf("LSTM RMSE (1-step): %.4f\n", rmse))
-plot(history)</code></pre>
-        </div>
-      </div>
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>LSTM gates (forget, input, output) and the cell state $c_t$ are the core innovation over vanilla RNNs — the cell state acts as a selective long-range memory that can persist information over many steps.</li>
+        <li>LSTM requires significantly more data than classical models (typically 500+ observations minimum) and is computationally expensive — for most tabular time series, XGBoost or LightGBM outperforms LSTM with far less tuning effort.</li>
+        <li>Sequence length (lookback window) is a critical hyperparameter: too short misses long-range patterns; too long dilutes the gradient signal through backpropagation through time (BPTT).</li>
+        <li><strong>Modern alternatives to LSTM:</strong> Temporal Fusion Transformer (TFT) and N-BEATS have outperformed LSTM on major time series benchmarks (M4, M5 competitions). Transformer-based architectures (Informer, PatchTST) handle much longer sequences more efficiently. LSTM remains a solid baseline but is no longer state-of-the-art for most forecasting tasks.</li>
+      </ul>
     </div>
 
     <!-- M4 QUIZ -->
@@ -3348,7 +4128,29 @@ plot(history)</code></pre>
         </div>
         <div class="quiz-feedback" id="m4q3-feedback"></div>
       </div>
-      <button class="quiz-submit" onclick="checkQuiz('m4',{m4q1:'b',m4q2:'c',m4q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="m4q4">
+        <p>4. Which LSTM gate decides what information from the previous cell state to discard?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m4q4" value="a"> Input gate ($i_t$)</label>
+          <label class="quiz-opt"><input type="radio" name="m4q4" value="b"> Output gate ($o_t$)</label>
+          <label class="quiz-opt"><input type="radio" name="m4q4" value="c"> Forget gate ($f_t$)</label>
+          <label class="quiz-opt"><input type="radio" name="m4q4" value="d"> Candidate cell ($\tilde{c}_t$)</label>
+        </div>
+        <div class="quiz-feedback" id="m4q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="m4q5">
+        <p>5. A practitioner wants to forecast daily electricity demand 7 days ahead. They have 3 years of hourly data and plenty of computation time. Which approach is most likely to give the best accuracy?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m4q5" value="a"> ARIMA(2,1,2) — classical and interpretable</label>
+          <label class="quiz-opt"><input type="radio" name="m4q5" value="b"> XGBoost with engineered lag, calendar, and weather features</label>
+          <label class="quiz-opt"><input type="radio" name="m4q5" value="c"> Random Forest with 10 trees and no feature engineering</label>
+          <label class="quiz-opt"><input type="radio" name="m4q5" value="d"> The naïve seasonal baseline (last week same day)</label>
+        </div>
+        <div class="quiz-feedback" id="m4q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m4',{m4q1:'b',m4q2:'c',m4q3:'b',m4q4:'c',m4q5:'b'})">Submit Answers</button>
     </div>
     <div class="lesson-nav">
       <button class="nav-btn" onclick="showLesson('m4l3')">← LSTM</button>
@@ -3363,8 +4165,21 @@ plot(history)</code></pre>
     <span class="lesson-badge">Module 5 · Lesson 1</span>
     <h1>Prophet &amp; State Space Models</h1>
 
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Describe Prophet's additive decomposition of trend, seasonality, and holidays and explain how Bayesian parameter estimation enables automatic changepoint detection</li>
+        <li>Identify scenarios where Prophet is and is not a good choice, including its known limitations</li>
+        <li>Set up a linear Gaussian state space model and understand how ARIMA and ETS models are special cases of it</li>
+      </ul>
+    </div>
+
     <h2>Facebook Prophet</h2>
     <p>Prophet is a decomposable additive model designed for business time series with strong seasonality and trend changes. It is robust to missing data, outliers, and structural breaks — and requires minimal tuning.</p>
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Prophet Status (2023–present):</strong> Meta deprecated active development of Prophet in 2023. While still functional and installable, it has shown mixed results in rigorous benchmarks — often underperforming simpler ETS or ARIMA models on standard datasets. It remains a practical tool for rapid deployment across many business series by non-specialists, but should not be assumed to be the best model without benchmarking.</div>
+    </div>
     <div class="math-box">
       <div class="math-label">Prophet Generative Model</div>
       $$y(t) = g(t) + s(t) + h(t) + \varepsilon_t$$
@@ -3424,10 +4239,18 @@ plot(history)</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m5l1')">📊 R</button>
       </div>
       <div id="py-m5l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m5l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m5l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m5l1')" id="btn-py-m5l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m5l1" spellcheck="false">import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # ── Simulate Prophet-like decomposed series ────────────────────────
 np.random.seed(42)
@@ -3440,7 +4263,7 @@ changepoints = [365, 730]
 trend = np.where(t < changepoints[0], 0.03*t,
         np.where(t < changepoints[1], 0.03*changepoints[0] + 0.01*(t - changepoints[0]),
                  0.03*changepoints[0] + 0.01*(changepoints[1]-changepoints[0]) + 0.05*(t - changepoints[1])))
-# Yearly seasonality (Fourier, N=10)
+# Yearly seasonality (Fourier, N=3)
 yearly = sum(np.sin(2*np.pi*k*t/365) * np.random.uniform(2,8)
              + np.cos(2*np.pi*k*t/365) * np.random.uniform(2,8)
              for k in range(1, 4))
@@ -3454,6 +4277,31 @@ df = pd.DataFrame({'ds': dates, 'y': y})
 
 print(f"Data: {len(df)} days from {df.ds.min().date()} to {df.ds.max().date()}")
 print(f"y summary: mean={df.y.mean():.1f}, std={df.y.std():.1f}")
+
+# ── Plot true decomposition ───────────────────────────────────────────
+fig, axes = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+
+axes[0].plot(dates, y, color='#2563eb', linewidth=0.8, alpha=0.9)
+axes[0].set_title('Observed Series (Trend + Yearly + Weekly + Noise)', fontsize=11)
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(dates, 100 + trend, color='#dc2626', linewidth=1.8)
+axes[1].axvline(dates[changepoints[0]], color='#888', linestyle='--', linewidth=1)
+axes[1].axvline(dates[changepoints[1]], color='#888', linestyle='--', linewidth=1)
+axes[1].set_title('Piecewise Linear Trend (changepoints marked)', fontsize=11)
+axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(dates[:90], yearly[:90], color='#16a34a', linewidth=1.4)
+axes[2].set_title('Yearly Seasonality (first 90 days shown)', fontsize=11)
+axes[2].grid(True, alpha=0.3)
+
+axes[3].plot(dates[:21], weekly[:21], color='#7c3aed', linewidth=1.4,
+             marker='o', markersize=3)
+axes[3].set_title('Weekly Seasonality (3 weeks shown)', fontsize=11)
+axes[3].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
 
 # ── Prophet (if installed) ─────────────────────────────────────────
 try:
@@ -3491,60 +4339,80 @@ except ImportError:
                                      freq_seasonal=[{'period': 365, 'harmonics': 3},
                                                     {'period': 7,   'harmonics': 2}])
     uc_result = uc_model.fit(disp=False, maxiter=100)
-    print(uc_result.summary())</code></pre>
-        </div>
-      </div>
+    print(uc_result.summary())</textarea>
+    <div class="output-area editor-output" id="output-py-m5l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m5l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(prophet)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-5l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m5l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m5l1')" id="btn-r-m5l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m5l1" spellcheck="false"># Prophet requires a local R install; browser runtime uses STL + KFAS instead
+# (Prophet API shown in comments for reference)
 
-# Simulate data
+library(stats)
+
+# Simulate decomposable time series (same as Python example)
 set.seed(42)
 n  <- 365 * 3
 ds <- seq(as.Date("2021-01-01"), by = "day", length.out = n)
 t  <- 1:n
 y  <- 100 + 0.04*t + 20*sin(2*pi*t/365) + 5*sin(2*pi*t/7) + rnorm(n, 0, 3)
-df <- data.frame(ds = ds, y = y)
+ts_y <- ts(y, frequency = 7)  # weekly frequency for STL
 
-# Fit Prophet
-m <- prophet(
-  df,
-  changepoint.prior.scale   = 0.05,
-  seasonality.prior.scale   = 10,
-  yearly.seasonality         = TRUE,
-  weekly.seasonality         = TRUE
-)
+cat("Data:", n, "days from", format(ds[1]), "to", format(ds[n]), "\n")
+cat("y: mean =", round(mean(y), 1), " std =", round(sd(y), 1), "\n\n")
 
-# Forecast 90 days
-future   <- make_future_dataframe(m, periods = 90)
-forecast <- predict(m, future)
-plot(m, forecast) + ggtitle("Prophet Forecast")
-prophet_plot_components(m, forecast)
+# STL decomposition (Prophet-like additive decomposition)
+stl_fit <- stl(ts_y, s.window = "periodic", robust = TRUE)
+components <- stl_fit$time.series
+cat("STL Decomposition components:\n")
+cat("  Seasonal amplitude: ", round(diff(range(components[,'seasonal'])), 2), "\n")
+cat("  Trend range:        ", round(range(components[,'trend']), 2), "\n")
+cat("  Residual std:       ", round(sd(components[,'remainder']), 2), "\n\n")
 
-# Cross-validation
-cv   <- cross_validation(m, initial = "365 days",
-                          period = "90 days", horizon = "90 days")
-perf <- performance_metrics(cv)
-cat("\nProphet CV Metrics (MAPE):\n")
-print(head(perf[, c("horizon","mae","rmse","mape")]))
-
-# State-space alternative: structural TS
+# KFAS state-space model (browser-compatible alternative)
 library(KFAS)
 sts <- SSModel(y ~ SSMtrend(degree = 2) +
                SSMseasonal(period = 7, sea.type = "trigonometric"),
                H = NA, data = data.frame(y = y))
 fit <- fitSSM(sts, inits = rep(log(var(y)), 3))
 smo <- KFS(fit$model)
-cat("\nKFAS Log-likelihood:", logLik(fit$model), "\n")</code></pre>
-        </div>
-      </div>
+cat("KFAS Log-likelihood:", round(logLik(fit$model), 2), "\n")
+
+# Simple 90-day forecast using last trend slope
+last_trend <- tail(components[,'trend'], 1)
+trend_slope <- mean(diff(components[,'trend']))
+fc_vals <- last_trend + trend_slope * (1:90)
+cat("\n90-day trend forecast range: [",
+    round(min(fc_vals), 1), ",", round(max(fc_vals), 1), "]\n")
+cat("\nNote: For full Prophet, install locally:\n")
+cat("  install.packages('prophet')\n")</textarea>
+    <div class="output-area editor-output" id="output-r-m5l1">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>📘 Meta's Capacity Planning</h4>
       <p>Facebook (Meta) built Prophet to forecast server load, ad revenue, and data center capacity across thousands of time series. Each server farm's demand has weekly seasonality (weekday/weekend), annual cycles, and occasional trend breaks (product launches, policy changes). Prophet's Bayesian approach automatically detects these changepoints and scales across analysts without deep time series expertise — processing millions of series in production.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Prophet's strengths are interpretability, robustness to missing data, automatic changepoint detection, and easy incorporation of known holidays — not raw accuracy.</li>
+        <li>Prophet fits components via MAP estimation using Stan (a probabilistic programming system), making it inherently Bayesian — this is unrelated to STL's iterative loess procedure.</li>
+        <li>State space models are a unifying framework: ARIMA, ETS, structural time series models, and the Kalman filter are all special cases of the linear Gaussian state space representation $(\mathbf{x}_t = \mathbf{F}\mathbf{x}_{t-1} + \mathbf{w}_t,\; \mathbf{y}_t = \mathbf{H}\mathbf{x}_t + \mathbf{v}_t)$.</li>
+        <li>Always benchmark Prophet against simpler baselines (Holt-Winters, ARIMA) before deploying — its advantage is mainly on series with clear trend changepoints and multiple seasonalities, not all business series.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -3560,6 +4428,15 @@ cat("\nKFAS Log-likelihood:", logLik(fit$model), "\n")</code></pre>
     <span class="lesson-badge">Module 5 · Lesson 2</span>
     <h1>The Kalman Filter</h1>
     <p>The Kalman filter is an optimal recursive Bayesian estimator for linear Gaussian state space models. It provides the minimum-variance unbiased estimate of the hidden state given all observations up to time $t$.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Apply the two-step Kalman filter (predict → update) and interpret each equation's role in fusing prior state estimates with new observations</li>
+        <li>Explain the Kalman gain and its behavior at the extremes (perfect model vs. perfect measurements)</li>
+        <li>Implement a tracking or smoothing application using the Kalman filter and interpret the resulting state estimates</li>
+      </ul>
+    </div>
 
     <h2>Kalman Filter Algorithm</h2>
     <div class="math-box">
@@ -3600,9 +4477,16 @@ cat("\nKFAS Log-likelihood:", logLik(fit$model), "\n")</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m5l2')">📊 R</button>
       </div>
       <div id="py-m5l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m5l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m5l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m5l2')" id="btn-py-m5l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m5l2" spellcheck="false">import numpy as np
 import pandas as pd
 
 # ── Implement Kalman Filter from scratch ───────────────────────────
@@ -3667,13 +4551,21 @@ xfc = xf[-1]
 print(f"\n5-step forecast:")
 for h in range(1, 6):
     xfc = F * xfc
-    print(f"  h={h}: {xfc:.4f}")</code></pre>
-        </div>
-      </div>
+    print(f"  h={h}: {xfc:.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m5l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m5l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(KFAS)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-5l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m5l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m5l2')" id="btn-r-m5l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m5l2" spellcheck="false">library(KFAS)
 
 # Simulate noisy signal
 set.seed(42)
@@ -3707,15 +4599,26 @@ dlm_model <- dlmModARMA(ar = 0.95, sigma2 = 0.1,
 filtered  <- dlmFilter(obs, dlm_model)
 smoothed  <- dlmSmooth(filtered)
 cat("\nDLM filtered first 5:\n")
-print(head(filtered$m[-1], 5))</code></pre>
-        </div>
-      </div>
+print(head(filtered$m[-1], 5))</textarea>
+    <div class="output-area editor-output" id="output-r-m5l2">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>🚀 GPS Navigation & Quantitative Finance</h4>
       <p>Originally developed at NASA for Apollo guidance systems, Kalman filters now track thousands of real-time processes. In finance, they estimate unobservable quantities: the instantaneous short rate (Hull-White model), time-varying betas (rolling CAPM), and hidden volatility regimes. High-frequency traders use Kalman filters to separate signal from microstructure noise in tick data, estimating the "efficient price" underlying noisy transaction prices.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>The Kalman filter is optimal (minimum-variance unbiased) under the linear Gaussian assumptions — if those assumptions hold, no other estimator can do better.</li>
+        <li>The Kalman gain $K_t = P_t^- H^T(HP_t^- H^T + R)^{-1}$ determines the trust balance: when $R \rightarrow 0$ (perfect measurements), $K_t \rightarrow H^{-1}$ (follow the data); when $P_t^- \rightarrow 0$ (confident model), $K_t \rightarrow 0$ (ignore the data).</li>
+        <li>The Kalman smoother (RTS smoother) uses future observations to refine past state estimates — useful for parameter estimation, imputation, and retrospective analysis.</li>
+        <li>For nonlinear or non-Gaussian systems, extensions include the Extended Kalman Filter (EKF, linearization), Unscented Kalman Filter (UKF, sigma points), and particle filters (sequential Monte Carlo).</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -3730,7 +4633,16 @@ print(head(filtered$m[-1], 5))</code></pre>
    <div class="lesson-content">
     <span class="lesson-badge">Module 5 · Lesson 3</span>
     <h1>Ensemble Forecasting</h1>
-    <p>Combining multiple forecasting models almost always outperforms any single model — a robust empirical finding known as the <strong>"forecast combination puzzle."</strong></p>
+    <p>Combining multiple forecasting models almost always outperforms any single model — a robust empirical finding known as the <strong>"forecast combination puzzle"</strong> (Timmermann, 2006; Stock &amp; Watson, 2004).</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Apply simple (equal weight) and optimal (inverse-MSE) combining methods and explain why the simpler approach often competes with the optimal</li>
+        <li>Derive the Bates-Granger optimal weight formula and describe when optimal weights can become negative and why that is problematic</li>
+        <li>Evaluate a forecast combination using RMSE and the Diebold-Mariano test</li>
+      </ul>
+    </div>
 
     <h2>Simple Combination Methods</h2>
     <div class="math-box">
@@ -3757,9 +4669,16 @@ print(head(filtered$m[-1], 5))</code></pre>
         <button class="code-tab-btn" onclick="switchTab(this,'r-m5l3')">📊 R</button>
       </div>
       <div id="py-m5l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m5l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m5l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m5l3')" id="btn-py-m5l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m5l3" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import Ridge
@@ -3790,8 +4709,8 @@ Xva,yva = data[fc].iloc[cut_tr:cut_val], data.y.iloc[cut_tr:cut_val]
 Xte,yte = data[fc].iloc[cut_val:], data.y.iloc[cut_val:]
 
 # Base models
-m1 = RandomForestRegressor(100,random_state=42).fit(Xtr,ytr)
-m2 = GradientBoostingRegressor(100,learning_rate=0.05,random_state=42).fit(Xtr,ytr)
+m1 = RandomForestRegressor(n_estimators=100,random_state=42).fit(Xtr,ytr)
+m2 = GradientBoostingRegressor(n_estimators=100,learning_rate=0.05,random_state=42).fit(Xtr,ytr)
 
 # Validation predictions for stacking
 p1v,p2v = m1.predict(Xva), m2.predict(Xva)
@@ -3818,13 +4737,21 @@ print(f"Model 1  (RF):     RMSE = {rmse(yte,p1t):.4f}")
 print(f"Model 2  (GBM):    RMSE = {rmse(yte,p2t):.4f}")
 print(f"Equal-weight:      RMSE = {rmse(yte,ew):.4f}")
 print(f"Optimal weights:   RMSE = {rmse(yte,opt):.4f}  (w=[{w_opt[0]:.2f},{w_opt[1]:.2f}])")
-print(f"Ridge stacking:    RMSE = {rmse(yte,stacked):.4f}")</code></pre>
-        </div>
-      </div>
+print(f"Ridge stacking:    RMSE = {rmse(yte,stacked):.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m5l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m5l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-5l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m5l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m5l3')" id="btn-r-m5l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m5l3" spellcheck="false">library(forecast)
 library(ranger)
 
 set.seed(42)
@@ -3842,7 +4769,7 @@ m1 <- ets(train); fc1 <- forecast(m1, h=h)$mean
 m2 <- auto.arima(train); fc2 <- forecast(m2, h=h)$mean
 
 # Model 3: Theta method
-m3 <- thetaf(train, h=h)$mean
+fc3 <- thetaf(train, h=h)$mean
 
 # Ensemble
 ew  <- (fc1 + fc2 + fc3) / 3
@@ -3857,9 +4784,20 @@ cat(sprintf("ARIMA:      RMSE = %.3f\n", sqrt(mean((fc2 - test_y)^2))))
 cat(sprintf("Theta:      RMSE = %.3f\n", sqrt(mean((fc3 - test_y)^2))))
 cat(sprintf("Equal-wt:   RMSE = %.3f\n", sqrt(mean((ew  - test_y)^2))))
 cat(sprintf("Optimal-wt: RMSE = %.3f  (w=[%.2f,%.2f,%.2f])\n",
-            sqrt(mean((opt - test_y)^2)), w[1], w[2], w[3]))</code></pre>
-        </div>
-      </div>
+            sqrt(mean((opt - test_y)^2)), w[1], w[2], w[3]))</textarea>
+    <div class="output-area editor-output" id="output-r-m5l3">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Forecast combination works because individual models make different errors — averaging cancels out uncorrelated mistakes. The benefit is largest when models are diverse and their errors weakly correlated.</li>
+        <li>Equal-weight combination is remarkably competitive with optimal weighting in practice; estimated optimal weights are noisy and can be unstable, particularly when training samples are short.</li>
+        <li>Optimal weights can be negative (mathematically valid) but negative weights are economically counterintuitive and numerically fragile. In practice, constrain weights to $[0, 1]$ and require them to sum to one to avoid instability.</li>
+        <li><strong>Limitation:</strong> Ensemble models add operational complexity (more models to maintain, monitor, and retrain), higher computational cost, and reduced interpretability compared to a single well-specified model.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -3875,6 +4813,15 @@ cat(sprintf("Optimal-wt: RMSE = %.3f  (w=[%.2f,%.2f,%.2f])\n",
     <span class="lesson-badge">Module 5 · Lesson 4</span>
     <h1>Forecast Evaluation</h1>
     <p>Choosing the right evaluation metric — and applying it correctly — is as important as model selection itself.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Select the appropriate point forecast metric (MAE, RMSE, MAPE, MASE) based on the characteristics of the series and the decision context</li>
+        <li>Apply the Diebold-Mariano test to assess whether two models have statistically significantly different forecast accuracy</li>
+        <li>Construct and interpret prediction intervals and explain what calibration means for probabilistic forecasts</li>
+      </ul>
+    </div>
 
     <h2>Point Forecast Metrics</h2>
     <div class="math-box">
@@ -3924,9 +4871,16 @@ cat(sprintf("Optimal-wt: RMSE = %.3f  (w=[%.2f,%.2f,%.2f])\n",
         <button class="code-tab-btn" onclick="switchTab(this,'r-m5l4')">📊 R</button>
       </div>
       <div id="py-m5l4" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m5l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m5l4')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m5l4')" id="btn-py-m5l4">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m5l4" spellcheck="false">import numpy as np
 from scipy import stats
 
 def mae(y, yhat):   return np.mean(np.abs(y - yhat))
@@ -3934,6 +4888,8 @@ def rmse(y, yhat):  return np.sqrt(np.mean((y - yhat)**2))
 def mape(y, yhat):  return np.mean(np.abs((y - yhat) / y)) * 100
 def smape(y, yhat): return np.mean(2*np.abs(y-yhat)/(np.abs(y)+np.abs(yhat)))*100
 def mase(y, yhat, m=1):
+    # m=1 for non-seasonal; set m to the seasonal period (e.g. m=12 monthly, m=7 daily)
+    # The scale is the mean absolute naive seasonal forecast error on the training series
     scale = np.mean(np.abs(np.diff(y, n=m)))
     return mae(y[m:], yhat[m:]) / scale if scale > 0 else np.nan
 
@@ -3979,13 +4935,21 @@ dm, pv = diebold_mariano(y, f1, f2, h=1, loss='mse')
 print(f"\nDiebold-Mariano test (MSE loss):")
 print(f"  DM statistic: {dm:.4f}")
 print(f"  p-value:      {pv:.4f}")
-print(f"  {'Model 1 significantly better' if pv < 0.05 and dm < 0 else 'No significant difference (p≥0.05)' if pv >= 0.05 else 'Model 2 significantly better'}")</code></pre>
-        </div>
-      </div>
+print(f"  {'Model 1 significantly better' if pv < 0.05 and dm < 0 else 'No significant difference (p≥0.05)' if pv >= 0.05 else 'Model 2 significantly better'}")</textarea>
+    <div class="output-area editor-output" id="output-py-m5l4">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m5l4" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-5l4"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m5l4')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m5l4')" id="btn-r-m5l4">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m5l4" spellcheck="false">library(forecast)
 library(Metrics)
 
 # Generate data
@@ -4012,9 +4976,20 @@ cat(sprintf("%-8s %10.4f %10.4f\n", "MASE",
 # Diebold-Mariano test
 dm <- dm.test(f1 - y, f2 - y, h = 1, power = 2)
 print(dm)
-cat(sprintf("\nDM stat: %.4f, p-value: %.4f\n", dm$statistic, dm$p.value))</code></pre>
-        </div>
-      </div>
+cat(sprintf("\nDM stat: %.4f, p-value: %.4f\n", dm$statistic, dm$p.value))</textarea>
+    <div class="output-area editor-output" id="output-r-m5l4">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>MAPE fails when $y_t \approx 0$ (division by zero) and is asymmetric (larger penalties for over-forecasting). Prefer MASE for series that pass through or near zero; prefer RMSE when large errors are especially costly.</li>
+        <li>MASE scales by the in-sample naive forecast error and requires specifying the correct seasonal period $m$ — using $m=1$ for a monthly seasonal series dramatically inflates the MASE value.</li>
+        <li>The Diebold-Mariano (DM) test uses a Newey-West HAC variance estimator to account for autocorrelated loss differentials — this is critical for multi-step-ahead forecasts where errors are serially correlated.</li>
+        <li>A 95% prediction interval should contain the actual value 95% of the time — <em>calibration</em>. Always back-test your prediction intervals; they are routinely too narrow in practice due to model misspecification.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -4061,7 +5036,29 @@ cat(sprintf("\nDM stat: %.4f, p-value: %.4f\n", dm$statistic, dm$p.value))</code
         </div>
         <div class="quiz-feedback" id="m5q3-feedback"></div>
       </div>
-      <button class="quiz-submit" onclick="checkQuiz('m5',{m5q1:'b',m5q2:'c',m5q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="m5q4">
+        <p>4. You are forecasting a monthly retail sales series where some months have near-zero values. Which metric should you avoid?</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m5q4" value="a"> RMSE</label>
+          <label class="quiz-opt"><input type="radio" name="m5q4" value="b"> MAE</label>
+          <label class="quiz-opt"><input type="radio" name="m5q4" value="c"> MAPE</label>
+          <label class="quiz-opt"><input type="radio" name="m5q4" value="d"> MASE</label>
+        </div>
+        <div class="quiz-feedback" id="m5q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="m5q5">
+        <p>5. In ensemble forecasting, equal-weight averaging often beats optimal weight combining because:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m5q5" value="a"> Optimal weights always sum to more than 1</label>
+          <label class="quiz-opt"><input type="radio" name="m5q5" value="b"> Estimated optimal weights are noisy and unstable, especially in small samples</label>
+          <label class="quiz-opt"><input type="radio" name="m5q5" value="c"> Equal weights are derived from a stronger theoretical framework</label>
+          <label class="quiz-opt"><input type="radio" name="m5q5" value="d"> Optimal weights require non-stationary series</label>
+        </div>
+        <div class="quiz-feedback" id="m5q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m5',{m5q1:'b',m5q2:'c',m5q3:'b',m5q4:'c',m5q5:'b'})">Submit Answers</button>
     </div>
     <div class="lesson-nav">
       <button class="nav-btn" onclick="showLesson('m5l4')">← Forecast Evaluation</button>
@@ -4076,6 +5073,15 @@ cat(sprintf("\nDM stat: %.4f, p-value: %.4f\n", dm$statistic, dm$p.value))</code
     <span class="lesson-badge">Module 6 · Lesson 1</span>
     <h1>Data Preparation for Forecasting</h1>
     <p>Real-world time series data is messy. Proper preparation is the foundation of reliable forecasts — garbage in, garbage out applies with particular force in temporal modeling.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Handle missing values in time series using imputation methods appropriate to the missingness mechanism (LOCF, interpolation, model-based)</li>
+        <li>Detect and treat outliers without introducing look-ahead bias</li>
+        <li>Scale and transform features correctly to prevent data leakage between train and test sets</li>
+      </ul>
+    </div>
 
     <h2>Missing Value Treatment</h2>
     <div class="callout warn">
@@ -4113,9 +5119,16 @@ cat(sprintf("\nDM stat: %.4f, p-value: %.4f\n", dm$statistic, dm$p.value))</code
         <button class="code-tab-btn" onclick="switchTab(this,'r-m6l1')">📊 R</button>
       </div>
       <div id="py-m6l1" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m6l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m6l1')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m6l1')" id="btn-py-m6l1">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m6l1" spellcheck="false">import numpy as np
 import pandas as pd
 from scipy.stats import boxcox
 from scipy.special import inv_boxcox
@@ -4125,7 +5138,7 @@ np.random.seed(42)
 n = 200
 t = np.arange(n)
 y = 100 * np.exp(0.005*t) + 10*np.sin(2*np.pi*t/12) + np.random.normal(0, 5, n)
-dates = pd.date_range('2020-01-01', periods=n, freq='ME')
+dates = pd.date_range('2020-01-01', periods=n, freq='M')
 ts = pd.Series(y, index=dates, name='value')
 
 # Inject missing values and outliers
@@ -4136,10 +5149,10 @@ ts.iloc[[50,150]] *= 3.5                     # outliers
 def causal_fill(series):
     """Fill NaN forward, then seasonal, then linear from past."""
     s = series.copy()
-    # Forward fill (LOCF)
-    s = s.fillna(method='ffill')
+    # Forward fill (LOCF) — modern pandas API
+    s = s.ffill()
     # Any remaining (at start): backward fill
-    s = s.fillna(method='bfill')
+    s = s.bfill()
     return s
 
 ts_clean = causal_fill(ts)
@@ -4156,7 +5169,7 @@ ts_winsor = ts_clean.clip(lower=low, upper=high)
 
 # ── STL-based outlier detection ────────────────────────────────────
 from statsmodels.tsa.seasonal import STL
-stl = STL(ts_winsor.fillna(method='ffill'), period=12, robust=True).fit()
+stl = STL(ts_winsor.ffill(), period=12, robust=True).fit()
 resid = stl.resid
 robust_std = 1.4826 * np.median(np.abs(resid - resid.median()))
 stl_outliers = resid[np.abs(resid) > 3 * robust_std]
@@ -4170,13 +5183,21 @@ print(f"Original std: {positive.std():.2f}, Transformed std: {y_bc.std():.2f}")
 
 # Reverse transform
 y_orig = inv_boxcox(y_bc, lam) - abs(ts_winsor.min()) - 1
-print(f"Round-trip error: {np.max(np.abs(y_orig - ts_winsor)):.6f}")</code></pre>
-        </div>
-      </div>
+print(f"Round-trip error: {np.max(np.abs(y_orig - ts_winsor)):.6f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m6l1">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m6l1" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-6l1"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m6l1')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m6l1')" id="btn-r-m6l1">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m6l1" spellcheck="false">library(forecast)
 library(tsoutliers)
 
 # Simulate messy series
@@ -4211,9 +5232,20 @@ print(aof$outliers)
 lam <- BoxCox.lambda(ts(y_win, frequency=12), method = "guerrero")
 y_bc <- BoxCox(ts(y_win, frequency=12), lambda = lam)
 cat(sprintf("\nBox-Cox lambda: %.4f\n", lam))
-cat(sprintf("Before: sd=%.2f  After: sd=%.2f\n", sd(y_win), sd(y_bc)))</code></pre>
-        </div>
-      </div>
+cat(sprintf("Before: sd=%.2f  After: sd=%.2f\n", sd(y_win), sd(y_bc)))</textarea>
+    <div class="output-area editor-output" id="output-r-m6l1">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Forward-fill (LOCF) is the only imputation method safe to use in a production pipeline — it uses only past information. Backward-fill and mean imputation introduce look-ahead bias and must never be applied before splitting train/test sets.</li>
+        <li>Outlier detection and treatment must be performed on the training set only; outlier thresholds must not be influenced by test-set values.</li>
+        <li>Scaling (StandardScaler, MinMaxScaler) must be fit on training data only and then applied to both train and test — fitting on the full dataset leaks test-set statistics into the model.</li>
+        <li>Box-Cox transformation stabilizes variance and can improve model performance for series with heteroskedastic noise; the $\lambda$ parameter should be selected on training data and applied consistently through the pipeline.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -4228,6 +5260,15 @@ cat(sprintf("Before: sd=%.2f  After: sd=%.2f\n", sd(y_win), sd(y_bc)))</code></p
    <div class="lesson-content">
     <span class="lesson-badge">Module 6 · Lesson 2</span>
     <h1>Time Series Cross-Validation &amp; Backtesting</h1>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Implement expanding and rolling window walk-forward validation and choose between them based on the presence of structural breaks</li>
+        <li>Correctly report averaged metrics across CV folds and understand why walk-forward estimates are often pessimistic</li>
+        <li>Design a model selection process that uses CV estimates for tuning and reserves a hold-out test set for final evaluation</li>
+      </ul>
+    </div>
 
     <h2>Walk-Forward Validation</h2>
     <p>The gold standard for time series model evaluation. At each fold, the model is trained on all data up to time $t$ and evaluated on a fixed window ahead — simulating real deployment.</p>
@@ -4271,9 +5312,16 @@ cat(sprintf("Before: sd=%.2f  After: sd=%.2f\n", sd(y_win), sd(y_bc)))</code></p
         <button class="code-tab-btn" onclick="switchTab(this,'r-m6l2')">📊 R</button>
       </div>
       <div id="py-m6l2" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m6l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m6l2')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m6l2')" id="btn-py-m6l2">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m6l2" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.ensemble import GradientBoostingRegressor
@@ -4331,13 +5379,21 @@ for t_cv in range(init, len(Y)-1):
     oos_errors.append((Y[t_cv] - pred)**2)
 
 rmse_oos = np.sqrt(np.mean(oos_errors))
-print(f"  AR(1) expanding-window RMSE: {rmse_oos:.4f}")</code></pre>
-        </div>
-      </div>
+print(f"  AR(1) expanding-window RMSE: {rmse_oos:.4f}")</textarea>
+    <div class="output-area editor-output" id="output-py-m6l2">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m6l2" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-6l2"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m6l2')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m6l2')" id="btn-r-m6l2">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m6l2" spellcheck="false">library(forecast)
 library(Metrics)
 
 # Time series CV with forecast::tsCV
@@ -4367,9 +5423,20 @@ for (start in seq(init, length(y)-horizon, by=step)) {
   maes  <- c(maes, mean(abs(fc - test)))
 }
 cat(sprintf("\nManual walk-forward MAE: %.4f ± %.4f\n",
-            mean(maes), sd(maes)))</code></pre>
-        </div>
-      </div>
+            mean(maes), sd(maes)))</textarea>
+    <div class="output-area editor-output" id="output-r-m6l2">Click Run to execute code</div>
+  </div>
+</div>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>Walk-forward (expanding window) CV is preferred when the full history is informative; rolling window CV is preferred when older data may no longer be relevant due to structural breaks or distribution shift.</li>
+        <li>CV estimates are pessimistic (lower than true out-of-sample performance) because the earliest folds train on less data than the final deployed model — this is acceptable for model comparison but not for absolute accuracy reporting.</li>
+        <li>Never use the test set for model selection or tuning. Use walk-forward CV for all model comparison decisions; reserve the test set for a single final evaluation after all decisions are made.</li>
+        <li>Report both the mean and standard deviation of CV fold metrics — high variance across folds indicates an unstable model that may not generalize reliably.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -4385,6 +5452,15 @@ cat(sprintf("\nManual walk-forward MAE: %.4f ± %.4f\n",
     <span class="lesson-badge">Module 6 · Lesson 3</span>
     <h1>Production Forecasting Pipelines</h1>
     <p>A production-grade forecasting system requires automation, monitoring, retraining triggers, and robust uncertainty quantification — not just a trained model.</p>
+
+    <div class="learning-objectives">
+      <h4>🎯 Learning Objectives</h4>
+      <ul>
+        <li>Design a production forecasting pipeline with stages for data ingestion, preprocessing, training, evaluation, and serving</li>
+        <li>Implement data drift detection and forecast monitoring to trigger automated retraining</li>
+        <li>Apply champion/challenger model evaluation to safely deploy improved models without disrupting production</li>
+      </ul>
+    </div>
 
     <h2>Pipeline Architecture</h2>
     <div class="callout info">
@@ -4422,9 +5498,16 @@ cat(sprintf("\nManual walk-forward MAE: %.4f ± %.4f\n",
         <button class="code-tab-btn" onclick="switchTab(this,'r-m6l3')">📊 R</button>
       </div>
       <div id="py-m6l3" class="code-tab-pane active">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-python">import numpy as np
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">🐍 Python</span>
+      <div class="editor-actions">
+        <span class="run-status" id="py-status-m6l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-py-m6l3')">Copy</button>
+        <button class="run-btn-py" onclick="runPyEditor('py-m6l3')" id="btn-py-m6l3">▶ Run Python</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-py-m6l3" spellcheck="false">import numpy as np
 import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error
@@ -4503,13 +5586,21 @@ print(fc_df.round(2))
 
 # Monitor on latest 20 actuals
 metrics = pipe.monitor(y[-20:], y[-20:] + np.random.normal(0,3,20))
-print(f"\nMonitoring metrics: {metrics}")</code></pre>
-        </div>
-      </div>
+print(f"\nMonitoring metrics: {metrics}")</textarea>
+    <div class="output-area editor-output" id="output-py-m6l3">Click Run to execute code</div>
+  </div>
+</div>
       <div id="r-m6l3" class="code-tab-pane">
-        <div class="code-block-wrapper">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-<pre><code class="language-r">library(forecast)
+  <div class="editor-block">
+    <div class="editor-header">
+      <span class="editor-lang-label">📊 R</span>
+      <div class="editor-actions">
+        <span class="run-status" id="r-status-6l3"></span>
+        <button class="copy-btn-editor" onclick="copyEditorCode('editor-r-m6l3')">Copy</button>
+        <button class="run-btn-r" onclick="runREditor('r-m6l3')" id="btn-r-m6l3">▶ Run R</button>
+      </div>
+    </div>
+    <textarea class="code-editor" id="editor-r-m6l3" spellcheck="false">library(forecast)
 library(tidyverse)
 
 # Production-style forecasting workflow in R
@@ -4559,15 +5650,26 @@ print(round(head(fc_orig, 6), 2))
 # Plot
 autoplot(fc) +
   ggtitle(paste("Production Forecast —", champion)) +
-  labs(y = "Transformed value", x = "Time")</code></pre>
-        </div>
-      </div>
+  labs(y = "Transformed value", x = "Time")</textarea>
+    <div class="output-area editor-output" id="output-r-m6l3">Click Run to execute code</div>
+  </div>
+</div>
     </div>
 
     <div class="use-case">
       <div class="uc-label">Real-World Use Case</div>
       <h4>🏪 Retail Inventory Optimization</h4>
       <p>A large retailer runs forecasting pipelines for 100,000+ SKU-location combinations daily. The system: ingests POS scan data → validates for anomalies (store closures, data feed failures) → runs ensemble of ETS + XGBoost + store-level RF → generates 4–8 week demand forecasts → feeds safety stock calculations → triggers replenishment orders. Conformal prediction intervals drive the safety stock formula, targeting 98.5% in-stock rate while minimizing excess inventory. A 1% reduction in forecast MAPE across this portfolio yields ~$50M in inventory cost savings annually.</p>
+    </div>
+
+    <div class="key-takeaways">
+      <h4>✅ Key Takeaways</h4>
+      <ul>
+        <li>A production pipeline is not just model training — it encompasses data validation, feature computation, prediction serving, monitoring, and automated retraining triggers.</li>
+        <li>Model drift monitoring should track two dimensions: data drift (input feature distributions shift) and forecast drift (errors systematically increase). Both require separate alarms and response protocols.</li>
+        <li>Champion/challenger deployment lets you safely test a new model on a small traffic fraction before full promotion, comparing live performance rather than relying only on historical backtests.</li>
+        <li>Full-pipeline integration tests — retraining a model end-to-end from raw data to evaluated forecast — are essential for catching silent failures (e.g., stale feature stores, schema changes, silent numeric overflows) that unit tests miss.</li>
+      </ul>
     </div>
 
     <div class="lesson-nav">
@@ -4614,7 +5716,29 @@ autoplot(fc) +
         </div>
         <div class="quiz-feedback" id="m6q3-feedback"></div>
       </div>
-      <button class="quiz-submit" onclick="checkQuiz('m6',{m6q1:'b',m6q2:'b',m6q3:'b'})">Submit Answers</button>
+      <div class="quiz-q" id="m6q4">
+        <p>4. A StandardScaler is fit on the entire dataset (train + test) before splitting. This practice:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m6q4" value="a"> Is acceptable because scaling is reversible</label>
+          <label class="quiz-opt"><input type="radio" name="m6q4" value="b"> Introduces data leakage because test set statistics influence the transformation</label>
+          <label class="quiz-opt"><input type="radio" name="m6q4" value="c"> Improves model accuracy without introducing bias</label>
+          <label class="quiz-opt"><input type="radio" name="m6q4" value="d"> Only matters for deep learning models</label>
+        </div>
+        <div class="quiz-feedback" id="m6q4-feedback"></div>
+      </div>
+
+      <div class="quiz-q" id="m6q5">
+        <p>5. A production forecasting system shows that RMSE has been steadily increasing over the last 4 weeks while input data distributions look normal. This most likely indicates:</p>
+        <div class="quiz-options">
+          <label class="quiz-opt"><input type="radio" name="m6q5" value="a"> A data ingestion problem — raw data has noise</label>
+          <label class="quiz-opt"><input type="radio" name="m6q5" value="b"> Concept drift — the relationship between features and target has changed, signaling retraining is needed</label>
+          <label class="quiz-opt"><input type="radio" name="m6q5" value="c"> The prediction intervals are too narrow</label>
+          <label class="quiz-opt"><input type="radio" name="m6q5" value="d"> The model needs more training data from 10 years ago</label>
+        </div>
+        <div class="quiz-feedback" id="m6q5-feedback"></div>
+      </div>
+
+      <button class="quiz-submit" onclick="checkQuiz('m6',{m6q1:'b',m6q2:'b',m6q3:'b',m6q4:'b',m6q5:'b'})">Submit Answers</button>
     </div>
 
     <div style="text-align:center;padding:40px 0">
@@ -4622,6 +5746,30 @@ autoplot(fc) +
       <h2 style="font-size:1.6rem;margin-bottom:8px">Course Complete!</h2>
       <p style="color:var(--text-muted);max-width:400px;margin:0 auto 24px">You've covered the full spectrum — from foundational time series concepts to production-grade forecasting pipelines.</p>
       <button class="start-btn" onclick="showLesson('welcome')">↩ Back to Overview</button>
+    </div>
+
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-top:24px">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--text)">📚 Key References</h3>
+      <p style="font-size:.82rem;line-height:1.8;color:var(--text-muted)">
+        <strong>Foundations:</strong><br>
+        Box, G.E.P., Jenkins, G.M., Reinsel, G.C., &amp; Ljung, G.M. (2015). <em>Time Series Analysis: Forecasting and Control</em> (5th ed.). Wiley.<br>
+        Bartlett, M.S. (1946). On the theoretical specification of sampling properties of autocorrelated time series. <em>Journal of the Royal Statistical Society</em>, 8(1), 27–41.<br>
+        Cleveland, R.B., Cleveland, W.S., McRae, J.E., &amp; Terpenning, I. (1990). STL: A seasonal-trend decomposition procedure based on loess. <em>Journal of Official Statistics</em>, 6(1), 3–73.<br><br>
+        <strong>ARIMA &amp; Exponential Smoothing:</strong><br>
+        Hyndman, R.J. &amp; Athanasopoulos, G. (2021). <em>Forecasting: Principles and Practice</em> (3rd ed.). OTexts. <a href="https://otexts.com/fpp3" target="_blank">otexts.com/fpp3</a><br>
+        Hyndman, R.J., Koehler, A.B., Ord, J.K., &amp; Snyder, R.D. (2008). <em>Forecasting with Exponential Smoothing: The State Space Approach</em>. Springer.<br><br>
+        <strong>Multivariate &amp; Cointegration:</strong><br>
+        Hamilton, J.D. (1994). <em>Time Series Analysis</em>. Princeton University Press.<br>
+        Engle, R.F. &amp; Granger, C.W.J. (1987). Co-integration and error correction. <em>Econometrica</em>, 55(2), 251–276.<br><br>
+        <strong>Machine Learning &amp; Ensembles:</strong><br>
+        Bates, J.M. &amp; Granger, C.W.J. (1969). The combination of forecasts. <em>Operational Research Quarterly</em>, 20(4), 451–468.<br>
+        Stock, J.H. &amp; Watson, M.W. (2004). Combination forecasts of output growth. <em>Journal of Forecasting</em>, 23(6), 405–430.<br>
+        Timmermann, A. (2006). Forecast combinations. In G. Elliott et al. (eds.), <em>Handbook of Economic Forecasting</em>. Elsevier.<br><br>
+        <strong>Evaluation:</strong><br>
+        Diebold, F.X. &amp; Mariano, R.S. (1995). Comparing predictive accuracy. <em>Journal of Business &amp; Economic Statistics</em>, 13(3), 253–263.<br>
+        Hyndman, R.J. &amp; Koehler, A.B. (2006). Another look at measures of forecast accuracy. <em>International Journal of Forecasting</em>, 22(4), 679–688.<br>
+        Makridakis, S., Spiliotis, E., &amp; Assimakopoulos, V. (2020). The M4 Competition. <em>International Journal of Forecasting</em>, 36(1), 54–74.
+      </p>
     </div>
 
     <div class="lesson-nav">
@@ -4732,23 +5880,46 @@ function toggleExpand(header) {
 // ══════════════════════════════════════════════════════════════════
 let pyodide = null;
 let pyodideLoading = false;
+let pyodideReady = false;
 
 async function loadPyodideRuntime() {
-  if (pyodide || pyodideLoading) return;
+  if (pyodideReady || pyodideLoading) return;
   pyodideLoading = true;
   const dot  = document.getElementById('pyodide-dot');
   const text = document.getElementById('pyodide-text');
   dot.className  = 'loading';
   text.textContent = 'Loading Python…';
   try {
-    // Load Pyodide from CDN
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
     document.head.appendChild(script);
     await new Promise((res,rej) => { script.onload=res; script.onerror=rej; });
-    pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/' });
-    // Load essential packages
-    await pyodide.loadPackage(['numpy','micropip']);
+    // Use a LOCAL variable — do NOT assign to global `pyodide` until everything is ready
+    const _py = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/' });
+
+    // Step 1: load core scientific packages
+    dot.className = 'loading';
+    text.textContent = 'Loading packages (numpy, pandas, matplotlib…)';
+    await _py.loadPackage(['numpy', 'pandas', 'matplotlib', 'scipy',
+                           'statsmodels', 'scikit-learn', 'micropip']);
+
+    // Step 2: install extra packages via micropip
+    text.textContent = 'Installing plotly, xgboost…';
+    const micropip = _py.pyimport('micropip');
+    try { await micropip.install('plotly'); } catch(_) {}
+    try { await micropip.install('xgboost'); } catch(_) {}
+
+    // Step 3: configure matplotlib for non-interactive (Agg) rendering
+    _py.runPython(`
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+`);
+    // Only NOW expose to the rest of the code
+    pyodide = _py;
+    pyodideReady = true;
     dot.className  = 'ready';
     text.textContent = 'Python Ready';
   } catch(e) {
@@ -5379,6 +6550,277 @@ window.addEventListener('resize', ()=>{
     if(el.data) Plotly.relayout(el.id,{});
   });
 });
+
+// ══════════════════════════════════════════════════════════════════
+// EDITOR UTILITIES
+// ══════════════════════════════════════════════════════════════════
+function copyEditorCode(editorId) {
+  const ta = document.getElementById(editorId);
+  if (!ta) return;
+  navigator.clipboard.writeText(ta.value).then(() => {
+    // flash feedback on the copy button nearest the textarea
+    const btn = ta.closest('.editor-block').querySelector('.copy-btn-editor');
+    if (btn) { const orig = btn.textContent; btn.textContent = 'Copied!'; setTimeout(()=>btn.textContent=orig,1800); }
+  });
+}
+
+// ── Python (Pyodide) editor runner ────────────────────────────────
+async function runPyEditor(paneId) {
+  const editorId = 'editor-' + paneId;
+  const outputId = 'output-' + paneId;
+  const btnId    = 'btn-' + paneId;
+  const code   = document.getElementById(editorId)?.value || '';
+  const output = document.getElementById(outputId);
+  const btn    = document.getElementById(btnId);
+  if (!output) return;
+
+  if (!pyodideReady) {
+    output.textContent = 'Loading Python runtime + packages… (first run ~30-60 s)';
+    output.className = 'output-area editor-output running';
+    if (pyodideLoading) {
+      // Another call is already loading — just wait for it to finish
+      while (pyodideLoading) await new Promise(r => setTimeout(r, 300));
+    } else {
+      await loadPyodideRuntime();
+    }
+    if (!pyodideReady) { output.textContent = 'Failed to load Python. Check console.'; output.className='output-area editor-output has-error'; return; }
+  }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Running…'; }
+  // Clear previous output
+  output.innerHTML = '';
+  output.className = 'output-area editor-output running';
+  try {
+    // Redirect stdout, close any open figures
+    pyodide.runPython(`
+import sys, io, base64
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+plt.close('all')
+_old_stdout = sys.stdout
+sys.stdout = io.StringIO()
+`);
+    pyodide.runPython(code);
+    const captured = pyodide.runPython('sys.stdout.getvalue()');
+    pyodide.runPython('sys.stdout = _old_stdout');
+
+    // Build text output
+    const textDiv = document.createElement('div');
+    textDiv.style.cssText = 'white-space:pre-wrap;word-break:break-word;';
+    textDiv.textContent = captured || '(No printed output)';
+    output.appendChild(textDiv);
+    output.className = 'output-area editor-output';
+
+    // Capture any matplotlib figures
+    const figCount = pyodide.runPython('len(plt.get_fignums())');
+    if (figCount > 0) {
+      const imgs = pyodide.runPython(`
+import io, base64
+_imgs = []
+for _fn in plt.get_fignums():
+    _fig = plt.figure(_fn)
+    _buf = io.BytesIO()
+    _fig.savefig(_buf, format='png', bbox_inches='tight', dpi=100)
+    _buf.seek(0)
+    _imgs.append(base64.b64encode(_buf.read()).decode())
+    plt.close(_fig)
+'|'.join(_imgs)
+`);
+      imgs.split('|').forEach(b64 => {
+        const img = document.createElement('img');
+        img.src = 'data:image/png;base64,' + b64;
+        img.style.cssText = 'max-width:100%;border-radius:4px;margin-top:8px;background:#fff;display:block;';
+        output.appendChild(img);
+      });
+    }
+  } catch(err) {
+    try { pyodide.runPython('sys.stdout = _old_stdout'); } catch(_){}
+    output.innerHTML = '';
+    const errDiv = document.createElement('div');
+    errDiv.textContent = '❌ Error:\n' + err.message;
+    output.appendChild(errDiv);
+    output.className = 'output-area editor-output has-error';
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML='▶ Run Python'; }
+  }
+}
+
+// ── R (WebR) editor runner ─────────────────────────────────────────
+let webR = null;
+let webRLoading = false;
+let webRReady = false;
+
+async function loadWebR() {
+  if (webR || webRLoading) return;
+  webRLoading = true;
+  const dot  = document.getElementById('r-status-dot');
+  const text = document.getElementById('r-status-text');
+  if (dot)  dot.className = 'loading';
+  if (text) text.textContent = 'Loading R…';
+  try {
+    const { WebR } = await import('https://webr.r-wasm.org/latest/webr.mjs');
+    webR = new WebR();
+    await webR.init();
+    webRReady = true;
+    if (dot)  { dot.className = 'ready'; }
+    if (text) text.textContent = 'R Ready';
+  } catch(e) {
+    if (dot)  dot.className = 'error';
+    if (text) text.textContent = 'R unavailable';
+    console.error('WebR load failed:', e);
+  }
+  webRLoading = false;
+}
+
+// Start loading WebR in background
+setTimeout(loadWebR, 2500);
+
+// R packages that are NOT available in WebR (require native compilation)
+const R_UNAVAILABLE = new Set(['keras','tensorflow','prophet']);
+
+// Packages pre-installed in WebR base (no install needed)
+const R_BUILTIN = new Set(['stats','base','utils','methods','datasets','grDevices',
+                            'graphics','grid','parallel','tools','compiler']);
+
+async function runREditor(paneId) {
+  const editorId = 'editor-' + paneId;
+  const outputId = 'output-' + paneId;
+  const btnId    = 'btn-' + paneId;
+  const code   = document.getElementById(editorId)?.value || '';
+  const output = document.getElementById(outputId);
+  const btn    = document.getElementById(btnId);
+  if (!output) return;
+
+  if (!webRReady) {
+    output.textContent = 'Loading R runtime… (first run may take 30-60 s)';
+    output.className = 'output-area editor-output running';
+    await loadWebR();
+    if (!webRReady) {
+      output.textContent = 'R runtime unavailable. Copy the code and run it in a local R session.';
+      output.className='output-area editor-output has-error'; return;
+    }
+  }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Running…'; }
+  output.textContent = 'Installing R packages if needed…';
+  output.className = 'output-area editor-output running';
+
+  try {
+    // Extract library(pkg) / require(pkg) calls
+    const libMatch = [...code.matchAll(/(?:library|require)\s*\(\s*["']?([\w\.]+)["']?\s*\)/g)];
+    const needed = libMatch.map(m => m[1])
+      .filter(p => !R_BUILTIN.has(p) && !R_UNAVAILABLE.has(p));
+
+    // Install missing packages (WebR will skip already-installed ones quickly)
+    if (needed.length > 0) {
+      try {
+        output.textContent = `Installing: ${needed.join(', ')} …`;
+        await webR.installPackages(needed, { quiet: true });
+      } catch(e) { console.warn('Some R packages may not have installed:', e); }
+    }
+
+    // Rewrite code: replace unavailable library() calls with informative messages
+    let runCode = code;
+    for (const pkg of R_UNAVAILABLE) {
+      const rx = new RegExp(`library\\s*\\(\\s*["']?${pkg}["']?\\s*\\)`, 'g');
+      if (rx.test(code)) {
+        runCode = runCode.replace(
+          new RegExp(`library\\s*\\(\\s*["']?${pkg}["']?\\s*\\)`, 'g'),
+          `message("Note: '${pkg}' is not available in the browser R runtime. Install it locally via: install.packages('${pkg}')")`
+        );
+      }
+    }
+
+    output.textContent = '';
+
+    // ── Set up SVG capture device — each new plot window → its own SVG file ──
+    const svgTs = Date.now();
+    await webR.evalRVoid(`
+      .__svg_ts__     <- ${svgTs}
+      .__plot_count__ <- 0L
+      options(device = function(...) {
+        .__plot_count__ <<- .__plot_count__ + 1L
+        grDevices::svg(
+          sprintf("/tmp/rpl_%d_%03d.svg", .__svg_ts__, .__plot_count__),
+          width = 7, height = 4.5
+        )
+      })
+    `);
+
+    // ── Run code; capture text output + how many SVGs were created ────
+    await webR.evalRVoid('.__rcode__ <- ' + JSON.stringify(runCode));
+    const rOut = await webR.evalRString(`
+      tryCatch({
+        lines <- capture.output(
+          withCallingHandlers(
+            eval(parse(text = .__rcode__)),
+            message = function(m) {
+              cat(conditionMessage(m))
+              invokeRestart("muffleMessage")
+            }
+          )
+        )
+        while (grDevices::dev.cur() > 1) grDevices::dev.off()
+        options(device = NULL)
+        paste0(paste(lines, collapse = "\n"), "\n__PLOTS__:", .__plot_count__)
+      }, error = function(e) {
+        tryCatch({
+          while (grDevices::dev.cur() > 1) grDevices::dev.off()
+          options(device = NULL)
+        }, error = function(e2) {})
+        paste0("❌ R Error:\n", conditionMessage(e))
+      })
+    `);
+    // \u2500\u2500 Parse: split text from plot-count marker \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+    let textOut = rOut;
+    let plotCount = 0;
+    const markerIdx = rOut.indexOf('__PLOTS__:');
+    if (markerIdx !== -1) {
+      const lineBreak = rOut.lastIndexOf('\n', markerIdx);
+      textOut = rOut.substring(0, lineBreak >= 0 ? lineBreak : markerIdx).trim();
+      plotCount = parseInt(rOut.substring(markerIdx + '__PLOTS__:'.length).trim(), 10) || 0;
+    }
+
+    // \u2500\u2500 Render text output \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+    output.innerHTML = '';
+    if (textOut) {
+      const pre = document.createElement('pre');
+      pre.style.cssText = 'margin:0;white-space:pre-wrap;word-break:break-word;';
+      pre.textContent = textOut;
+      output.appendChild(pre);
+    }
+
+    // \u2500\u2500 Render SVG plots as images \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+    for (let i = 1; i <= plotCount; i++) {
+      const svgPath = `/tmp/rpl_${svgTs}_${String(i).padStart(3, '0')}.svg`;
+      try {
+        const bytes = await webR.FS.readFile(svgPath);
+        const svgText = new TextDecoder().decode(bytes);
+        const clean = svgText.replace(/<\?xml[^?]*\?>\s*/g, '').trim();
+        if (clean.startsWith('<svg')) {
+          const b64 = btoa(unescape(encodeURIComponent(clean)));
+          const img = document.createElement('img');
+          img.src = 'data:image/svg+xml;base64,' + b64;
+          img.style.cssText = 'max-width:100%;border-radius:6px;margin-top:8px;background:#fff;display:block;';
+          output.appendChild(img);
+        }
+      } catch(e) { console.debug('SVG read skipped:', i); }
+    }
+
+    if (!output.hasChildNodes()) {
+      const msg = document.createElement('pre');
+      msg.style.margin = '0';
+      msg.textContent = '(No output)';
+      output.appendChild(msg);
+    }
+    output.className = 'output-area editor-output';
+  } catch(err) {
+    output.textContent = '\u274C R Error:\n' + (err.message || String(err));
+    output.className = 'output-area editor-output has-error';
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML='\u25B6 Run R'; }
+  }
+}
+
 </script>
 </body>
 </html>
