@@ -61,7 +61,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
 #main{margin-left:var(--sidebar-w);flex:1;min-height:100vh}
 .top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .top-bar h1{font-size:17px;font-weight:600;color:var(--text)}
-.top-bar-right{display:flex;align-items:center;gap:16px}
+.top-bar-right{display:flex;align-items:center;gap:10px}
+.topbar-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'Inter',sans-serif}
+.topbar-btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.topbar-btn.active{border-color:var(--blue);background:#eff6ff;color:var(--blue);font-weight:600}
+.theme-btn{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'Inter',sans-serif;transition:all .2s}
+.theme-btn:hover{border-color:var(--blue);color:var(--blue)}
 .badge{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
 #hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
 
@@ -81,6 +86,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
 .module-meta{display:flex;gap:24px;margin-top:20px}
 .module-meta span{font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px}
 .module-meta strong{color:rgba(255,255,255,.9)}
+.learning-objectives{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15)}
+.learning-objectives h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.5);margin-bottom:10px}
+.learning-objectives ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 20px}
+.learning-objectives li{font-size:13px;color:rgba(255,255,255,.8);display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+.learning-objectives li::before{content:'→';color:var(--teal-light);flex-shrink:0;margin-top:1px}
+@media(max-width:640px){.learning-objectives ul{grid-template-columns:1fr}}
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
@@ -135,19 +146,37 @@ tr:hover td{background:#eff6ff}
 .code-block pre{margin:0!important;border-radius:0!important}
 .code-block pre code{font-family:'JetBrains Mono',monospace!important;font-size:13px!important;padding:18px 20px!important}
 
-/* PYODIDE RUNNER */
-.pyodide-runner{margin:16px 0;border-radius:10px;overflow:hidden;border:2px solid #3776ab}
-.pyodide-header{background:#1e3a5f;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
-.pyodide-header span{color:#4fc3f7;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
-.run-btn{background:linear-gradient(135deg,#3776ab,#2196f3);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
-.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(33,150,243,.4)}
-.run-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.pyodide-runner textarea{width:100%;background:#1a202c;color:#e2e8f0;border:none;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:13px;resize:vertical;min-height:120px;outline:none;line-height:1.6}
-.pyodide-output{background:#0d1117;padding:14px 20px;min-height:40px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#7ee787;white-space:pre-wrap;border-top:1px solid #21262d;display:none}
-.pyodide-output.visible{display:block}
-.pyodide-output.error{color:#f85149}
+/* ── DSGE-STYLE CODE EDITOR ── */
+.run-btn{background:var(--teal);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+.run-btn:hover{opacity:.88}
+.run-btn:disabled{opacity:.55;cursor:not-allowed}
 .pyodide-status{background:#1e3a5f;padding:6px 16px;font-size:11px;color:#4fc3f7;display:none}
 .pyodide-status.visible{display:block}
+.code-block-wrap{border:1px solid #374151;border-radius:10px;overflow:hidden;margin:16px 0;background:#111827}
+.code-header{display:flex;align-items:stretch;justify-content:space-between;background:#1e2535;border-bottom:1px solid #374151;min-height:36px}
+.code-tabs{display:flex;gap:0}
+.code-tab{padding:0 18px;font-size:12px;font-weight:600;border:none;border-right:1px solid #374151;cursor:pointer;background:transparent;color:#6b7280;transition:color .15s,background .15s}
+.code-tab:hover{color:#d1d5db}
+.code-tab.active{background:#111827;color:#e5e7eb;border-bottom:2px solid var(--teal-light)}
+.code-actions{display:flex;align-items:center;gap:6px;padding:0 10px}
+.code-actions .copy-btn{padding:4px 12px;font-size:11px;border-radius:5px;border:none;cursor:pointer;font-weight:600;background:#2d3748;color:#9ca3af;transition:background .15s,color .15s}
+.code-actions .copy-btn:hover{background:#374151;color:#e5e7eb}
+.code-actions .copy-btn.copied{background:#064e3b;color:#6ee7b7}
+.code-actions .run-btn{background:var(--teal);color:#fff;padding:4px 12px;font-size:11px;display:flex;align-items:center;gap:5px}
+.code-actions .run-btn:hover{background:var(--teal-light)}
+.code-panel{display:none}
+.code-panel.active{display:block}
+.code-panel pre{margin:0!important;border-radius:0!important}
+.code-panel pre code{font-family:'JetBrains Mono',monospace!important;font-size:13px!important;padding:18px 20px!important}
+.code-output{display:none;border-top:1px solid #374151}
+.code-output.visible{display:block}
+.output-header{display:flex;align-items:center;justify-content:space-between;padding:5px 12px;background:#0f172a;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.output-close{background:none;border:none;color:#4b5563;cursor:pointer;font-size:14px;line-height:1;padding:2px 6px;border-radius:4px}
+.output-close:hover{color:#9ca3af;background:#1e293b}
+.output-text{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#86efac;white-space:pre-wrap;background:#0f172a;max-height:260px;overflow-y:auto}
+.output-text.error{color:#f87171}
+.output-chart{background:#0f172a;padding:0 14px 14px;display:none}.output-chart:not(:empty){display:block}
+.output-r-note{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#fbbf24;background:#0f172a}
 
 /* INTERACTIVE TOOLS */
 .tool-section{background:linear-gradient(135deg,#eff6ff,#f0fdfa);border:1px solid #bfdbfe;border-radius:12px;padding:28px;margin:24px 0}
@@ -293,7 +322,11 @@ tr:hover td{background:#eff6ff}
       <button id="hamburger" onclick="toggleSidebar()" style="border:none;background:none;font-size:20px;cursor:pointer">☰</button>
       <h1 id="topBarTitle">Module 1 — Introduction to Bibliometrics</h1>
     </div>
-    <div class="top-bar-right"><div class="badge" id="topBadge">Module 1/8</div></div>
+    <div class="top-bar-right">
+      <div class="badge" id="topBadge">Module 1/8</div>
+      <a href="https://narcissesandwidi.com/" target="_blank" class="topbar-btn">🏠 Home</a>
+      <a href="mailto:sand02@yahoo.com" class="topbar-btn">✉ Contact</a>
+    </div>
   </div>
 
   <div class="content">
@@ -310,6 +343,15 @@ tr:hover td{background:#eff6ff}
       <span>⏱ <strong>~25 min</strong></span>
       <span>📚 <strong>4 sections</strong></span>
       <span>🎯 <strong>Beginner</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>Define bibliometrics and distinguish it from scientometrics, informetrics, and altmetrics</li>
+        <li>Identify key historical milestones from Lotka (1926) to OpenAlex (2022)</li>
+        <li>Explain the main application domains: research evaluation, library science, science policy</li>
+        <li>Recognise the role of citation analysis as bibliometrics' foundational methodology</li>
+      </ul>
     </div>
   </div>
 
@@ -426,68 +468,65 @@ tr:hover td{background:#eff6ff}
 
   <div class="card">
     <h3><span class="icon">💻</span>Getting Started with Python</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod0">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Basic bibliometric data setup</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod0','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod0','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod0')">Copy</button>
+          <button class="run-btn" id="run-mod0" onclick="runEditor('cb-mod0','out-mod0')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import pandas as pd
+      <div class="code-panel active" id="cb-mod0-python">
+        <pre><code class="language-python">import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
-# Sample publication dataset
 data = {
-    'title': [
-        'Deep Learning for Medical Imaging',
-        'BERT: Pre-training of Deep Bidirectional Transformers',
-        'Attention is All You Need',
-        'Generative Adversarial Networks',
-        'ImageNet Classification with Deep Convolutional Neural Networks'
+    &#x27;title&#x27;: [
+        &#x27;Deep Learning for Medical Imaging&#x27;,
+        &#x27;BERT: Bidirectional Transformers&#x27;,
+        &#x27;Attention is All You Need&#x27;,
+        &#x27;Generative Adversarial Networks&#x27;,
+        &#x27;AlexNet: ImageNet Classification&#x27;
     ],
-    'authors': ['Smith J, Jones A', 'Devlin J et al.', 'Vaswani A et al.',
-                'Goodfellow I et al.', 'Krizhevsky A et al.'],
-    'year': [2021, 2018, 2017, 2014, 2012],
-    'journal': ['Nature Medicine', 'NAACL', 'NeurIPS', 'NeurIPS', 'NeurIPS'],
-    'citations': [142, 45231, 62847, 38921, 89234]
-}
-
-df = pd.DataFrame(data)
-print("=== Publication Dataset ===")
-print(df[['title', 'year', 'citations']].to_string(index=False))
-print(f"\nTotal papers: {len(df)}")
-print(f"Total citations: {df['citations'].sum():,}")
-print(f"Mean citations: {df['citations'].mean():.1f}")
-print(f"Median citations: {df['citations'].median():.1f}")
-print(f"\nMost cited: {df.loc[df['citations'].idxmax(), 'title'][:40]}...")</code></pre>
-    </div>
-
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser (Pyodide)</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="0">▶ Run</button>
-      </div>
-      <textarea id="pycode-0">import pandas as pd
-import numpy as np
-
-data = {
-    'title': ['Deep Learning', 'BERT', 'Attention', 'GANs', 'AlexNet'],
-    'year': [2021, 2018, 2017, 2014, 2012],
-    'citations': [142, 45231, 62847, 38921, 89234]
+    &#x27;authors&#x27;: [&#x27;Smith J, Jones A&#x27;, &#x27;Devlin J et al.&#x27;, &#x27;Vaswani A et al.&#x27;,
+                &#x27;Goodfellow I et al.&#x27;, &#x27;Krizhevsky A et al.&#x27;],
+    &#x27;year&#x27;: [2021, 2018, 2017, 2014, 2012],
+    &#x27;journal&#x27;: [&#x27;Nature Medicine&#x27;, &#x27;NAACL&#x27;, &#x27;NeurIPS&#x27;, &#x27;NeurIPS&#x27;, &#x27;NeurIPS&#x27;],
+    &#x27;citations&#x27;: [142, 45231, 62847, 38921, 89234]
 }
 df = pd.DataFrame(data)
-print("Publication Dataset:")
-print(df.to_string(index=False))
-print(f"\nTotal citations: {df['citations'].sum():,}")
-print(f"Mean citations: {df['citations'].mean():.1f}")</textarea>
-      <div class="pyodide-status" id="pystatus-0"></div>
-      <div class="pyodide-output" id="pyout-0"></div>
-    </div>
+df = df.sort_values(&#x27;citations&#x27;, ascending=True)
 
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Introduction with bibliometrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+print(&quot;=== Publication Dataset ===&quot;)
+print(df[[&#x27;title&#x27;, &#x27;year&#x27;, &#x27;citations&#x27;]].to_string(index=False))
+print(f&quot;\nTotal citations : {df[&#x27;citations&#x27;].sum():,}&quot;)
+print(f&quot;Mean citations  : {df[&#x27;citations&#x27;].mean():.0f}&quot;)
+print(f&quot;Median citations: {df[&#x27;citations&#x27;].median():.0f}&quot;)
+
+# Visualisation
+labels = [t[:28] + &#x27;...&#x27; if len(t) &gt; 28 else t for t in df[&#x27;title&#x27;]]
+colors = plt.cm.Blues(np.linspace(0.4, 0.9, len(df)))
+fig, ax = plt.subplots(figsize=(8, 4))
+bars = ax.barh(range(len(df)), df[&#x27;citations&#x27;], color=colors, edgecolor=&#x27;none&#x27;)
+ax.set_yticks(range(len(df)))
+ax.set_yticklabels(labels, fontsize=9)
+ax.set_xlabel(&#x27;Citation count&#x27;, fontsize=10)
+ax.set_title(&#x27;Sample publication dataset — citation counts&#x27;, fontsize=12, fontweight=&#x27;bold&#x27;, pad=10)
+ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f&#x27;{int(x):,}&#x27;))
+for bar, val in zip(bars, df[&#x27;citations&#x27;]):
+    ax.text(bar.get_width() + 500, bar.get_y() + bar.get_height()/2,
+            f&#x27;{val:,}&#x27;, va=&#x27;center&#x27;, fontsize=8, color=&#x27;#374151&#x27;)
+ax.spines[[&#x27;top&#x27;,&#x27;right&#x27;]].set_visible(False)
+plt.tight_layout()
+</code></pre>
       </div>
-      <pre><code class="language-r"># Install and load bibliometrix
+      <div class="code-panel" id="cb-mod0-r">
+        <pre><code class="language-r"># Install and load bibliometrix
 # install.packages("bibliometrix")
 library(bibliometrix)
 library(tidyverse)
@@ -517,6 +556,15 @@ df %>%
   arrange(desc(TC)) %>%
   mutate(rank = row_number()) %>%
   select(rank, TI, PY, TC)</code></pre>
+      </div>
+      <div class="code-output" id="out-mod0">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod0')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod0-text"></div>
+        <div class="output-chart" id="out-mod0-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -553,8 +601,18 @@ df %>%
       </div>
       <div class="quiz-feedback" id="fb-q0-2"></div>
     </div>
+    <div class="quiz-question" id="q0-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> A librarian wants to identify the "core" journals to subscribe to for a systematic review on climate change. Which bibliometric law provides the most direct framework for this task?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q0-3','A')"><div class="option-radio"></div>Lotka's Law — it identifies the most productive authors</div>
+        <div class="option" onclick="selectOption(this,'q0-3','B')"><div class="option-radio"></div>Zipf's Law — it ranks terms by frequency</div>
+        <div class="option" onclick="selectOption(this,'q0-3','C')"><div class="option-radio"></div>Bradford's Law — it defines a core zone of journals that produce most relevant literature</div>
+        <div class="option" onclick="selectOption(this,'q0-3','D')"><div class="option-radio"></div>Garfield's IF — it ranks journals by average citation rate</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q0-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q0',['B','C','C'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q0',['B','C','C','C'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q0"></div>
   </div>
@@ -575,6 +633,15 @@ df %>%
       <span>⏱ <strong>~35 min</strong></span>
       <span>📚 <strong>5 sections</strong></span>
       <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>Calculate h-index, g-index, and i10-index for a given citation profile</li>
+        <li>Interpret the Journal Impact Factor and explain its two-year citation window</li>
+        <li>Distinguish author-level, journal-level, and document-level metrics</li>
+        <li>Apply field-normalisation concepts when comparing impact across disciplines</li>
+      </ul>
     </div>
   </div>
 
@@ -607,7 +674,7 @@ df %>%
     Paper 1: 45 ≥ 1 ✓ | Paper 2: 32 ≥ 2 ✓ | Paper 3: 18 ≥ 3 ✓ | Paper 4: 12 ≥ 4 ✓ | Paper 5: 8 ≥ 5 ✓ | Paper 6: 5 ≥ 6 ✗ → <strong>h = 5</strong></p>
     <div class="info-box teal">
       <strong>Related Variants</strong>
-      <p><strong>g-index</strong>: top g papers together received g² citations (rewards highly-cited single papers more). <strong>i10-index</strong> (Google Scholar): number of papers with ≥10 citations. <strong>m-quotient</strong>: h ÷ years since first publication.</p>
+      <p><strong>g-index</strong> (Egghe, 2006): top g papers together received g² citations (rewards highly-cited single papers more). <strong>i10-index</strong> (Google Scholar): number of papers with ≥10 citations. <strong>m-quotient</strong>: h ÷ years since first publication.</p>
     </div>
     <h4>Typical h-index Benchmarks</h4>
     <div class="table-wrap">
@@ -702,101 +769,82 @@ df %>%
   <!-- CODE SECTION -->
   <div class="card">
     <h3><span class="icon">💻</span>Computing Metrics in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod1">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> h-index, g-index, IF calculation</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod1','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod1','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod1')">Copy</button>
+          <button class="run-btn" id="run-mod1" onclick="runEditor('cb-mod1','out-mod1')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import numpy as np
+      <div class="code-panel active" id="cb-mod1-python">
+        <pre><code class="language-python">import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 def compute_h_index(citations):
-    """Compute h-index from a list of citation counts."""
-    sorted_cits = sorted(citations, reverse=True)
+    s = sorted(citations, reverse=True)
     h = 0
-    for i, c in enumerate(sorted_cits, 1):
-        if c >= i:
+    for i, c in enumerate(s, 1):
+        if c &gt;= i:
             h = i
         else:
             break
     return h
 
 def compute_g_index(citations):
-    """Compute g-index: largest g where top-g papers have >= g^2 total citations."""
-    sorted_cits = sorted(citations, reverse=True)
-    cumsum = 0
-    g = 0
-    for i, c in enumerate(sorted_cits, 1):
+    s = sorted(citations, reverse=True)
+    cumsum, g = 0, 0
+    for i, c in enumerate(s, 1):
         cumsum += c
-        if cumsum >= i**2:
+        if cumsum &gt;= i * i:
             g = i
     return g
 
-def compute_i10_index(citations):
-    """Number of papers with >= 10 citations."""
-    return sum(1 for c in citations if c >= 10)
+def impact_factor(cites_2yr, articles_2yr):
+    return cites_2yr / articles_2yr if articles_2yr else 0
 
-def compute_impact_factor(cites_y1, cites_y2, articles_y1, articles_y2):
-    """Compute Journal Impact Factor."""
-    total_cites = cites_y1 + cites_y2
-    total_articles = articles_y1 + articles_y2
-    return total_cites / total_articles if total_articles > 0 else 0
-
-# Example: Researcher citation profile
-citations = [89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1]
-
+citations = [142, 45231, 62847, 38921, 89234, 31, 8, 3, 1, 0]
 h = compute_h_index(citations)
 g = compute_g_index(citations)
-i10 = compute_i10_index(citations)
+if_val = impact_factor(18500, 850)
 
-print(f"Papers: {len(citations)}")
-print(f"Total citations: {sum(citations)}")
-print(f"h-index: {h}")
-print(f"g-index: {g}")
-print(f"i10-index: {i10}")
+print(f&quot;h-index : {h}&quot;)
+print(f&quot;g-index : {g}&quot;)
+print(f&quot;IF (2yr): {if_val:.2f}&quot;)
 
-# Journal IF example
-IF = compute_impact_factor(380, 290, 120, 115)
-print(f"\nJournal Impact Factor: {IF:.3f}")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="1">▶ Run</button>
+# h-index staircase
+s = sorted(citations, reverse=True)
+ranks = list(range(1, len(s) + 1))
+colors = [&#x27;#2563eb&#x27; if c &gt;= r else &#x27;#e5e7eb&#x27; for c, r in zip(s, ranks)]
+
+fig, ax = plt.subplots(figsize=(8, 4.5))
+bars = ax.bar(ranks, s, color=colors, edgecolor=&#x27;white&#x27;, linewidth=0.5, zorder=3)
+# h-index reference line
+ax.plot([0.4, h + 0.5], [h, h], color=&#x27;#dc2626&#x27;, lw=2, ls=&#x27;--&#x27;, zorder=4, label=f&#x27;h = {h}&#x27;)
+ax.plot([h, h], [0, h], color=&#x27;#dc2626&#x27;, lw=2, ls=&#x27;--&#x27;, zorder=4)
+ax.scatter([h], [h], s=80, color=&#x27;#dc2626&#x27;, zorder=5)
+# g-index line
+ax.axvline(g + 0.5, color=&#x27;#d97706&#x27;, lw=1.5, ls=&#x27;:&#x27;, label=f&#x27;g = {g}&#x27;, zorder=4)
+ax.set_yscale(&#x27;log&#x27;)
+ax.set_xlabel(&#x27;Paper rank&#x27;, fontsize=10)
+ax.set_ylabel(&#x27;Citation count (log scale)&#x27;, fontsize=10)
+ax.set_title(&#x27;h-index &amp; g-index visualisation&#x27;, fontsize=12, fontweight=&#x27;bold&#x27;, pad=10)
+ax.set_xlim(0.4, len(s) + 0.6)
+ax.legend(fontsize=9)
+ax.spines[[&#x27;top&#x27;,&#x27;right&#x27;]].set_visible(False)
+blue_p  = mpatches.Patch(color=&#x27;#2563eb&#x27;, label=f&#x27;Papers in h-core ({h} papers)&#x27;)
+grey_p  = mpatches.Patch(color=&#x27;#e5e7eb&#x27;, label=&#x27;Papers outside h-core&#x27;)
+ax.legend(handles=[blue_p, grey_p] + ax.get_legend_handles_labels()[0], fontsize=8, loc=&#x27;upper right&#x27;)
+plt.tight_layout()
+</code></pre>
       </div>
-      <textarea id="pycode-1">def compute_h_index(citations):
-    sorted_cits = sorted(citations, reverse=True)
-    h = 0
-    for i, c in enumerate(sorted_cits, 1):
-        if c >= i:
-            h = i
-        else:
-            break
-    return h
-
-def compute_g_index(citations):
-    sorted_cits = sorted(citations, reverse=True)
-    cumsum = 0; g = 0
-    for i, c in enumerate(sorted_cits, 1):
-        cumsum += c
-        if cumsum >= i**2: g = i
-    return g
-
-citations = [89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1]
-print(f"Citations: {citations}")
-print(f"h-index: {compute_h_index(citations)}")
-print(f"g-index: {compute_g_index(citations)}")
-print(f"i10-index: {sum(1 for c in citations if c >= 10)}")
-print(f"Total citations: {sum(citations)}")</textarea>
-      <div class="pyodide-status" id="pystatus-1"></div>
-      <div class="pyodide-output" id="pyout-1"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Metrics with bibliometrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod1-r">
+        <pre><code class="language-r">library(bibliometrix)
 
 # Compute h-index from citation vector
 citations <- c(89, 67, 45, 32, 28, 21, 18, 15, 12, 9, 7, 5, 3, 2, 1)
@@ -829,6 +877,15 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
 # With real bibliometrix data:
 # results <- biblioAnalysis(M, sep = ";")
 # summary(results, k = 10, pause = FALSE)</code></pre>
+      </div>
+      <div class="code-output" id="out-mod1">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod1')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod1-text"></div>
+        <div class="output-chart" id="out-mod1-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -865,8 +922,18 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
       </div>
       <div class="quiz-feedback" id="fb-q1-2"></div>
     </div>
+    <div class="quiz-question" id="q1-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> A mathematician has an h-index of 12. A molecular biologist has an h-index of 12. Which statement best describes their relative standing?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q1-3','A')"><div class="option-radio"></div>They have equal scientific impact — h-indices are directly comparable across fields</div>
+        <div class="option" onclick="selectOption(this,'q1-3','B')"><div class="option-radio"></div>The biologist likely has weaker relative impact, as citation rates in biology are lower than in mathematics</div>
+        <div class="option" onclick="selectOption(this,'q1-3','C')"><div class="option-radio"></div>The mathematician likely has stronger relative impact, because citation rates are lower in mathematics, so reaching h = 12 is more difficult</div>
+        <div class="option" onclick="selectOption(this,'q1-3','D')"><div class="option-radio"></div>The h-index cannot be used for any cross-field comparison and provides no useful information here</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q1-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q1',['B','B','C'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q1',['B','B','C','C'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q1"></div>
   </div>
@@ -888,6 +955,15 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
       <span>📚 <strong>3 laws + interactive demos</strong></span>
       <span>🎯 <strong>Intermediate</strong></span>
     </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>State and apply Lotka's, Bradford's, and Zipf's Laws to bibliometric data</li>
+        <li>Interpret the Bradford multiplier k to estimate core journal coverage needs</li>
+        <li>Recognise the empirical limitations and deviations of each law</li>
+        <li>Use interactive simulations to explore how parameter changes affect distributions</li>
+      </ul>
+    </div>
   </div>
 
   <!-- LOTKA'S LAW -->
@@ -895,6 +971,7 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
     <h3><span class="icon">📉</span>Lotka's Law of Scientific Productivity</h3>
     <p>Alfred Lotka (1926) studied the frequency of author contributions in chemical abstracts and discovered an <strong>inverse square law</strong>: the number of authors making <em>n</em> contributions is approximately 1/n² of those making one contribution.</p>
     <div class="formula">f(n) = <span>C / n<sup>α</sup></span> &nbsp;&nbsp; where α ≈ 2 and C ≈ 0.6079</div>
+    <p>The constant C is derived from the Riemann zeta function: C = 1/ζ(α). For α = 2, this equals 6/π² ≈ 0.6079 — the reciprocal of the well-known Basel problem sum (π²/6).</p>
     <p>Equivalently: if 60% of authors publish exactly 1 paper, then ~15% publish 2, ~6.7% publish 3, and so on. A small elite of prolific authors accounts for a disproportionate share of total output.</p>
     <div class="info-box blue">
       <strong>📌 Rule of Thumb</strong>
@@ -917,9 +994,13 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
   <!-- BRADFORD'S LAW -->
   <div class="card">
     <h3><span class="icon">📚</span>Bradford's Law of Scattering</h3>
-    <p>Samuel Bradford (1934) observed that a <strong>small core of journals</strong> produces most of the relevant literature in any given subject, and as coverage expands, progressively more journals are needed for diminishing returns. Journals divide into zones of equal yield.</p>
+    <p>Samuel Bradford (1934) observed that a <strong>small core of journals</strong> produces most of the relevant literature in any given subject, and as coverage expands, progressively more journals are needed for diminishing returns. In the classic verbal formulation, journals divide into three zones of approximately equal yield.</p>
     <div class="formula">n₁ : n₂ : n₃ = <span>1 : k : k²</span> &nbsp;&nbsp; where k is the Bradford multiplier</div>
     <p>If 5 core journals contain 1/3 of relevant papers, and k≈5, then 25 journals provide the next third, and 125 journals the final third. This helps librarians prioritize journal subscriptions.</p>
+    <div class="info-box amber">
+      <strong>⚠️ Empirical Caveat</strong>
+      <p>Real-world Bradford distributions frequently deviate from perfect equal-thirds zones. Brookes (1969) showed that the continuous Bradford distribution is better modelled as a logarithmic curve, and empirical zone sizes often differ substantially from the 1:k:k² ideal. Always verify zone boundaries with actual data rather than assuming equal splits.</p>
+    </div>
     <div class="info-box teal">
       <strong>📌 Practical Application</strong>
       <p>Bradford zones are used to build <strong>core journal lists</strong> for systematic reviews. The first zone ("Bradford core") is the essential collection; beyond zone 3, cost per relevant article becomes prohibitive.</p>
@@ -970,95 +1051,89 @@ cat(sprintf("Total citations: %d\n", sum(citations)))
   <!-- CODE -->
   <div class="card">
     <h3><span class="icon">💻</span>Implementing the Three Laws in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod2">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Lotka, Bradford, Zipf</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod2','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod2','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod2')">Copy</button>
+          <button class="run-btn" id="run-mod2" onclick="runEditor('cb-mod2','out-mod2')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import numpy as np
+      <div class="code-panel active" id="cb-mod2-python">
+        <pre><code class="language-python">import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 
-# ===== LOTKA'S LAW =====
+# ===== LOTKA&#x27;S LAW =====
 def lotka_theoretical(n_range, alpha=2.0, C=0.6079):
-    """Theoretical Lotka distribution."""
     return {n: C / n**alpha for n in n_range}
 
-# Verify: sum of f(n) should ≈ 1 for large range
 n_range = range(1, 100)
 lotka = lotka_theoretical(n_range)
-print("Lotka's Law:")
+print(&quot;Lotka&#x27;s Law:&quot;)
 for n in [1, 2, 3, 5, 10]:
-    print(f"  f({n:2d}) = {lotka[n]:.4f} ({lotka[n]*100:.2f}%)")
-print(f"  Sum (1-99): {sum(lotka.values()):.4f}")
+    print(f&quot;  f({n:2d}) = {lotka[n]:.4f} ({lotka[n]*100:.2f}%)&quot;)
+print(f&quot;  Sum (1-99): {sum(lotka.values()):.4f}&quot;)
 
-# ===== BRADFORD'S LAW =====
+# ===== BRADFORD&#x27;S LAW =====
 def bradford_zones(core_journals, k, zones=3):
-    """Compute Bradford zone sizes."""
     return [int(core_journals * k**z) for z in range(zones)]
 
 zones = bradford_zones(core_journals=5, k=5, zones=3)
-print(f"\nBradford's Law (core=5, k=5):")
+print(f&quot;\nBradford&#x27;s Law (core=5, k=5):&quot;)
 for i, z in enumerate(zones, 1):
-    print(f"  Zone {i}: {z} journals")
+    print(f&quot;  Zone {i}: {z} journals&quot;)
 
-# ===== ZIPF'S LAW =====
-# Simulate word frequency data
+# ===== ZIPF&#x27;S LAW =====
 np.random.seed(42)
 ranks = np.arange(1, 51)
 s = 1.0
-frequencies = 1000 / ranks**s  # Theoretical
+frequencies = 1000 / ranks**s
 noise = np.random.normal(0, 0.05 * frequencies)
 observed = np.maximum(1, frequencies + noise)
 
-# Fit log-log regression
 log_rank = np.log(ranks)
 log_freq = np.log(observed)
 slope, intercept, r, p, _ = linregress(log_rank, log_freq)
-print(f"\nZipf's Law fit:")
-print(f"  Slope (−s): {slope:.3f}")
-print(f"  R²: {r**2:.4f}")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="2">▶ Run</button>
+print(f&quot;\nZipf&#x27;s Law fit:&quot;)
+print(f&quot;  Slope (-s) : {slope:.3f}&quot;)
+print(f&quot;  R²         : {r**2:.4f}&quot;)
+
+# ===== VISUALISATION =====
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+# Left: Zipf log-log
+ax = axes[0]
+ax.scatter(np.log(ranks), np.log(observed), s=20, color=&#x27;#2563eb&#x27;, alpha=0.7, label=&#x27;Observed&#x27;)
+fit_line = slope * np.log(ranks) + intercept
+ax.plot(np.log(ranks), fit_line, color=&#x27;#dc2626&#x27;, lw=2, label=f&#x27;Fit: slope={slope:.2f}, R²={r**2:.3f}&#x27;)
+ax.set_xlabel(&#x27;log(Rank)&#x27;, fontsize=10)
+ax.set_ylabel(&#x27;log(Frequency)&#x27;, fontsize=10)
+ax.set_title(&quot;Zipf&#x27;s Law — log-log plot&quot;, fontsize=11, fontweight=&#x27;bold&#x27;)
+ax.legend(fontsize=8)
+ax.spines[[&#x27;top&#x27;,&#x27;right&#x27;]].set_visible(False)
+
+# Right: Lotka distribution (n=1..10)
+ax = axes[1]
+ns = list(range(1, 11))
+probs = [lotka[n] for n in ns]
+bars = ax.bar(ns, probs, color=&#x27;#0891b2&#x27;, edgecolor=&#x27;white&#x27;)
+ax.set_xlabel(&#x27;Number of papers (n)&#x27;, fontsize=10)
+ax.set_ylabel(&#x27;Proportion of authors f(n)&#x27;, fontsize=10)
+ax.set_title(&quot;Lotka&#x27;s Law — author productivity&quot;, fontsize=11, fontweight=&#x27;bold&#x27;)
+ax.set_xticks(ns)
+ax.spines[[&#x27;top&#x27;,&#x27;right&#x27;]].set_visible(False)
+
+plt.suptitle(&#x27;Bibliometric Laws&#x27;, fontsize=13, fontweight=&#x27;bold&#x27;, y=1.01)
+plt.tight_layout()
+</code></pre>
       </div>
-      <textarea id="pycode-2">import numpy as np
-
-# LOTKA'S LAW
-def lotka(n, alpha=2.0, C=0.6079):
-    return C / n**alpha
-
-print("=== Lotka's Law (alpha=2, C=0.6079) ===")
-for n in [1, 2, 3, 5, 10]:
-    print(f"  f({n}) = {lotka(n):.4f}  ({lotka(n)*100:.2f}% of authors)")
-
-# BRADFORD'S LAW
-print("\n=== Bradford's Law (core=5 journals, k=5) ===")
-core, k = 5, 5
-for zone in range(3):
-    journals = core * (k**zone)
-    print(f"  Zone {zone+1}: {journals} journals")
-
-# ZIPF'S LAW
-print("\n=== Zipf's Law (s=1.0) ===")
-ranks = np.arange(1, 11)
-freqs = 1000 / ranks**1.0
-print("  Rank | Frequency")
-for r, f in zip(ranks, freqs):
-    print(f"  {r:4d} | {f:8.1f}")
-</textarea>
-      <div class="pyodide-status" id="pystatus-2"></div>
-      <div class="pyodide-output" id="pyout-2"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Three laws with bibliometrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod2-r">
+        <pre><code class="language-r">library(bibliometrix)
 
 # ===== LOTKA'S LAW =====
 # Using bibliometrix with WoS data:
@@ -1095,6 +1170,15 @@ df_zipf <- data.frame(rank = ranks, freq = freq_theoretical)
 fit <- lm(log(freq) ~ log(rank), data = df_zipf)
 cat(sprintf("\nZipf slope (should be ≈ -1): %.3f\n", coef(fit)["log(rank)"]))
 cat(sprintf("R²: %.4f\n", summary(fit)$r.squared))</code></pre>
+      </div>
+      <div class="code-output" id="out-mod2">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod2')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod2-text"></div>
+        <div class="output-chart" id="out-mod2-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -1131,8 +1215,18 @@ cat(sprintf("R²: %.4f\n", summary(fit)$r.squared))</code></pre>
       </div>
       <div class="quiz-feedback" id="fb-q2-2"></div>
     </div>
+    <div class="quiz-question" id="q2-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> You are planning a systematic review. Using Bradford's Law with Zone 1 containing 3 core journals and a multiplier k = 4, how many total journals would you need across all three zones to achieve near-complete coverage?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q2-3','A')"><div class="option-radio"></div>12 journals (3 × k)</div>
+        <div class="option" onclick="selectOption(this,'q2-3','B')"><div class="option-radio"></div>63 journals (3 + 12 + 48, i.e. zones 1:k:k²)</div>
+        <div class="option" onclick="selectOption(this,'q2-3','C')"><div class="option-radio"></div>9 journals (Zone 1 × 3 zones)</div>
+        <div class="option" onclick="selectOption(this,'q2-3','D')"><div class="option-radio"></div>48 journals (Zone 3 alone: 3 × k²)</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q2-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q2',['C','B','A'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q2',['C','B','A','B'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q2"></div>
   </div>
@@ -1153,6 +1247,15 @@ cat(sprintf("R²: %.4f\n", summary(fit)$r.squared))</code></pre>
       <span>⏱ <strong>~35 min</strong></span>
       <span>📚 <strong>4 sections</strong></span>
       <span>🎯 <strong>Advanced</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives — Prerequisites: Modules 1–3</h4>
+      <ul>
+        <li>Distinguish co-citation, bibliographic coupling, and co-authorship networks</li>
+        <li>Interpret degree centrality and betweenness centrality in a collaboration network</li>
+        <li>Describe how community detection algorithms identify research clusters</li>
+        <li>Construct a basic co-authorship network using Python's NetworkX library</li>
+      </ul>
     </div>
   </div>
 
@@ -1201,117 +1304,84 @@ cat(sprintf("R²: %.4f\n", summary(fit)$r.squared))</code></pre>
 
   <div class="card">
     <h3><span class="icon">💻</span>Building Networks in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod3">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Co-authorship network with NetworkX</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod3','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod3','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod3')">Copy</button>
+          <button class="run-btn" id="run-mod3" onclick="runEditor('cb-mod3','out-mod3')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import networkx as nx
-import pandas as pd
+      <div class="code-panel active" id="cb-mod3-python">
+        <pre><code class="language-python">import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from itertools import combinations
 from collections import Counter
 
-# Sample publication data with multiple authors
+try:
+    import networkx as nx
+except ImportError:
+    import micropip
+    await micropip.install(&#x27;networkx&#x27;)
+    import networkx as nx
+
 publications = [
-    {'id': 'P1', 'authors': ['Smith J', 'Jones A', 'Brown K']},
-    {'id': 'P2', 'authors': ['Smith J', 'Williams L']},
-    {'id': 'P3', 'authors': ['Jones A', 'Brown K', 'Davis M']},
-    {'id': 'P4', 'authors': ['Williams L', 'Taylor R', 'Smith J']},
-    {'id': 'P5', 'authors': ['Davis M', 'Taylor R']},
-    {'id': 'P6', 'authors': ['Brown K', 'Moore S', 'Jones A']},
+    {&#x27;id&#x27;: &#x27;P1&#x27;, &#x27;authors&#x27;: [&#x27;Smith J&#x27;, &#x27;Jones A&#x27;, &#x27;Brown K&#x27;]},
+    {&#x27;id&#x27;: &#x27;P2&#x27;, &#x27;authors&#x27;: [&#x27;Smith J&#x27;, &#x27;Williams L&#x27;]},
+    {&#x27;id&#x27;: &#x27;P3&#x27;, &#x27;authors&#x27;: [&#x27;Jones A&#x27;, &#x27;Brown K&#x27;, &#x27;Davis M&#x27;]},
+    {&#x27;id&#x27;: &#x27;P4&#x27;, &#x27;authors&#x27;: [&#x27;Williams L&#x27;, &#x27;Taylor R&#x27;, &#x27;Smith J&#x27;]},
+    {&#x27;id&#x27;: &#x27;P5&#x27;, &#x27;authors&#x27;: [&#x27;Davis M&#x27;, &#x27;Taylor R&#x27;]},
+    {&#x27;id&#x27;: &#x27;P6&#x27;, &#x27;authors&#x27;: [&#x27;Brown K&#x27;, &#x27;Moore S&#x27;, &#x27;Jones A&#x27;]},
 ]
 
-# Build co-authorship graph
 G = nx.Graph()
-
-# Add edges for all author pairs within each paper
 edge_weights = Counter()
 for pub in publications:
-    authors = pub['authors']
-    for a1, a2 in combinations(authors, 2):
-        edge = tuple(sorted([a1, a2]))
-        edge_weights[edge] += 1
+    for a1, a2 in combinations(sorted(pub[&#x27;authors&#x27;]), 2):
+        edge_weights[(a1, a2)] += 1
 
-# Add weighted edges to graph
-for (a1, a2), weight in edge_weights.items():
-    if G.has_edge(a1, a2):
-        G[a1][a2]['weight'] += weight
-    else:
-        G.add_edge(a1, a2, weight=weight)
+for (a1, a2), w in edge_weights.items():
+    G.add_edge(a1, a2, weight=w)
 
-# Node attributes: publication count
-for pub in publications:
-    for author in pub['authors']:
-        if author not in G.nodes:
-            G.add_node(author)
-        G.nodes[author]['pubs'] = G.nodes[author].get('pubs', 0) + 1
+degree     = dict(G.degree())
+betweenness = nx.betweenness_centrality(G)
 
-print("=== Co-authorship Network ===")
-print(f"Authors (nodes): {G.number_of_nodes()}")
-print(f"Collaborations (edges): {G.number_of_edges()}")
-print(f"Density: {nx.density(G):.3f}")
-print(f"\nDegree centrality (top collaborators):")
-dc = nx.degree_centrality(G)
-for author, cent in sorted(dc.items(), key=lambda x: -x[1]):
-    print(f"  {author:<15} {cent:.3f}")
+print(&quot;Co-authorship network metrics:&quot;)
+print(f&quot;  Nodes (authors): {G.number_of_nodes()}&quot;)
+print(f&quot;  Edges (pairs)  : {G.number_of_edges()}&quot;)
+print(f&quot;  Density        : {nx.density(G):.3f}&quot;)
+print()
+print(f&quot;{&#x27;Author&#x27;:&lt;14} {&#x27;Degree&#x27;:&gt;6} {&#x27;Betweenness&#x27;:&gt;12}&quot;)
+print(&quot;-&quot; * 34)
+for a in sorted(degree, key=lambda x: betweenness[x], reverse=True):
+    print(f&quot;{a:&lt;14} {degree[a]:&gt;6} {betweenness[a]:&gt;12.3f}&quot;)
 
-print(f"\nBetweenness centrality (bridges):")
-bc = nx.betweenness_centrality(G)
-for author, cent in sorted(bc.items(), key=lambda x: -x[1])[:3]:
-    print(f"  {author:<15} {cent:.3f}")
+# Visualisation
+fig, ax = plt.subplots(figsize=(7, 5))
+pos = nx.spring_layout(G, seed=42, k=1.2)
+node_sizes  = [1000 + 400 * degree[n] for n in G.nodes()]
+node_colors = [betweenness[n] for n in G.nodes()]
+weights     = [G[u][v][&#x27;weight&#x27;] * 1.5 for u, v in G.edges()]
 
-# Detect communities
-communities = list(nx.community.greedy_modularity_communities(G))
-print(f"\nCommunities detected: {len(communities)}")
-for i, comm in enumerate(communities, 1):
-    print(f"  Group {i}: {', '.join(sorted(comm))}")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="3">▶ Run</button>
+nx.draw_networkx_edges(G, pos, width=weights, alpha=0.4, edge_color=&#x27;#94a3b8&#x27;, ax=ax)
+nc = nx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color=node_colors,
+                             cmap=cm.Blues, vmin=0, ax=ax)
+nx.draw_networkx_labels(G, pos, font_size=9, font_weight=&#x27;bold&#x27;, ax=ax)
+
+sm = plt.cm.ScalarMappable(cmap=cm.Blues, norm=plt.Normalize(0, max(node_colors)))
+plt.colorbar(sm, ax=ax, label=&#x27;Betweenness centrality&#x27;, shrink=0.7)
+ax.set_title(&#x27;Co-authorship network\n(node size = degree, colour = betweenness)&#x27;,
+             fontsize=11, fontweight=&#x27;bold&#x27;)
+ax.axis(&#x27;off&#x27;)
+plt.tight_layout()
+</code></pre>
       </div>
-      <textarea id="pycode-3">from itertools import combinations
-from collections import Counter, defaultdict
-
-publications = [
-    {'authors': ['Smith J', 'Jones A', 'Brown K']},
-    {'authors': ['Smith J', 'Williams L']},
-    {'authors': ['Jones A', 'Brown K', 'Davis M']},
-    {'authors': ['Williams L', 'Taylor R', 'Smith J']},
-    {'authors': ['Davis M', 'Taylor R']},
-    {'authors': ['Brown K', 'Moore S', 'Jones A']},
-]
-
-edge_weights = Counter()
-pub_counts = defaultdict(int)
-
-for pub in publications:
-    authors = pub['authors']
-    for a in authors:
-        pub_counts[a] += 1
-    for a1, a2 in combinations(authors, 2):
-        edge = tuple(sorted([a1, a2]))
-        edge_weights[edge] += 1
-
-print("Co-authorship Network:")
-print(f"Authors: {len(pub_counts)}")
-print(f"Collaboration pairs: {len(edge_weights)}")
-print("\nPublication counts:")
-for author, count in sorted(pub_counts.items(), key=lambda x: -x[1]):
-    print(f"  {author}: {count} paper(s)")
-print("\nStrongest collaborations:")
-for (a1, a2), w in sorted(edge_weights.items(), key=lambda x: -x[1])[:5]:
-    print(f"  {a1} -- {a2}: {w}")</textarea>
-      <div class="pyodide-status" id="pystatus-3"></div>
-      <div class="pyodide-output" id="pyout-3"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Co-authorship network with bibliometrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod3-r">
+        <pre><code class="language-r">library(bibliometrix)
 library(igraph)
 
 # With real data loaded:
@@ -1354,6 +1424,15 @@ print(sort(dc, decreasing = TRUE))
 # Community detection
 communities <- cluster_louvain(g)
 cat(sprintf("\nCommunities: %d\n", length(communities)))</code></pre>
+      </div>
+      <div class="code-output" id="out-mod3">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod3')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod3-text"></div>
+        <div class="output-chart" id="out-mod3-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -1389,8 +1468,18 @@ cat(sprintf("\nCommunities: %d\n", length(communities)))</code></pre>
       </div>
       <div class="quiz-feedback" id="fb-q3-2"></div>
     </div>
+    <div class="quiz-question" id="q3-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> In a co-authorship network, Researcher A has the highest betweenness centrality but only average degree centrality. What does this most likely indicate about Researcher A?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q3-3','A')"><div class="option-radio"></div>Researcher A has published the most papers in the field</div>
+        <div class="option" onclick="selectOption(this,'q3-3','B')"><div class="option-radio"></div>Researcher A acts as a bridge connecting otherwise separate research communities</div>
+        <div class="option" onclick="selectOption(this,'q3-3','C')"><div class="option-radio"></div>Researcher A co-authors exclusively with highly cited researchers</div>
+        <div class="option" onclick="selectOption(this,'q3-3','D')"><div class="option-radio"></div>Researcher A belongs to the largest and most densely connected cluster</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q3-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q3',['B','B','B'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q3',['B','B','B','B'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q3"></div>
   </div>
@@ -1411,6 +1500,15 @@ cat(sprintf("\nCommunities: %d\n", length(communities)))</code></pre>
       <span>⏱ <strong>~25 min</strong></span>
       <span>📚 <strong>3 sections</strong></span>
       <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>Compare coverage, access model, and citation data for WoS, Scopus, PubMed, Google Scholar, and OpenAlex</li>
+        <li>Select the most appropriate database for a given research question and discipline</li>
+        <li>Explain why database choice affects bibliometric results and reproducibility</li>
+        <li>Retrieve and filter records using the free OpenAlex API</li>
+      </ul>
     </div>
   </div>
 
@@ -1505,97 +1603,85 @@ cat(sprintf("\nCommunities: %d\n", length(communities)))</code></pre>
 
   <div class="card">
     <h3><span class="icon">💻</span>Querying Databases via Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod4">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> OpenAlex API — free bibliometric data</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod4','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod4','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod4')">Copy</button>
+          <button class="run-btn" id="run-mod4" onclick="runEditor('cb-mod4','out-mod4')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import requests
+      <div class="code-panel active" id="cb-mod4-python">
+        <pre><code class="language-python"># Browser-compatible version — uses pyodide.http instead of requests
+# For local Python: replace pyfetch with requests.get() and remove await/async
+import json
 import pandas as pd
+from pyodide.http import pyfetch
 
-# OpenAlex is free and open — no API key needed for basic queries
-BASE_URL = "https://api.openalex.org"
+BASE_URL = &quot;https://api.openalex.org&quot;
 
-def search_works(query, per_page=10, email="your@email.com"):
-    """Search OpenAlex works by query string."""
-    params = {
-        "search": query,
-        "per-page": per_page,
-        "mailto": email,  # polite pool = faster responses
-        "select": "id,title,publication_year,cited_by_count,authorships,primary_location"
-    }
-    resp = requests.get(f"{BASE_URL}/works", params=params)
-    resp.raise_for_status()
-    return resp.json()["results"]
+async def search_works(query, per_page=8):
+    &quot;&quot;&quot;Search OpenAlex works — returns list of result dicts.&quot;&quot;&quot;
+    url = (BASE_URL + &quot;/works?search=&quot; + query
+           + &quot;&amp;per-page=&quot; + str(per_page)
+           + &quot;&amp;mailto=demo@example.com&quot;
+           + &quot;&amp;select=id,title,publication_year,cited_by_count,authorships&quot;)
+    resp = await pyfetch(url)
+    data = await resp.json()
+    return data.get(&quot;results&quot;, [])
 
-def get_author_metrics(orcid):
-    """Fetch author h-index and metrics from OpenAlex."""
-    resp = requests.get(f"{BASE_URL}/authors/https://orcid.org/{orcid}")
-    resp.raise_for_status()
-    data = resp.json()
-    return {
-        "name": data.get("display_name"),
-        "works_count": data.get("works_count"),
-        "cited_by_count": data.get("cited_by_count"),
-        "h_index": data.get("summary_stats", {}).get("h_index"),
-        "i10_index": data.get("summary_stats", {}).get("i10_index"),
-    }
+async def get_venue_info(issn):
+    &quot;&quot;&quot;Fetch journal/venue metadata from OpenAlex.&quot;&quot;&quot;
+    url = (BASE_URL + &quot;/sources?filter=issn:&quot; + issn
+           + &quot;&amp;select=id,display_name,cited_by_count,works_count&quot;)
+    resp = await pyfetch(url)
+    data = await resp.json()
+    results = data.get(&quot;results&quot;, [])
+    return results[0] if results else {}
 
-# Example search (requires internet connection)
-# works = search_works("bibliometrics scientometrics", per_page=5)
-# for w in works:
-#     print(f"{w['publication_year']} | {w['cited_by_count']:5d} cites | {w['title'][:60]}")
+# ── 1. Search for bibliometrics papers ──────────────────────────────
+print(&quot;Querying OpenAlex API for &#x27;h-index bibliometrics&#x27;...&quot;)
+results = await search_works(&quot;h-index bibliometrics&quot;, per_page=10)
 
-# Example author lookup
-# metrics = get_author_metrics("0000-0002-7425-5765")  # replace with real ORCID
-# print(metrics)
+if results:
+    df = pd.DataFrame([{
+        &quot;title&quot;:     (r.get(&quot;title&quot;) or &quot;N/A&quot;)[:55],
+        &quot;year&quot;:      r.get(&quot;publication_year&quot;),
+        &quot;citations&quot;: r.get(&quot;cited_by_count&quot;, 0),
+        &quot;authors&quot;:   len(r.get(&quot;authorships&quot;, [])),
+    } for r in results])
+    df = df.sort_values(&quot;citations&quot;, ascending=False).reset_index(drop=True)
+    print(&quot;\nTop results (&quot; + str(len(df)) + &quot; papers):&quot;)
+    print(df.to_string(index=False))
+    top_title = df.iloc[0][&quot;title&quot;]
+    top_year  = df.iloc[0][&quot;year&quot;]
+    top_cites = df.iloc[0][&quot;citations&quot;]
+    print(&quot;\nMost cited paper:&quot;)
+    print(&quot;  Title    : &quot; + top_title)
+    print(&quot;  Year     : &quot; + str(top_year))
+    print(&quot;  Citations: &quot; + f&quot;{top_cites:,}&quot;)
+else:
+    print(&quot;No results — check network connectivity or CORS policy.&quot;)
 
-# Parse a local Scopus CSV export
-def parse_scopus_csv(filepath):
-    df = pd.read_csv(filepath)
-    required = ['Authors', 'Title', 'Year', 'Cited by', 'Source title']
-    df = df[[c for c in required if c in df.columns]]
-    df['Cited by'] = pd.to_numeric(df.get('Cited by', 0), errors='coerce').fillna(0)
-    return df.sort_values('Cited by', ascending=False)
-
-# df = parse_scopus_csv("scopus_export.csv")
-print("OpenAlex query functions defined.")
-print("Replace the commented-out examples with real searches/ORCID IDs.")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser — Parse simulated Scopus CSV</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="4">▶ Run</button>
+# ── 2. Fetch Nature journal metadata ────────────────────────────────
+print(&quot;\nFetching Nature journal metadata...&quot;)
+nature = await get_venue_info(&quot;0028-0836&quot;)
+if nature:
+    name        = nature.get(&quot;display_name&quot;, &quot;N/A&quot;)
+    works_count = nature.get(&quot;works_count&quot;, &quot;N/A&quot;)
+    cited_count = nature.get(&quot;cited_by_count&quot;, &quot;N/A&quot;)
+    print(&quot;  Journal      : &quot; + name)
+    print(&quot;  Total works  : &quot; + f&quot;{works_count:,}&quot;)
+    print(&quot;  Total cited  : &quot; + f&quot;{cited_count:,}&quot;)
+else:
+    print(&quot;  Journal metadata unavailable.&quot;)
+</code></pre>
       </div>
-      <textarea id="pycode-4">import io, csv
-
-# Simulate Scopus CSV data
-scopus_csv = """Authors,Title,Year,Cited by,Source title
-Smith J; Jones A,Deep learning review,2022,342,Nature Reviews
-Brown K,Bibliometrics methods,2021,189,Scientometrics
-Lee M; Park S,H-index analysis,2020,95,Journal of Informetrics
-Wang H,Citation networks,2019,67,JASIST
-Garcia R,Impact factor critique,2023,23,PLoS ONE"""
-
-rows = list(csv.DictReader(io.StringIO(scopus_csv)))
-print(f"{'Year':<6}{'Citations':>10}  {'Source':<25} Title")
-print("-"*75)
-for r in sorted(rows, key=lambda x: -int(x['Cited by'])):
-    print(f"{r['Year']:<6}{r['Cited by']:>10}  {r['Source title']:<25} {r['Title'][:30]}")
-
-total = sum(int(r['Cited by']) for r in rows)
-print(f"\nTotal papers: {len(rows)}")
-print(f"Total citations: {total}")
-print(f"Mean citations: {total/len(rows):.1f}")</textarea>
-      <div class="pyodide-status" id="pystatus-4"></div>
-      <div class="pyodide-output" id="pyout-4"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Loading WoS &amp; Scopus exports</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod4-r">
+        <pre><code class="language-r">library(bibliometrix)
 
 # ===== Web of Science Plain Text Export =====
 # Download: WoS > Export > Plain Text > Full Record + Cited References
@@ -1636,6 +1722,15 @@ print(head(results$Authors, 10))
 # Publication trend over time
 cat("\nAnnual production:\n")
 print(results$AnnualProduction)</code></pre>
+      </div>
+      <div class="code-output" id="out-mod4">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod4')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod4-text"></div>
+        <div class="output-chart" id="out-mod4-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -1671,8 +1766,18 @@ print(results$AnnualProduction)</code></pre>
       </div>
       <div class="quiz-feedback" id="fb-q4-2"></div>
     </div>
+    <div class="quiz-question" id="q4-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> A researcher studying Spanish-language public health journals in Latin America wants comprehensive citation data. Which database is LEAST suitable for this task?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q4-3','A')"><div class="option-radio"></div>SciELO — it specialises in Latin American and Iberian journals</div>
+        <div class="option" onclick="selectOption(this,'q4-3','B')"><div class="option-radio"></div>OpenAlex — it has broad multilingual coverage via open metadata</div>
+        <div class="option" onclick="selectOption(this,'q4-3','C')"><div class="option-radio"></div>Web of Science — it has a well-documented English-language and Western publication bias</div>
+        <div class="option" onclick="selectOption(this,'q4-3','D')"><div class="option-radio"></div>Google Scholar — it indexes a wide range of sources including grey literature</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q4-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q4',['C','C','B'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q4',['C','C','B','C'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q4"></div>
   </div>
@@ -1693,6 +1798,15 @@ print(results$AnnualProduction)</code></pre>
       <span>⏱ <strong>~30 min</strong></span>
       <span>📚 <strong>3 sections</strong></span>
       <span>🎯 <strong>Advanced</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives — Prerequisites: Modules 1–4</h4>
+      <ul>
+        <li>Interpret the four quadrants of a thematic map (motor, niche, emerging/declining, basic topics)</li>
+        <li>Distinguish keyword co-occurrence, author co-citation, and bibliographic coupling maps</li>
+        <li>Explain how VOSviewer's association strength normalisation affects map layout</li>
+        <li>Apply science mapping outputs to identify research trends in a chosen field</li>
+      </ul>
     </div>
   </div>
 
@@ -1748,100 +1862,83 @@ print(results$AnnualProduction)</code></pre>
 
   <div class="card">
     <h3><span class="icon">💻</span>Science Mapping in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod5">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Keyword co-occurrence matrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod5','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod5','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod5')">Copy</button>
+          <button class="run-btn" id="run-mod5" onclick="runEditor('cb-mod5','out-mod5')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import pandas as pd
+      <div class="code-panel active" id="cb-mod5-python">
+        <pre><code class="language-python">import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 from collections import Counter
 from itertools import combinations
-import json
 
-# Sample publication keywords
-publications_kw = [
-    ['bibliometrics', 'scientometrics', 'h-index', 'citation analysis'],
-    ['bibliometrics', 'web of science', 'scopus', 'impact factor'],
-    ['co-authorship', 'network analysis', 'collaboration', 'bibliometrics'],
-    ['h-index', 'citation analysis', 'research evaluation', 'impact factor'],
-    ['scientometrics', 'knowledge mapping', 'VOSviewer', 'network analysis'],
-    ['altmetrics', 'social media', 'research impact', 'bibliometrics'],
-    ['lotka law', 'bradford law', 'zipf law', 'scientometrics'],
-    ['network analysis', 'co-citation', 'knowledge mapping', 'clustering'],
+papers = [
+    {&#x27;keywords&#x27;: [&#x27;bibliometrics&#x27;, &#x27;h-index&#x27;, &#x27;citation analysis&#x27;, &#x27;research evaluation&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;h-index&#x27;, &#x27;impact factor&#x27;, &#x27;journal ranking&#x27;, &#x27;citation analysis&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;science mapping&#x27;, &#x27;bibliometrics&#x27;, &#x27;VOSviewer&#x27;, &#x27;co-citation&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;altmetrics&#x27;, &#x27;social media&#x27;, &#x27;research impact&#x27;, &#x27;bibliometrics&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;co-authorship&#x27;, &#x27;collaboration&#x27;, &#x27;network analysis&#x27;, &#x27;bibliometrics&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;impact factor&#x27;, &#x27;journal ranking&#x27;, &#x27;citation analysis&#x27;, &#x27;Scopus&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;h-index&#x27;, &#x27;research evaluation&#x27;, &#x27;bibliometrics&#x27;, &#x27;scientometrics&#x27;]},
+    {&#x27;keywords&#x27;: [&#x27;co-citation&#x27;, &#x27;science mapping&#x27;, &#x27;knowledge domain&#x27;, &#x27;bibliometrics&#x27;]},
 ]
 
-# Build co-occurrence matrix
-all_kw = sorted(set(kw for pub in publications_kw for kw in pub))
-n = len(all_kw)
-kw_idx = {kw: i for i, kw in enumerate(all_kw)}
-cooc = np.zeros((n, n), dtype=int)
+# Keyword frequency
+all_kw = [kw for p in papers for kw in p[&#x27;keywords&#x27;]]
+kw_freq = Counter(all_kw)
+top_kw = [k for k, _ in kw_freq.most_common(8)]
 
-for pub in publications_kw:
-    for kw1, kw2 in combinations(pub, 2):
-        i, j = kw_idx[kw1], kw_idx[kw2]
+# Co-occurrence matrix
+cooc = np.zeros((len(top_kw), len(top_kw)), dtype=int)
+for p in papers:
+    kws = [k for k in p[&#x27;keywords&#x27;] if k in top_kw]
+    for k1, k2 in combinations(kws, 2):
+        i, j = top_kw.index(k1), top_kw.index(k2)
         cooc[i, j] += 1
         cooc[j, i] += 1
+np.fill_diagonal(cooc, [kw_freq[k] for k in top_kw])
 
-# Frequency count
-freq = Counter(kw for pub in publications_kw for kw in pub)
-print("=== Keyword Co-occurrence Analysis ===")
-print(f"\nTotal unique keywords: {n}")
-print(f"\nTop keywords by frequency:")
-for kw, cnt in freq.most_common(8):
-    print(f"  {kw:<30} {cnt}")
+print(&quot;Top keywords by frequency:&quot;)
+for k, v in kw_freq.most_common(8):
+    print(f&quot;  {k:&lt;22} {v}&quot;)
 
-# Co-occurrence matrix as DataFrame
-df_cooc = pd.DataFrame(cooc, index=all_kw, columns=all_kw)
-print(f"\nTop keyword pairs by co-occurrence:")
-pairs = []
-for i in range(n):
-    for j in range(i+1, n):
-        if cooc[i, j] > 0:
-            pairs.append((all_kw[i], all_kw[j], cooc[i, j]))
-pairs.sort(key=lambda x: -x[2])
-for kw1, kw2, cnt in pairs[:5]:
-    print(f"  {kw1} + {kw2}: {cnt}")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="5">▶ Run</button>
+# Co-occurrence counts (off-diagonal top pairs)
+pairs = Counter()
+for p in papers:
+    for k1, k2 in combinations(sorted(p[&#x27;keywords&#x27;]), 2):
+        pairs[(k1, k2)] += 1
+print(&quot;\nTop co-occurring pairs:&quot;)
+for (k1, k2), cnt in pairs.most_common(5):
+    print(f&quot;  {k1} + {k2}: {cnt}&quot;)
+
+# Heatmap
+fig, ax = plt.subplots(figsize=(8, 6))
+labels = [k[:18] for k in top_kw]
+cmap = plt.cm.YlOrRd
+im = ax.imshow(cooc, cmap=cmap, aspect=&#x27;auto&#x27;)
+ax.set_xticks(range(len(top_kw))); ax.set_yticks(range(len(top_kw)))
+ax.set_xticklabels(labels, rotation=40, ha=&#x27;right&#x27;, fontsize=8)
+ax.set_yticklabels(labels, fontsize=8)
+for i in range(len(top_kw)):
+    for j in range(len(top_kw)):
+        ax.text(j, i, cooc[i, j], ha=&#x27;center&#x27;, va=&#x27;center&#x27;,
+                fontsize=9, color=&#x27;white&#x27; if cooc[i, j] &gt; cooc.max()*0.6 else &#x27;#1e293b&#x27;)
+plt.colorbar(im, ax=ax, label=&#x27;Co-occurrence count&#x27;, shrink=0.8)
+ax.set_title(&#x27;Keyword co-occurrence matrix&#x27;, fontsize=12, fontweight=&#x27;bold&#x27;, pad=12)
+plt.tight_layout()
+</code></pre>
       </div>
-      <textarea id="pycode-5">from collections import Counter
-from itertools import combinations
-
-publications_kw = [
-    ['bibliometrics', 'h-index', 'citation analysis'],
-    ['bibliometrics', 'scopus', 'impact factor'],
-    ['co-authorship', 'network analysis', 'bibliometrics'],
-    ['h-index', 'citation analysis', 'impact factor'],
-    ['scientometrics', 'VOSviewer', 'network analysis'],
-    ['altmetrics', 'research impact', 'bibliometrics'],
-]
-
-freq = Counter(kw for pub in publications_kw for kw in pub)
-cooc = Counter()
-for pub in publications_kw:
-    for p in combinations(sorted(pub), 2):
-        cooc[p] += 1
-
-print("Top keywords:")
-for kw, n in freq.most_common(8):
-    print(f"  {kw:<25} freq={n}")
-
-print("\nTop co-occurring pairs:")
-for (a, b), n in cooc.most_common(5):
-    print(f"  {a} & {b}: {n} co-occurrences")</textarea>
-      <div class="pyodide-status" id="pystatus-5"></div>
-      <div class="pyodide-output" id="pyout-5"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Thematic maps with bibliometrix</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod5-r">
+        <pre><code class="language-r">library(bibliometrix)
 
 # Load and convert data
 # M <- convert2df("wos_export.txt", dbsource="wos", format="plaintext")
@@ -1877,6 +1974,15 @@ for (a, b), n in cooc.most_common(5):
 #                            k.max = 8, stemming = FALSE)
 cat("bibliometrix science mapping functions demonstrated.\n")
 cat("Load your own WoS/Scopus export to generate real maps.")</code></pre>
+      </div>
+      <div class="code-output" id="out-mod5">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod5')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod5-text"></div>
+        <div class="output-chart" id="out-mod5-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -1912,8 +2018,18 @@ cat("Load your own WoS/Scopus export to generate real maps.")</code></pre>
       </div>
       <div class="quiz-feedback" id="fb-q5-2"></div>
     </div>
+    <div class="quiz-question" id="q5-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> A thematic map of climate science research places "machine learning" in the bottom-left quadrant (low density, low centrality). What does this suggest about machine learning's status in this field?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q5-3','A')"><div class="option-radio"></div>It is a well-developed motor topic driving the field forward</div>
+        <div class="option" onclick="selectOption(this,'q5-3','B')"><div class="option-radio"></div>It is an emerging or declining topic with weak internal development and peripheral connections to the field</div>
+        <div class="option" onclick="selectOption(this,'q5-3','C')"><div class="option-radio"></div>It is a basic/transversal topic that underpins all other research in the field</div>
+        <div class="option" onclick="selectOption(this,'q5-3','D')"><div class="option-radio"></div>It is a highly specialised niche with strong internal coherence but few external links</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q5-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q5',['B','B','B'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q5',['B','B','B','B'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q5"></div>
   </div>
@@ -1934,6 +2050,15 @@ cat("Load your own WoS/Scopus export to generate real maps.")</code></pre>
       <span>⏱ <strong>~25 min</strong></span>
       <span>📚 <strong>3 sections</strong></span>
       <span>🎯 <strong>Intermediate</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>Summarise the key principles of DORA, the Leiden Manifesto, and CoARA</li>
+        <li>Calculate and interpret a Field-Weighted Citation Impact (FWCI) score</li>
+        <li>Evaluate how REF and ERA incorporate bibliometrics alongside expert peer review</li>
+        <li>Distinguish responsible from irresponsible uses of bibliometric indicators</li>
+      </ul>
     </div>
   </div>
 
@@ -2048,88 +2173,84 @@ cat("Load your own WoS/Scopus export to generate real maps.")</code></pre>
 
   <div class="card">
     <h3><span class="icon">💻</span>Field-Normalized Metrics in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod6">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Field normalization &amp; MNCS calculation</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod6','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod6','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod6')">Copy</button>
+          <button class="run-btn" id="run-mod6" onclick="runEditor('cb-mod6','out-mod6')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import pandas as pd
+      <div class="code-panel active" id="cb-mod6-python">
+        <pre><code class="language-python">import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Simulated publication dataset with field averages
-papers = pd.DataFrame({
-    'title': ['Paper A', 'Paper B', 'Paper C', 'Paper D', 'Paper E', 'Paper F'],
-    'field': ['Biology', 'Biology', 'Physics', 'Physics', 'Math', 'Math'],
-    'year': [2020, 2021, 2020, 2021, 2020, 2021],
-    'citations': [45, 12, 8, 22, 3, 1],
-})
-
-# Field-year average citations (from database benchmarks)
-field_averages = {
-    ('Biology', 2020): 18.5,
-    ('Biology', 2021): 7.2,
-    ('Physics', 2020): 9.1,
-    ('Physics', 2021): 11.3,
-    ('Math', 2020): 2.8,
-    ('Math', 2021): 1.9,
-}
-
-def get_expected(row):
-    return field_averages.get((row['field'], row['year']), 1)
-
-papers['expected'] = papers.apply(get_expected, axis=1)
-papers['FWCI'] = papers['citations'] / papers['expected']  # Field-Weighted Citation Impact
-
-print("=== Field-Normalized Citation Analysis ===")
-print(papers[['title', 'field', 'year', 'citations', 'expected', 'FWCI']].to_string(index=False))
-
-print(f"\nMean FWCI (MNCS): {papers['FWCI'].mean():.2f}")
-print(f"Papers above world average (FWCI > 1): {(papers['FWCI'] > 1).sum()}/{len(papers)}")
-print(f"PP(top 10%): {(papers['FWCI'] >= 10).sum()/len(papers)*100:.1f}%")
-
-# By field
-print("\nMean FWCI by field:")
-print(papers.groupby('field')['FWCI'].mean().round(2).to_string())</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="6">▶ Run</button>
-      </div>
-      <textarea id="pycode-6">papers = [
-    {'title': 'Paper A', 'field': 'Biology', 'year': 2020, 'citations': 45},
-    {'title': 'Paper B', 'field': 'Biology', 'year': 2021, 'citations': 12},
-    {'title': 'Paper C', 'field': 'Physics', 'year': 2020, 'citations': 8},
-    {'title': 'Paper D', 'field': 'Physics', 'year': 2021, 'citations': 22},
-    {'title': 'Paper E', 'field': 'Math',    'year': 2020, 'citations': 3},
-    {'title': 'Paper F', 'field': 'Math',    'year': 2021, 'citations': 1},
+papers = [
+    {&#x27;field&#x27;: &#x27;Biology&#x27;,     &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 45, &#x27;field_avg&#x27;: 18.2},
+    {&#x27;field&#x27;: &#x27;Biology&#x27;,     &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 12, &#x27;field_avg&#x27;: 18.2},
+    {&#x27;field&#x27;: &#x27;Biology&#x27;,     &#x27;year&#x27;: 2019, &#x27;citations&#x27;: 89, &#x27;field_avg&#x27;: 22.1},
+    {&#x27;field&#x27;: &#x27;Mathematics&#x27;, &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 8,  &#x27;field_avg&#x27;: 4.3},
+    {&#x27;field&#x27;: &#x27;Mathematics&#x27;, &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 3,  &#x27;field_avg&#x27;: 4.3},
+    {&#x27;field&#x27;: &#x27;Mathematics&#x27;, &#x27;year&#x27;: 2019, &#x27;citations&#x27;: 15, &#x27;field_avg&#x27;: 5.1},
+    {&#x27;field&#x27;: &#x27;CS&#x27;,          &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 32, &#x27;field_avg&#x27;: 12.7},
+    {&#x27;field&#x27;: &#x27;CS&#x27;,          &#x27;year&#x27;: 2019, &#x27;citations&#x27;: 67, &#x27;field_avg&#x27;: 15.3},
+    {&#x27;field&#x27;: &#x27;Physics&#x27;,     &#x27;year&#x27;: 2020, &#x27;citations&#x27;: 23, &#x27;field_avg&#x27;: 9.8},
+    {&#x27;field&#x27;: &#x27;Physics&#x27;,     &#x27;year&#x27;: 2019, &#x27;citations&#x27;: 41, &#x27;field_avg&#x27;: 11.2},
 ]
 
-field_avg = {('Biology',2020):18.5,('Biology',2021):7.2,
-             ('Physics',2020):9.1,('Physics',2021):11.3,
-             ('Math',2020):2.8,('Math',2021):1.9}
+df = pd.DataFrame(papers)
+df[&#x27;MNCS&#x27;] = df[&#x27;citations&#x27;] / df[&#x27;field_avg&#x27;]
 
-print(f"{'Title':<10} {'Field':<10} {'Cites':>6} {'Expected':>9} {'FWCI':>6}")
-print("-"*45)
-fwcis = []
-for p in papers:
-    exp = field_avg.get((p['field'], p['year']), 1)
-    fwci = p['citations'] / exp
-    fwcis.append(fwci)
-    flag = " ★" if fwci > 1 else ""
-    print(f"{p['title']:<10} {p['field']:<10} {p['citations']:>6} {exp:>9.1f} {fwci:>6.2f}{flag}")
+summary = df.groupby(&#x27;field&#x27;).agg(
+    mean_raw=(&#x27;citations&#x27;, &#x27;mean&#x27;),
+    mean_mncs=(&#x27;MNCS&#x27;, &#x27;mean&#x27;),
+    n_papers=(&#x27;citations&#x27;, &#x27;count&#x27;)
+).reset_index()
 
-print(f"\nMean FWCI: {sum(fwcis)/len(fwcis):.2f}")
-print(f"Above world avg (FWCI>1): {sum(1 for f in fwcis if f>1)}/{len(fwcis)}")</textarea>
-      <div class="pyodide-status" id="pystatus-6"></div>
-      <div class="pyodide-output" id="pyout-6"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Institutional bibliometric report</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+print(&quot;Field-normalised citation analysis:&quot;)
+print(f&quot;{&#x27;Field&#x27;:&lt;12} {&#x27;Mean raw cites&#x27;:&gt;14} {&#x27;Mean MNCS&#x27;:&gt;10} {&#x27;Papers&#x27;:&gt;7}&quot;)
+print(&quot;-&quot; * 46)
+for _, row in summary.iterrows():
+    flag = &#x27; ← normalisation changes ranking&#x27; if (
+        (row[&#x27;mean_raw&#x27;] &gt; 30 and row[&#x27;mean_mncs&#x27;] &lt; 3) or
+        (row[&#x27;mean_raw&#x27;] &lt; 10 and row[&#x27;mean_mncs&#x27;] &gt; 1.5)
+    ) else &#x27;&#x27;
+    print(f&quot;{row[&#x27;field&#x27;]:&lt;12} {row[&#x27;mean_raw&#x27;]:&gt;14.1f} {row[&#x27;mean_mncs&#x27;]:&gt;10.2f} {int(row[&#x27;n_papers&#x27;]):&gt;7}{flag}&quot;)
+print(&quot;\nMNCS &gt; 1.0 = above-average for the field&quot;)
+
+# Grouped bar chart: raw vs MNCS (normalised to same scale for comparison)
+fields = summary[&#x27;field&#x27;].tolist()
+x = np.arange(len(fields))
+w = 0.35
+
+# Normalise raw cites to share axis (divide by max)
+raw_norm  = summary[&#x27;mean_raw&#x27;]  / summary[&#x27;mean_raw&#x27;].max()
+mncs_norm = summary[&#x27;mean_mncs&#x27;] / summary[&#x27;mean_mncs&#x27;].max()
+
+fig, ax = plt.subplots(figsize=(8, 4.5))
+b1 = ax.bar(x - w/2, raw_norm,  w, label=&#x27;Raw citations (scaled)&#x27;, color=&#x27;#3b82f6&#x27;, alpha=0.85)
+b2 = ax.bar(x + w/2, mncs_norm, w, label=&#x27;MNCS (scaled)&#x27;,          color=&#x27;#10b981&#x27;, alpha=0.85)
+
+# Annotate with actual MNCS values
+for i, (bar, val) in enumerate(zip(b2, summary[&#x27;mean_mncs&#x27;])):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02,
+            f&#x27;{val:.2f}&#x27;, ha=&#x27;center&#x27;, fontsize=8, color=&#x27;#065f46&#x27;, fontweight=&#x27;bold&#x27;)
+
+ax.set_xticks(x); ax.set_xticklabels(fields, fontsize=10)
+ax.set_ylabel(&#x27;Relative score (scaled to max = 1)&#x27;, fontsize=9)
+ax.set_title(&#x27;Raw citations vs Field-Normalised (MNCS)\nby discipline&#x27;, fontsize=11, fontweight=&#x27;bold&#x27;)
+ax.axhline(1.0, color=&#x27;grey&#x27;, lw=0.8, ls=&#x27;:&#x27;)
+ax.legend(fontsize=9)
+ax.spines[[&#x27;top&#x27;,&#x27;right&#x27;]].set_visible(False)
+plt.tight_layout()
+</code></pre>
       </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod6-r">
+        <pre><code class="language-r">library(bibliometrix)
 library(dplyr)
 
 # === Institutional Analysis ===
@@ -2173,6 +2294,15 @@ ref_indicators <- function(results) {
 #         las = 2, col = "#2563eb")
 cat("Research evaluation framework examples ready.\n")
 cat("Replace commented sections with your loaded dataset.")</code></pre>
+      </div>
+      <div class="code-output" id="out-mod6">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod6')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod6-text"></div>
+        <div class="output-chart" id="out-mod6-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -2208,8 +2338,18 @@ cat("Replace commented sections with your loaded dataset.")</code></pre>
       </div>
       <div class="quiz-feedback" id="fb-q6-2"></div>
     </div>
+    <div class="quiz-question" id="q6-3">
+      <div class="quiz-q"><span>4</span>🧩 <em>Applied:</em> A hiring committee uses the Journal Impact Factor of an applicant's publication venue as the sole criterion for shortlisting candidates. Which framework most directly condemns this specific practice?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q6-3','A')"><div class="option-radio"></div>DORA — it explicitly calls for stopping the use of journal-based metrics to evaluate individual researchers</div>
+        <div class="option" onclick="selectOption(this,'q6-3','B')"><div class="option-radio"></div>CoARA — it requires all signatories to abandon bibliometrics entirely</div>
+        <div class="option" onclick="selectOption(this,'q6-3','C')"><div class="option-radio"></div>REF — it prohibits the use of any citation-based indicators</div>
+        <div class="option" onclick="selectOption(this,'q6-3','D')"><div class="option-radio"></div>ERA — it mandates journal whitelists that exclude high-IF journals</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q6-3"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q6',['B','A','C'],3)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q6',['B','A','C','A'],4)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q6"></div>
   </div>
@@ -2230,6 +2370,15 @@ cat("Replace commented sections with your loaded dataset.")</code></pre>
       <span>⏱ <strong>~25 min</strong></span>
       <span>📚 <strong>4 sections</strong></span>
       <span>🎯 <strong>Advanced</strong></span>
+    </div>
+    <div class="learning-objectives">
+      <h4>Learning Objectives</h4>
+      <ul>
+        <li>Identify at least five structural limitations of citation-based metrics</li>
+        <li>Recognise common gaming strategies: self-citation, citation cartels, and salami slicing</li>
+        <li>Apply Goodhart's Law to explain perverse incentives in metric-driven evaluation</li>
+        <li>Formulate a balanced argument for when bibliometrics should and should not inform decisions</li>
+      </ul>
     </div>
   </div>
 
@@ -2258,7 +2407,7 @@ cat("Replace commented sections with your loaded dataset.")</code></pre>
         <p>Excessive <strong>self-citation</strong> (author citing own papers) inflates h-indices. <strong>Citation cartels</strong> — groups of journals that excessively cite each other — have been detected and removed from JCR.</p>
         <div class="info-box amber">
           <strong>Example</strong>
-          <p>Clarivate removed 40+ journals in 2023 from JCR due to citation stacking — journals inflating each other's IF through coordinated citaton practices.</p>
+          <p>Clarivate suppresses dozens of journals annually from JCR due to citation stacking — journals inflating each other's IF through coordinated citation practices. See Clarivate's annually published JCR Suppressed Journal List for verified figures.</p>
         </div>
 
         <h4>6. The Matthew Effect</h4>
@@ -2300,7 +2449,7 @@ cat("Replace commented sections with your loaded dataset.")</code></pre>
         <tr>
           <td>Citation farms / predatory publishing</td>
           <td>All metrics</td>
-          >Pay-to-publish in low-quality journals with guaranteed acceptance and fake peer review</td>
+          <td>Pay-to-publish in low-quality journals with guaranteed acceptance and fake peer review</td>
           <td>Beall's list, DOAJ, journal reputation checks</td>
         </tr>
         <tr>
@@ -2354,12 +2503,19 @@ cat("Replace commented sections with your loaded dataset.")</code></pre>
 
   <div class="card">
     <h3><span class="icon">💻</span>Detecting Gaming in Python &amp; R</h3>
-    <div class="code-block">
+    <div class="code-block-wrap" id="cb-mod7">
       <div class="code-header">
-        <div class="code-lang"><span class="lang-badge python">Python</span> Self-citation analysis</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab('cb-mod7','python')">Python</button>
+          <button class="code-tab" onclick="switchTab('cb-mod7','r')">R</button>
+        </div>
+        <div class="code-actions">
+          <button class="copy-btn" onclick="copyActiveCode('cb-mod7')">Copy</button>
+          <button class="run-btn" id="run-mod7" onclick="runEditor('cb-mod7','out-mod7')">&#9654; Run</button>
+        </div>
       </div>
-      <pre><code class="language-python">import pandas as pd
+      <div class="code-panel active" id="cb-mod7-python">
+        <pre><code class="language-python">import pandas as pd
 
 # Publication dataset with self-citation information
 papers = pd.DataFrame({
@@ -2398,53 +2554,9 @@ h_net = h_index(papers['net_citations'].tolist())
 print(f"\nh-index (all citations): {h_all}")
 print(f"h-index (excluding self): {h_net}")
 print(f"Inflation due to self-citation: {h_all - h_net} points")</code></pre>
-    </div>
-    <div class="pyodide-runner">
-      <div class="pyodide-header">
-        <span>🐍 Run Python in Browser</span>
-        <button class="run-btn" onclick="runPyodide(this)" data-code="7">▶ Run</button>
       </div>
-      <textarea id="pycode-7">papers = [
-    {'id':'P1','year':2018,'total':45,'self':3},
-    {'id':'P2','year':2019,'total':32,'self':8},
-    {'id':'P3','year':2020,'total':28,'self':12},
-    {'id':'P4','year':2021,'total':15,'self':9},
-    {'id':'P5','year':2022,'total':8,'self':5},
-]
-
-def h_index(cits):
-    s = sorted(cits, reverse=True)
-    h = 0
-    for i, c in enumerate(s, 1):
-        if c >= i: h = i
-        else: break
-    return h
-
-total_cits = sum(p['total'] for p in papers)
-total_self = sum(p['self'] for p in papers)
-self_rate = total_self / total_cits
-
-print(f"{'ID':<4} {'Year':<6} {'Total':>6} {'Self':>5} {'Rate':>6}  {'Flag'}")
-print("-"*38)
-for p in papers:
-    r = p['self']/p['total']
-    flag = " ⚠️" if r > 0.3 else ""
-    print(f"{p['id']:<4} {p['year']:<6} {p['total']:>6} {p['self']:>5} {r:>5.1%}  {flag}")
-
-h_all = h_index([p['total'] for p in papers])
-h_net = h_index([p['total']-p['self'] for p in papers])
-print(f"\nOverall self-citation rate: {self_rate:.1%}")
-print(f"h-index (all): {h_all}  |  h-index (excl. self): {h_net}")
-print("⚠️ WARNING: high self-citation detected" if self_rate > 0.25 else "✓ Acceptable self-citation rate")</textarea>
-      <div class="pyodide-status" id="pystatus-7"></div>
-      <div class="pyodide-output" id="pyout-7"></div>
-    </div>
-    <div class="code-block" style="margin-top:20px">
-      <div class="code-header">
-        <div class="code-lang"><span class="lang-badge r">R</span> Bias analysis and responsible reporting</div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code class="language-r">library(bibliometrix)
+      <div class="code-panel" id="cb-mod7-r">
+        <pre><code class="language-r">library(bibliometrix)
 library(dplyr)
 library(ggplot2)
 
@@ -2492,6 +2604,15 @@ for (i in seq_len(nrow(citation_growth))) {
     citation_growth$highly_cited[i],
     citation_growth$average_paper[i], r))
 }</code></pre>
+      </div>
+      <div class="code-output" id="out-mod7">
+        <div class="output-header">
+          <span>Output</span>
+          <button class="output-close" onclick="closeOutput('out-mod7')" title="Close">&#x2715;</button>
+        </div>
+        <div class="output-text" id="out-mod7-text"></div>
+        <div class="output-chart" id="out-mod7-chart"></div>
+      </div>
     </div>
   </div>
 
@@ -2538,8 +2659,18 @@ for (i in seq_len(nrow(citation_growth))) {
       </div>
       <div class="quiz-feedback" id="fb-q7-3"></div>
     </div>
+    <div class="quiz-question" id="q7-4">
+      <div class="quiz-q"><span>5</span>🧩 <em>Applied:</em> A university announces that promotion will require publishing in journals with an Impact Factor above 5. According to Goodhart's Law, what is the most likely unintended consequence?</div>
+      <div class="options">
+        <div class="option" onclick="selectOption(this,'q7-4','A')"><div class="option-radio"></div>Research quality will uniformly improve as researchers target higher-tier venues</div>
+        <div class="option" onclick="selectOption(this,'q7-4','B')"><div class="option-radio"></div>Researchers will adopt practices that game IF scores (e.g., self-citation, avoiding negative citations) without improving actual research quality</div>
+        <div class="option" onclick="selectOption(this,'q7-4','C')"><div class="option-radio"></div>The policy will have no effect because researchers already target high-IF journals</div>
+        <div class="option" onclick="selectOption(this,'q7-4','D')"><div class="option-radio"></div>The Impact Factor will become less useful for evaluating journals but more useful for evaluating individual papers</div>
+      </div>
+      <div class="quiz-feedback" id="fb-q7-4"></div>
+    </div>
     <div class="quiz-submit">
-      <button class="tool-btn" onclick="submitQuiz('q7',['C','B','C','B'],4)">Submit Answers</button>
+      <button class="tool-btn" onclick="submitQuiz('q7',['C','B','C','B','B'],5)">Submit Answers</button>
     </div>
     <div class="quiz-score" id="score-q7"></div>
   </div>
@@ -2570,7 +2701,8 @@ for (i in seq_len(nrow(citation_growth))) {
 // ===================== NAVIGATION =====================
 let currentModule = 0;
 const totalModules = 8;
-const completed = new Set();
+const STORAGE_KEY = 'bibliometrics_course_progress';
+const completed = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
 const moduleNames = [
   'Introduction to Bibliometrics',
   'Core Bibliometric Metrics',
@@ -2597,11 +2729,23 @@ function showModule(idx) {
 
 function completeModule(idx) {
   completed.add(idx);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
   const btn = document.getElementById('complete-' + idx);
   btn.textContent = '✓ Module ' + (idx+1) + ' Completed!';
   btn.classList.add('done');
   const nav = document.getElementById('nav-' + idx);
   nav.classList.add('completed');
+  updateProgress();
+  document.getElementById('finalScore').textContent = completed.size + '/' + totalModules;
+}
+
+function restoreProgress() {
+  completed.forEach(idx => {
+    const btn = document.getElementById('complete-' + idx);
+    if (btn) { btn.textContent = '✓ Module ' + (idx+1) + ' Completed!'; btn.classList.add('done'); }
+    const nav = document.getElementById('nav-' + idx);
+    if (nav) nav.classList.add('completed');
+  });
   updateProgress();
   document.getElementById('finalScore').textContent = completed.size + '/' + totalModules;
 }
@@ -2857,7 +3001,7 @@ function renderThematicChart() {
     plugins: [{
       afterDraw: chart => {
         const ctx2 = chart.ctx;
-        const {x:{left,right},y:{top,bottom}} = chart.chartArea;
+        const { left, right, top, bottom } = chart.chartArea;
         const midX=(left+right)/2, midY=(top+bottom)/2;
         ctx2.save();
         ctx2.strokeStyle='rgba(0,0,0,0.15)';
@@ -3007,84 +3151,210 @@ function renderKeywordNetwork() {
   });
 }
 
-// ===================== PYODIDE RUNNER =====================
-let pyodideReady = false;
+// ── DSGE EDITOR ──
+function switchTab(blockId, lang) {
+  const wrap   = document.getElementById(blockId);
+  const panels = wrap.querySelectorAll('.code-panel');
+  const tabs   = wrap.querySelectorAll('.code-tab');
+  panels.forEach(p => p.classList.remove('active'));
+  tabs.forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById(blockId + '-' + lang);
+  if (panel) panel.classList.add('active');
+  const tabIdx = lang === 'python' ? 0 : 1;
+  if (tabs[tabIdx]) tabs[tabIdx].classList.add('active');
+  const runBtn = wrap.querySelector('.run-btn');
+  if (runBtn && !runBtn.disabled) {
+    runBtn.textContent = lang === 'python' ? '\u25b6 Run' : '\u25b6 Copy R';
+  }
+}
+
+function copyActiveCode(blockId) {
+  const activePanel = document.querySelector('#' + blockId + ' .code-panel.active');
+  const code = activePanel ? activePanel.querySelector('code').textContent : '';
+  const btn  = document.querySelector('#' + blockId + ' .copy-btn');
+  navigator.clipboard.writeText(code).then(() => {
+    if (btn) { btn.textContent = '\u2713 Copied!'; btn.classList.add('copied'); }
+    setTimeout(() => { if (btn) { btn.textContent = 'Copy'; btn.classList.remove('copied'); } }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = code; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    if (btn) { btn.textContent = '\u2713 Copied!'; btn.classList.add('copied'); }
+    setTimeout(() => { if (btn) { btn.textContent = 'Copy'; btn.classList.remove('copied'); } }, 2000);
+  });
+}
+
+function closeOutput(outputId) {
+  const panel = document.getElementById(outputId);
+  if (panel) panel.classList.remove('visible');
+}
+
+async function runEditor(blockId, outputId) {
+  const activePanel = document.querySelector('#' + blockId + ' .code-panel.active');
+  const isR    = activePanel && activePanel.id.endsWith('-r');
+  const runBtn = document.querySelector('#' + blockId + ' .run-btn');
+  const outPanel = document.getElementById(outputId);
+  const textEl   = document.getElementById(outputId + '-text');
+  const chartEl  = document.getElementById(outputId + '-chart');
+
+  if (isR) {
+    const code = activePanel.querySelector('code').textContent;
+    navigator.clipboard.writeText(code).catch(() => {});
+    if (textEl)  textEl.innerHTML = '';
+    if (chartEl) chartEl.innerHTML = '';
+    if (outPanel) {
+      outPanel.classList.add('visible');
+      const note = document.createElement('div');
+      note.className = 'output-r-note';
+      note.innerHTML = '\ud83d\udccb <strong>R code copied to clipboard.</strong><br>Paste into RStudio or an R console to run.';
+      if (textEl) textEl.appendChild(note);
+    }
+    return;
+  }
+
+  const code = activePanel ? activePanel.querySelector('code').textContent : '';
+  if (!code.trim()) return;
+  if (textEl)  { textEl.textContent = ''; textEl.classList.remove('error'); }
+  if (chartEl) chartEl.innerHTML = '';
+  if (outPanel) outPanel.classList.add('visible');
+  await runPyodideCode(runBtn, outputId, code);
+}
+
+// ── PYODIDE RUNNER ──
+let pyodideReady   = false;
 let pyodideLoading = false;
-let pyodide = null;
+let pyodide        = null;
 
 async function loadPyodideIfNeeded(statusEl) {
   if (pyodideReady) return true;
   if (pyodideLoading) {
-    statusEl.textContent = 'Pyodide is loading, please wait...';
-    statusEl.classList.add('visible');
+    if (statusEl) { statusEl.textContent = 'Pyodide is loading, please wait...'; statusEl.classList.add('visible'); }
     while (!pyodideReady) await new Promise(r => setTimeout(r, 300));
     return true;
   }
   pyodideLoading = true;
-  statusEl.textContent = '⏳ Loading Pyodide runtime (~10MB first time)...';
-  statusEl.classList.add('visible');
+  if (statusEl) { statusEl.textContent = '\u23f3 Loading Pyodide runtime (~10 MB first time)...'; statusEl.classList.add('visible'); }
   try {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
     document.head.appendChild(script);
     await new Promise((res, rej) => { script.onload = res; script.onerror = rej; });
-    statusEl.textContent = '⏳ Loading Pyodide runtime...';
     pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/' });
-    statusEl.textContent = '⏳ Loading numpy & pandas...';
+    if (statusEl) statusEl.textContent = '\u23f3 Loading numpy & pandas...';
     await pyodide.loadPackage(['numpy', 'pandas', 'micropip']);
-    await pyodide.runPythonAsync(`import micropip, numpy, pandas`);
-    pyodideReady = true;
-    statusEl.textContent = '✓ Pyodide ready (numpy + pandas loaded)';
-    setTimeout(() => statusEl.classList.remove('visible'), 2000);
+    await pyodide.runPythonAsync('import micropip, numpy, pandas');
+    pyodideReady   = true;
+    pyodideLoading = false;
+    if (statusEl) { statusEl.textContent = '\u2713 Pyodide ready'; setTimeout(() => statusEl.classList.remove('visible'), 2000); }
     return true;
-  } catch(e) {
-    statusEl.textContent = '✗ Failed to load Pyodide: ' + e.message;
+  } catch (e) {
+    if (statusEl) statusEl.textContent = '\u2717 Failed to load Pyodide: ' + e.message;
     pyodideLoading = false;
     return false;
   }
 }
 
-async function runPyodide(btn) {
-  const codeIdx = btn.dataset.code;
-  const code = document.getElementById('pycode-' + codeIdx).value;
-  const outEl = document.getElementById('pyout-' + codeIdx);
-  const statusEl = document.getElementById('pystatus-' + codeIdx);
-  btn.disabled = true;
-  btn.innerHTML = '⏳ Running...';
-  const ok = await loadPyodideIfNeeded(statusEl);
-  if (!ok) { btn.disabled=false; btn.innerHTML='▶ Run'; return; }
-  outEl.classList.add('visible');
-  outEl.classList.remove('error');
-  outEl.textContent = '';
-  try {
-    pyodide.setStdout({ batched: s => { outEl.textContent += s + '\n'; } });
-    pyodide.setStderr({ batched: s => { outEl.textContent += '⚠️ ' + s + '\n'; } });
-    const result = await pyodide.runPythonAsync(code);
-    if (result !== undefined && result !== null) outEl.textContent += '\n→ ' + String(result);
-  } catch(e) {
-    outEl.classList.add('error');
-    outEl.textContent = '✗ Error:\n' + e.message;
+async function runPyodideCode(btn, outputId, code) {
+  const textEl  = document.getElementById(outputId + '-text');
+  const chartEl = document.getElementById(outputId + '-chart');
+  if (btn) { btn.disabled = true; btn.textContent = '\u23f3 Running...'; }
+  const ok = await loadPyodideIfNeeded(null);
+  if (!ok) {
+    if (textEl) { textEl.textContent = '\u2717 Failed to load Pyodide runtime.'; textEl.classList.add('error'); }
+    if (btn) { btn.disabled = false; btn.textContent = '\u25b6 Run'; }
+    return;
   }
-  btn.disabled = false;
-  btn.innerHTML = '▶ Run';
+  if (textEl) { textEl.textContent = ''; textEl.classList.remove('error'); }
+  if (chartEl) chartEl.innerHTML = '';
+
+  // Auto-detect and install packages not loaded at startup
+  const pypiPkgs  = [];  // installed via micropip
+  const wheelPkgs = [];  // loaded via pyodide.loadPackage
+  const detect = [
+    ['scipy',      false, 'scipy'],
+    ['matplotlib', false, 'matplotlib'],
+    ['networkx',   true,  'networkx'],
+    ['sklearn',    true,  'scikit-learn'],
+  ];
+  for (const [imp, isPypi, pkg] of detect) {
+    if (new RegExp('(^|\\n)(import ' + imp + '|from ' + imp + ')').test(code)) {
+      (isPypi ? pypiPkgs : wheelPkgs).push(pkg);
+    }
+  }
+  if (wheelPkgs.length || pypiPkgs.length) {
+    const allPkgs = [...wheelPkgs, ...pypiPkgs];
+    if (textEl) textEl.textContent = '\u23f3 Installing: ' + allPkgs.join(', ') + '...\n';
+    try {
+      if (wheelPkgs.length) await pyodide.loadPackage(wheelPkgs);
+      if (pypiPkgs.length)  await pyodide.runPythonAsync('import micropip; await micropip.install(' + JSON.stringify(pypiPkgs) + ')');
+    } catch(e) {
+      if (textEl) textEl.textContent += '\u26a0\ufe0f Package install: ' + e.message + '\n';
+    }
+  }
+
+  // Matplotlib: set agg backend so plt.show() doesn't crash
+  const usesMpl = /import matplotlib|from matplotlib/.test(code);
+  if (usesMpl) {
+    try {
+      await pyodide.runPythonAsync("import matplotlib; matplotlib.use('agg'); import matplotlib.pyplot as plt");
+    } catch(e) {}
+  }
+
+  try {
+    pyodide.setStdout({ batched: s => { if (textEl) textEl.textContent += s + '\n'; } });
+    pyodide.setStderr({ batched: s => { if (textEl) textEl.textContent += '\u26a0\ufe0f ' + s + '\n'; } });
+    const result = await pyodide.runPythonAsync(code);
+    if (result !== undefined && result !== null) {
+      if (textEl) textEl.textContent += '\n\u2192 ' + String(result);
+    }
+    // Capture any matplotlib figure as PNG
+    if (usesMpl && chartEl) {
+      try {
+        const b64 = await pyodide.runPythonAsync(
+          "import io, base64, matplotlib.pyplot as plt\n" +
+          "_figs = plt.get_fignums()\n" +
+          "_b64 = ''\n" +
+          "if _figs:\n" +
+          "  buf = io.BytesIO()\n" +
+          "  plt.savefig(buf, format='png', bbox_inches='tight', dpi=110)\n" +
+          "  buf.seek(0)\n" +
+          "  _b64 = base64.b64encode(buf.read()).decode()\n" +
+          "_b64"
+        );
+        if (b64) {
+          const img = document.createElement('img');
+          img.src = 'data:image/png;base64,' + b64;
+          img.style.cssText = 'max-width:100%;margin-top:8px;border-radius:6px;display:block';
+          chartEl.appendChild(img);
+          await pyodide.runPythonAsync('plt.close("all")');
+        }
+      } catch(e) { /* no figure */ }
+    }
+  } catch (e) {
+    if (textEl) { textEl.classList.add('error'); textEl.textContent = '\u2717 Error:\n' + e.message; }
+  }
+  if (btn) { btn.disabled = false; btn.textContent = '\u25b6 Run'; }
 }
 
-// ===================== COPY BUTTONS =====================
-function copyCode(btn) {
-  const code = btn.closest('.code-block').querySelector('code').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = code; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  });
+
+// ── THEME TOGGLE ──
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.classList.toggle('dark');
+  localStorage.setItem('bibliometrics_theme', isDark ? 'dark' : 'light');
+  const btn = document.querySelector('.theme-btn');
+  if (btn) btn.textContent = isDark ? '☀️ Theme' : '🌙 Theme';
 }
+(function() {
+  const saved = localStorage.getItem('bibliometrics_theme');
+  if (saved === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.querySelector('.theme-btn');
+      if (btn) btn.textContent = '☀️ Theme';
+    });
+  }
+})();
 
 // ===================== INIT =====================
 window.addEventListener('DOMContentLoaded', () => {
@@ -3097,6 +3367,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderThematicChart();
   renderCoauthorNetwork();
   window.networkRendered = true;
+  restoreProgress();
 });
 </script>
 </body>
