@@ -4,7 +4,7 @@
 
 **A free, fully interactive, browser-based course for learning real-world data wrangling with Python — no installation required.**
 
-[![Launch Course](https://img.shields.io/badge/🚀_Launch-Interactive_Course-blue?style=for-the-badge)](https://sandwidinarcisse.github.io/Courses/Data%20wrangling%20with%20python/ds.html)
+[![Launch Course](https://img.shields.io/badge/🚀_Launch-Interactive_Course-blue?style=for-the-badge)](https://sandwidinarcisse.github.io/Courses/Data%20Wrangling%20with%20Python/dw.html)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
@@ -20,7 +20,7 @@
 Wrangling messy, real-world data is one of the most important — and most poorly taught — skills in data science. This project turns that skill into something you *practice*, not just *read about*. It's a single self-contained HTML page that runs a real Python interpreter (via [Pyodide](https://pyodide.org)) directly in your browser, so you can read an explanation, edit the code right next to it, hit **Run**, and immediately see what happens.
 
 > 🚀 **Launch the Interactive Course**
-> 👉 **[https://sandwidinarcisse.github.io/Courses/Data wrangling with python/ds.html](https://sandwidinarcisse.github.io/Courses/Data%20wrangling%20with%20python/ds.html)**
+> 👉 **[https://sandwidinarcisse.github.io/Courses/Data wrangling with python/ds.html](https://sandwidinarcisse.github.io/Courses/Data%20Wrangling%20with%20Python/ds.html)**
 
 ---
 
@@ -164,7 +164,7 @@ Data wrangling in particular is a *craft* skill — it's built through repetitio
 
 <div align="center">
 
-### 👉 [**Launch the Course**](https://sandwidinarcisse.github.io/Courses/Data%20wrangling%20with%20python/ds.html) 👈
+### 👉 [**Launch the Course**](https://sandwidinarcisse.github.io/Courses/Data%20Wrangling%20with%20Python/ds.html) 👈
 
 Runs entirely in your browser — nothing to install, nothing to configure.
 
